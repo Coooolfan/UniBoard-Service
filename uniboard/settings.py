@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -25,8 +24,7 @@ SECRET_KEY = "django-insecure-r7l(3uws)ve@^6x5o46$ncv5+rfu=f#8i$@a4*2v%(iz&+piql
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['127.0.0.1', ]
 
 # Application definition
 
@@ -42,13 +40,16 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
-    # "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    # "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-]
+    # "django.middleware.clickjacking.XFrameOptionsMiddleware"
+    "api.middleware.auth.AuthMiddleWare"
 
+]
+CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = "uniboard.urls"
 
 TEMPLATES = [
@@ -68,7 +69,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "uniboard.wsgi.application"
-
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -90,6 +90,9 @@ CACHES = {
     }
 }
 
+REDIS_TIMEOUT = 7 * 24 * 60 * 60
+CUBES_REDIS_TIMEOUT = 60 * 60
+NEVER_REDIS_TIMEOUT = 365 * 24 * 60 * 60
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -107,7 +110,6 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

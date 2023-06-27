@@ -10,7 +10,9 @@ from django.http.response import HttpResponse
 
 def process_request(request: "WSGIRequest"):
     if need_check(request.path):
-        if not check_token(request.headers.get("Authorization")):
+        token_sent = request.headers.get("Authorization")[7:]
+        print("token_sent:", token_sent)
+        if not check_token(token_sent):
             print("无效token")
             return HttpResponse(status=201)
 
@@ -24,12 +26,12 @@ def process_response(request: "WSGIRequest", response: "HttpResponse"):
         cache.set("token", new_token)
         response.content = json.dumps(data)
         return response
+    return response
 
 
 def check_token(old_token):
-    return True
     reality_token = cache.get("token")
-    if not old_token == reality_token:
+    if old_token == reality_token:
         return True
     else:
         return False

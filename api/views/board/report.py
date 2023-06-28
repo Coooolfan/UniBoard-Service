@@ -1,10 +1,9 @@
 import json
-from secrets import token_hex
 
-from django.core.cache import cache
 from django.http import HttpResponse
 from pyotp import TOTP
 
+from api.middleware.auth import set_new_token
 from uniboard.settings import TwoFA_SecretKey
 
 
@@ -17,7 +16,7 @@ def index(request):
         if check_code(key):
             data = {
                 "verified": True,
-                "token": create_token(),
+                "token": set_new_token(request.headers.get("deviceID")),
             }
             return HttpResponse(json.dumps(data))
         return HttpResponse()
@@ -28,9 +27,3 @@ def index(request):
 def check_code(key):
     totp = TOTP(TwoFA_SecretKey)
     return totp.verify(key)
-
-
-def create_token():
-    new_token = token_hex(64)
-    cache.set("token", new_token)
-    return new_token

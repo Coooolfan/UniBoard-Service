@@ -1,4 +1,3 @@
-
 import json
 from operator import contains
 from secrets import token_hex
@@ -11,8 +10,8 @@ from django.http.response import HttpResponse
 def process_request(request: "WSGIRequest"):
     if need_check(request.path):
         token_sent = request.headers.get("Authorization")[7:]
-        print("token_sent:", token_sent)
-        if not check_token(token_sent):
+        device_id = request.headers.get("deviceID")
+        if not check_token(token_sent, device_id):
             print("无效token")
             return HttpResponse(status=201)
 
@@ -21,24 +20,23 @@ def process_request(request: "WSGIRequest"):
 def process_response(request: "WSGIRequest", response: "HttpResponse"):
     if need_check(request.path):
         data = json.loads(response.content)
-        new_token = create_token()
-        data['token'] = new_token
-        cache.set("token", new_token)
+        data["token"] = set_new_token(request.headers.get("deviceID"))
         response.content = json.dumps(data)
         return response
     return response
 
 
-def check_token(old_token):
-    reality_token = cache.get("token")
+def check_token(old_token, device_id):
+    reality_token = cache.get("token-" + device_id)
     if old_token == reality_token:
         return True
     else:
         return False
 
 
-def create_token():
+def set_new_token(decive_id):
     new_token = token_hex(64)
+    cache.set("token-" + decive_id, new_token)
     return new_token
 
 
@@ -53,10 +51,10 @@ class AuthMiddleWare:
         self.get_response = get_response
         # One-time configuration and initialization.
 
-    def __call__(self, request:"WSGIRequest"):
+    def __call__(self, request: "WSGIRequest"):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
-        response:"HttpResponse" = process_request(request)
+        response: "HttpResponse" = process_request(request)
 
         # 当验证中间件有返回内容时，说明校验不通过，直接向客户端返回
         if not response:

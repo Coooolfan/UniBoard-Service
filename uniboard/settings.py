@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -56,6 +57,7 @@ MIDDLEWARE = [
 ]
 CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = "uniboard.urls"
+CORS_ALLOW_HEADERS = ['Content-Type', 'Authorization', 'deviceid']
 
 TEMPLATES = [
     {

@@ -35,8 +35,12 @@ def check_token(old_token, device_id):
 
 
 def set_new_token(decive_id):
-    new_token = token_hex(64)
-    cache.set("token-" + decive_id, new_token, timeout=60 * 5)
+    time_expired = cache.ttl("token-" + decive_id)
+    if time_expired < 60:
+        new_token = token_hex(64)
+        cache.set("token-" + decive_id, new_token, timeout=60 * 5)
+    else:
+        new_token = cache.get("token-" + decive_id)
     return new_token
 
 

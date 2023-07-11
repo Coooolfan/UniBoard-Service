@@ -42,7 +42,5 @@ def is_trusted_device(device_id):
     # # 向数据库中写入数据
     # TrustedDevice(deviceID=device_id).save()
     # return False
-    trusted_devices = TrustedDevice.objects.all()
-    # 转换为数组
-    trusted_devices = [device.deviceID for device in trusted_devices]
+    trusted_devices = list(TrustedDevice.objects.values_list("deviceID", flat=True))
     return device_id in trusted_devices

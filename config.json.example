@@ -1,0 +1,24 @@
+[
+    {
+        "objectID": "2",
+        "objectName": "MineCraft Server WCS",
+        "category": "server",
+        "statusList": [
+            "tps",
+            "mstp",
+            "players"
+        ]
+    },
+    {
+        "objectID": "1",
+        "objectName": "XiaoMi Pad 5 Pro",
+        "category": "device",
+        "statusList": [
+            "battery",
+            "gps",
+            "ram",
+            "cpu",
+            "gpu"
+        ]
+    }
+]

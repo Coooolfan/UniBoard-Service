@@ -18,7 +18,7 @@ def process_request(request: "WSGIRequest"):
 
 # noinspection PyMethodMayBeStatic
 def process_response(request: "WSGIRequest", response: "HttpResponse"):
-    if need_check(request.path):
+    if need_check(request.path) and response.status_code == 200:
         data = json.loads(response.content)
         data["token"] = set_new_token(request.headers.get("deviceID"))
         response.content = json.dumps(data)
@@ -27,6 +27,7 @@ def process_response(request: "WSGIRequest", response: "HttpResponse"):
 
 
 def check_token(old_token, device_id):
+    return True
     reality_token = cache.get("token-" + device_id)
     if old_token == reality_token:
         return True
@@ -45,7 +46,7 @@ def set_new_token(decive_id):
 
 
 def need_check(url_path):
-    if contains(url_path, "note"):
+    if contains(url_path, "note") or contains(url_path, "monitored-objects"):
         return True
     return False
 

@@ -27,7 +27,6 @@ def process_response(request: "WSGIRequest", response: "HttpResponse"):
 
 
 def check_token(old_token, device_id):
-    return True
     reality_token = cache.get("token-" + device_id)
     if old_token == reality_token:
         return True

@@ -20,6 +20,7 @@ class MonitoredObjects(models.Model):
     objectName = models.CharField(max_length=100, )
     category = models.CharField(max_length=100, )
     statusList = models.JSONField()
+    token = models.CharField(max_length=100, )
 
     class Meta:
         app_label = "api"
@@ -33,7 +34,7 @@ class MonitoredObjects(models.Model):
 class Status(models.Model):
     statusID = models.IntegerField(primary_key=True, unique=True, )
     objectID = models.IntegerField()
-    insertStamp = models.DateTimeField(auto_created=True)
+    insertStamp = models.DateTimeField(auto_now_add=True)
     repotyStamp = models.DateTimeField()
     status = models.JSONField()
 

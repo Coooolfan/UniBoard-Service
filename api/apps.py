@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 import os
 import json
-
+from secrets import token_hex
 
 class ApiConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
@@ -32,6 +32,7 @@ class ApiConfig(AppConfig):
                 objectID=config["objectID"],
                 objectName=config["objectName"],
                 category=config["category"],
-                statusList=config["statusList"]
+                statusList=config["statusList"],
+                token=token_hex(16)
             ).save()
 

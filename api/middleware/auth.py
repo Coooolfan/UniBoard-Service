@@ -27,6 +27,7 @@ def process_response(request: "WSGIRequest", response: "HttpResponse"):
 
 
 def check_token(old_token, device_id):
+    # return True
     reality_token = cache.get("token-" + device_id)
     if old_token == reality_token:
         return True
@@ -45,7 +46,7 @@ def set_new_token(decive_id):
 
 
 def need_check(url_path):
-    if contains(url_path, "note") or contains(url_path, "monitored-objects"):
+    if contains(url_path, "board") and (contains(url_path, "note") or contains(url_path, "monitored-objects")):
         return True
     return False
 

@@ -3,6 +3,7 @@ import os
 import json
 from secrets import token_hex
 
+
 class ApiConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "api"
@@ -28,11 +29,12 @@ class ApiConfig(AppConfig):
     def save2database(self, config_data):
         from api.models import MonitoredObjects
         for config in config_data:
+            token = token_hex(16)
             MonitoredObjects(
                 objectID=config["objectID"],
                 objectName=config["objectName"],
                 category=config["category"],
                 statusList=config["statusList"],
-                token=token_hex(16)
+                token=token
             ).save()
-
+            print("添加监控对象：", config["objectName"], "，token：", token)

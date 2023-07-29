@@ -11,5 +11,4 @@ def index(request):
     objs = MonitoredObjects.objects.all()
     serializer = ObjSerializer(objs, many=True)
     data = {"monitored-objects": serializer.data}
-    print(json.dumps(data))
     return HttpResponse(json.dumps(data))

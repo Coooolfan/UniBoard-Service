@@ -28,8 +28,8 @@ def index(request):
 def check_token(token, obj_id):
     # return True
     true_token = MonitoredObjects.objects.filter(objectID=obj_id).values("token")
-    print(true_token)
-    print(token)
+    # 转换成字符串
+    true_token = true_token[0]["token"]
     return token == true_token
 
 

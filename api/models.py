@@ -35,12 +35,12 @@ class Status(models.Model):
     statusID = models.IntegerField(primary_key=True, unique=True, )
     objectID = models.IntegerField()
     insertStamp = models.DateTimeField(auto_now_add=True)
-    repotyStamp = models.DateTimeField()
+    reportStamp = models.DateTimeField()
     status = models.JSONField()
 
     class Meta:
         app_label = "api"
-        indexes = [models.Index(fields=['statusID', 'objectID', 'repotyStamp'])]
+        indexes = [models.Index(fields=['statusID', 'objectID', 'reportStamp'])]
 
     def __str__(self):
         return "status"

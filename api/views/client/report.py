@@ -37,6 +37,6 @@ def save2database(obj_id, data, report_stamp):
     report_stamp = datetime.datetime.fromtimestamp(int(report_stamp), tz=datetime.timezone(datetime.timedelta(hours=8)))
     Status(
         objectID=obj_id,
-        repotyStamp=report_stamp,
+        reportStamp=report_stamp,
         status=data
     ).save()

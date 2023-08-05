@@ -37,4 +37,4 @@ class ApiConfig(AppConfig):
                 statusList=config["statusList"],
                 token=token
             ).save()
-            print("添加监控对象：", config["objectName"], "，token：", token)
+            print("添加监控对象：", config["objectName"], ", ID: ", config["objectID"], ", token：", token)

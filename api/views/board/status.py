@@ -3,35 +3,68 @@ import json
 
 from django.http import HttpResponse
 from api.models import Status
+from api.models import MonitoredObjects
 
 
 def index(request):
-    if request.method != "POST":
+    if request.method != "GET":
         return HttpResponse(status=404)
 
     # 校验请求的参数合法性
     if not check_args(json.loads(request.body.decode())):
         return HttpResponse(status=400)
 
-    return HttpResponse(json.dumps({}))
+    # 校验ID的合法性
+    if not check_ids(json.loads(request.body.decode())["objectIDs"]):
+        return HttpResponse(json.dumps({"msg": "无效id"}), status=400)
+
+    # 获取请求的参数
+    object_ids = json.loads(request.body.decode())["objectIDs"]
+    start_time = json.loads(request.body.decode())["startTime"]
+    end_time = json.loads(request.body.decode())["endTime"]
+    items = json.loads(request.body.decode())["items"]
+    density = json.loads(request.body.decode())["density"]
+
+    all_status = []
+    for object_id in object_ids:
+        status = get_status(object_id, start_time, end_time, items, density)
+        all_status.append(status)
+
+    # 返回状态列表
+    return HttpResponse(json.dumps({"data": all_status}))
 
 
-def get_status(object_id, start_time, end_time, items: list, density):
-    # 将时间戳转换为datetime对象
-    start_time = convert_timestamp_to_datetime(start_time, "Asia/Shanghai")
-    end_time = convert_timestamp_to_datetime(end_time, "Asia/Shanghai")
+def get_status(object_id, start_time, end_time, items: list, density) -> dict:
+    # 将时间戳转换为datetime对象,时区的设置不影响程序运行，仅避免数据库warning
+    start_time = datetime.datetime.fromtimestamp(int(start_time), tz=datetime.timezone.utc)
+    end_time = datetime.datetime.fromtimestamp(int(end_time), tz=datetime.timezone.utc)
     # 按时间段查询
     status = Status.objects.filter(objectID=object_id).filter(reportStamp__range=(start_time, end_time))
     # 筛选出时间段内的所有状态
-    status = status.values("repotyStamp", "status")
+    status = status.values("reportStamp", "status")
     # QuerySet转换为list并预处理datatime对象
-    status = list(status)
-    for i in range(len(status)):
-        status[i]["repotyStamp"] = int(status[i]["repotyStamp"].timestamp())
-    pass
+    # 并按要求筛选出需要的状态
+    list_data = list(status)
+    formated_status: list = []
+    for i in range(len(list_data)):
+        reportStamp_int = int(list_data[i]["reportStamp"].timestamp())
+        # 字典推导式，筛选出需要的状态
+        status_dict = dict({key: list_data[i]["status"][key] for key in items})
+        # 将状态列表中的每个状态转换为字典
+        formated_status.append({
+            "reportTime": reportStamp_int,
+            "status": status_dict
+        })
+    return_data = {
+        "objectID": str(object_id),
+        "data": formated_status
+    }
+    # 将状态列表按照density进行筛选
+    # status = status[::density]
+    return return_data
 
 
-def check_args(request_json):
+def check_args(request_json) -> bool:
     if "startTime" not in request_json:
         return False
     if "endTime" not in request_json:
@@ -42,26 +75,13 @@ def check_args(request_json):
         return False
     if "density" not in request_json:
         return False
-    if "timezone" not in request_json:
-        return False
     return True
 
 
-import datetime
-import pytz
-
-
-def convert_timestamp_to_datetime(timestamp_str, timezone_str):
-    # 将时间戳字符串转换为整数
-    timestamp = int(timestamp_str)
-
-    # 使用 datetime 模块的 fromtimestamp() 方法将时间戳转换为 datetime 对象
-    datetime_obj = datetime.datetime.fromtimestamp(timestamp)
-
-    # 获取目标时区对象
-    target_timezone = pytz.timezone(timezone_str)
-
-    # 使用目标时区对象的 localize() 方法将 datetime 对象转换为特定时区的时间
-    localized_datetime = target_timezone.localize(datetime_obj)
-
-    return localized_datetime
+def check_ids(object_ids) -> bool:
+    exist_ids = MonitoredObjects.objects.values_list("objectID", flat=True)
+    exist_ids = list(exist_ids)
+    for object_id in object_ids:
+        if int(object_id) not in exist_ids:
+            return False
+    return True

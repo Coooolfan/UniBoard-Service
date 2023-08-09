@@ -32,7 +32,7 @@ SECRET_KEY = "django-insecure-r7l(3uws)ve@^6x5o46$ncv5+rfu=f#8i$@a4*2v%(iz&+piql
 DEBUG = True
 # DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', '192.168.1.107']
+ALLOWED_HOSTS = ['127.0.0.1', '192.168.1.107', "*"]
 
 # Application definition
 
@@ -95,6 +95,7 @@ CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379/1",
+        "TIMEOUT": None,
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }

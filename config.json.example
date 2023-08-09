@@ -4,9 +4,22 @@
         "objectName": "MineCraft Server WCS",
         "category": "server",
         "statusList": [
-            "tps",
-            "mstp",
-            "players"
+            {
+                "statusName": "tps",
+                "threshold": true,
+                "max": 20,
+                "min": 18
+            },
+            {
+                "statusName": "mstp",
+                "threshold": true,
+                "max": 56,
+                "min": -1
+            },
+            {
+                "statusName": "players",
+                "threshold": false
+            }
         ]
     },
     {
@@ -14,11 +27,49 @@
         "objectName": "XiaoMi Pad 5 Pro",
         "category": "device",
         "statusList": [
-            "battery",
-            "gps",
-            "ram",
-            "cpu",
-            "gpu"
+            {
+                "statusName": "battery",
+                "threshold": true,
+                "max": 70,
+                "min": 40
+            },
+            {
+                "statusName": "ram",
+                "threshold": true,
+                "max": 90,
+                "min": -1
+            },
+            {
+                "statusName": "cpu",
+                "threshold": true,
+                "max": 90,
+                "min": -1
+            }
+        ]
+    },
+    {
+        "objectID": "3",
+        "objectName": "LG G8X",
+        "category": "device",
+        "statusList": [
+            {
+                "statusName": "battery",
+                "threshold": true,
+                "max": 70,
+                "min": 40
+            },
+            {
+                "statusName": "ram",
+                "threshold": true,
+                "max": 90,
+                "min": -1
+            },
+            {
+                "statusName": "cpu",
+                "threshold": true,
+                "max": 90,
+                "min": -1
+            }
         ]
     }
 ]

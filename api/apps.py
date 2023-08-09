@@ -23,18 +23,51 @@ class ApiConfig(AppConfig):
             with open(config_file, 'r') as f:
                 config_data = json.load(f)
             f.close()
+        save2database(config_data)
+        cache_threshold(config_data)
 
-        self.save2database(config_data)
 
-    def save2database(self, config_data):
-        from api.models import MonitoredObjects
-        for config in config_data:
-            token = token_hex(16)
-            MonitoredObjects(
-                objectID=config["objectID"],
-                objectName=config["objectName"],
-                category=config["category"],
-                statusList=config["statusList"],
-                token=token
-            ).save()
-            print("添加监控对象：", config["objectName"], ", ID: ", config["objectID"], ", token：", token)
+def save2database(config_data):
+    from api.models import MonitoredObjects
+    for config in config_data:
+        token = token_hex(16)
+        MonitoredObjects(
+            objectID=config["objectID"],
+            objectName=config["objectName"],
+            category=config["category"],
+            statusList=config["statusList"],
+            token=token
+        ).save()
+        print("添加监控对象：", config["objectName"], ", ID: ", config["objectID"], ", token：", token)
+
+
+def cache_threshold(config_data):
+    # 对每个对象处理
+    for config in config_data:
+        # 对每个对象的每个状态处理
+        for item in config["statusList"]:
+            # 如果没有阈值，跳过
+            if not item["threshold"]:
+                continue
+            # 如果有阈值，设置阈值
+            set_threshold(
+                config["objectID"],
+                item["statusName"],
+                item["max"],
+                item["min"]
+            )
+
+
+def set_threshold(obj_id, item, threshold_max, threshold_min):
+    from django.core.cache import cache
+    key = "threshold-" + str(obj_id) + "-" + item
+    cache.set(key + "-max", threshold_max)
+    cache.set(key + "-min", threshold_min)
+
+
+def get_threshold(obj_id, item):
+    from django.core.cache import cache
+    key = "threshold-" + str(obj_id) + "-" + item
+    threshold_max = cache.get(key + "-max")
+    threshold_min = cache.get(key + "-min")
+    return threshold_max, threshold_min

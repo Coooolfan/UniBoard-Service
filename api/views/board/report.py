@@ -9,27 +9,28 @@ from uniboard.settings import TwoFA_SecretKey
 
 # Create your views here.
 def index(request):
-    if request.method == "POST":
-        received_data = json.loads(request.body.decode())
-        key = received_data["key"]
-        device_id = request.headers.get("deviceID")
-        if is_trusted_device(device_id):
-            data = {
-                "verified": True,
-                "token": set_new_token(device_id),
-            }
-            return HttpResponse(json.dumps(data))
-
-        if check_code(key):
-            data = {
-                "verified": True,
-                "token": set_new_token(request.headers.get("deviceID")),
-            }
-            return HttpResponse(json.dumps(data))
-
-        return HttpResponse()
-    else:
+    if request.method == "GET":
         return HttpResponse(status=404)
+    # 从请求中获取数据
+    received_data = json.loads(request.body.decode())
+    key = received_data["key"]
+    device_id = request.headers.get("deviceID")
+    # 对受信设备直接跳过验证
+    if is_trusted_device(device_id):
+        data = {
+            "verified": True,
+            "token": set_new_token(device_id),
+        }
+        return HttpResponse(json.dumps(data))
+
+    if check_code(key):
+        data = {
+            "verified": True,
+            "token": set_new_token(request.headers.get("deviceID")),
+        }
+        return HttpResponse(json.dumps(data))
+
+    return HttpResponse()
 
 
 def check_code(key):

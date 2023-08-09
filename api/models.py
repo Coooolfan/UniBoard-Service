@@ -46,6 +46,21 @@ class Status(models.Model):
         return "status"
 
 
+class PeriodStatus(models.Model):
+    statusID = models.IntegerField(primary_key=True, unique=True, )
+    objectID = models.IntegerField()
+    startStamp = models.DateTimeField()
+    endStamp = models.DateTimeField()
+    status = models.JSONField()
+
+    class Meta:
+        app_label = "api"
+        indexes = [models.Index(fields=['statusID', 'objectID'])]
+
+    def __str__(self):
+        return "period_status"
+
+
 class Configuration(models.Model):
     name = models.CharField(max_length=255, unique=True)
     value = models.CharField(max_length=255)

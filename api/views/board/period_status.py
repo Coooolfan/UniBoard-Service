@@ -2,8 +2,9 @@ import datetime
 import json
 
 from django.http import HttpResponse
-from api.models import Status
-from api.models import MonitoredObjects
+
+from api.models import PeriodStatus
+from api.views.board.status import check_args, check_ids
 
 
 def index(request):
@@ -40,23 +41,26 @@ def get_status(object_id, start_time, end_time, items: list, density, last) -> d
     start_time = datetime.datetime.fromtimestamp(int(start_time), tz=datetime.timezone.utc)
     end_time = datetime.datetime.fromtimestamp(int(end_time), tz=datetime.timezone.utc)
     # 按时间段查询
-    status = Status.objects.filter(objectID=object_id).filter(reportStamp__range=(start_time, end_time))
+    status = (PeriodStatus.objects.filter(objectID=object_id).
+              filter(startStamp__gte=start_time).filter(endStamp__lte=end_time))
     # 如果last为True，则只返回最后一条状态
     if last:
         status = status[:1]
     # 筛选出时间段内的所有状态
-    status = status.values("reportStamp", "status")
+    status = status.values("startStamp", "endStamp", "status")
     # QuerySet转换为list并预处理datatime对象
     # 并按要求筛选出需要的状态
     list_data = list(status)
     formated_status: list = []
     for i in range(len(list_data)):
-        reportStamp_int = int(list_data[i]["reportStamp"].timestamp())
+        startStamp_int = int(list_data[i]["startStamp"].timestamp())
+        endStamp_int = int(list_data[i]["endStamp"].timestamp())
         # 字典推导式，筛选出需要的状态
         status_dict = dict({key: list_data[i]["status"][key] for key in items})
         # 将状态列表中的每个状态转换为字典
         formated_status.append({
-            "reportTime": reportStamp_int,
+            "startStamp": startStamp_int,
+            "endStamp": endStamp_int,
             "status": status_dict
         })
     return_data = {
@@ -66,28 +70,3 @@ def get_status(object_id, start_time, end_time, items: list, density, last) -> d
     # 将状态列表按照density进行筛选
     # status = status[::density]
     return return_data
-
-
-def check_args(request_json) -> bool:
-    if "startTime" not in request_json:
-        return False
-    if "endTime" not in request_json:
-        return False
-    if "items" not in request_json or len(request_json["items"]) == 0:
-        return False
-    if "objectIDs" not in request_json or len(request_json["objectIDs"]) == 0:
-        return False
-    if "density" not in request_json:
-        return False
-    if "last" not in request_json:
-        return False
-    return True
-
-
-def check_ids(object_ids) -> bool:
-    exist_ids = MonitoredObjects.objects.values_list("objectID", flat=True)
-    exist_ids = list(exist_ids)
-    for object_id in object_ids:
-        if int(object_id) not in exist_ids:
-            return False
-    return True

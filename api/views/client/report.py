@@ -25,10 +25,6 @@ def index(request):
     # 保存数据
     save2database(obj_id, data, report_stamp)
 
-    # 检查阈值
-    for key, val in data.items():
-        check_threshold(obj_id, key, val)
-
     # 更新数据库周期状态
     update_period_status(obj_id, data, report_stamp)
 
@@ -52,6 +48,50 @@ def save2database(obj_id, data, report_stamp):
     ).save()
 
 
+def update_period_status(obj_id, data, report_stamp):
+    from api.models import PeriodStatus
+    # 获取此对象的最新周期状态
+    period_status = PeriodStatus.objects.filter(objectID=obj_id).last()
+    # 转换为datetime对象，定义时区为标准UTC
+    report_stamp = datetime.datetime.fromtimestamp(int(report_stamp), tz=datetime.timezone.utc)
+    # 非空判断
+    if period_status is None:
+        # 如果没有周期状态，创建一个周期状态
+        new_status = {}
+        for key, val in data.items():
+            check_threshold(obj_id, key, val)
+            new_status[key] = get_threshold_count(obj_id, key)
+        PeriodStatus(
+            objectID=obj_id,
+            startStamp=report_stamp,
+            endStamp=report_stamp,
+            status=new_status
+        ).save()
+        return
+    # 上一个阶段结束，新建周期状态
+    if report_stamp - period_status.startStamp > datetime.timedelta(hours=2):
+        del_threshold_count(obj_id)
+        new_status = {}
+        for key, val in data.items():
+            check_threshold(obj_id, key, val)
+            new_status[key] = get_threshold_count(obj_id, key)
+        PeriodStatus(
+            objectID=obj_id,
+            startStamp=report_stamp,
+            endStamp=report_stamp,
+            status=new_status
+        ).save()
+    # 上一个阶段未结束，更新周期状态
+    else:
+        new_status = {}
+        for key, val in data.items():
+            check_threshold(obj_id, key, val)
+            new_status[key] = get_threshold_count(obj_id, key)
+        period_status.status = new_status
+        period_status.endStamp = report_stamp
+        period_status.save()
+
+
 def check_threshold(obj_id, key, val):
     from django.core.cache import cache
     val = int(val)
@@ -65,54 +105,18 @@ def check_threshold(obj_id, key, val):
     cache_key = "threshold-" + str(obj_id) + "-" + str(key) + "-count"
     # 自增
     if cache.get(cache_key) is None or cache.get(cache_key) == 0:
-        # 用于纠正新周期置空的操作
-        cache.set(cache_key, 2)
+        cache.set(cache_key, 1)
     else:
         cache.incr(cache_key)
-
-
-# TODO 重写update_period_status和check_threshold，当前逻辑不合理，应该在update_period_status中进行阈值检查
-def update_period_status(obj_id, data, report_stamp):
-    from api.models import PeriodStatus
-    # 获取此对象的最新周期状态
-    period_status = PeriodStatus.objects.filter(objectID=obj_id).last()
-    # 非空判断
-    if period_status is not None:
-        start_time = period_status.startStamp
-    report_time = datetime.datetime.fromtimestamp(int(report_stamp), tz=datetime.timezone(datetime.timedelta(hours=8)))
-    new_period_status = {}
-    for key, val in data.items():
-        count = get_threshold_count(obj_id, key)
-        new_period_status[key] = count
-
-    # 检查报告时间是否超过周期时间
-    # noinspection PyUnboundLocalVariable
-    if period_status is None or (report_time - start_time > datetime.timedelta(minutes=5)):
-        # 创建一条新的周期状态
-        # 获取当前datatime对象,同时定义时区UTC
-        start_time = datetime.datetime.fromtimestamp(int(datetime.datetime.now().timestamp()), tz=datetime.timezone.utc)
-        new_status = PeriodStatus(
-            objectID=obj_id,
-            startStamp=start_time,
-            endStamp=report_time,
-            status=json.dumps(new_period_status)
-        )
-        new_status.save()
-        # 如果是表中第一条数据，则无需对计数进行清零
-        if period_status is not None:
-            del_threshold_count(obj_id)
-    else:
-        # 更新周期状态
-        period_status.endStamp = report_time
-        period_status.status = json.dumps(new_period_status)
-        period_status.save()
-    pass
 
 
 def get_threshold_count(obj_id, key):
     from django.core.cache import cache
     cache_key = "threshold-" + str(obj_id) + "-" + str(key) + "-count"
-    return cache.get(cache_key)
+    val = cache.get(cache_key)
+    if val is None:
+        return 0
+    return val
 
 
 def del_threshold_count(obj_id):

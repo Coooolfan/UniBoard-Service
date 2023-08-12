@@ -4,28 +4,24 @@ import json
 from django.http import HttpResponse
 
 from api.models import PeriodStatus
-from api.views.board.status import check_args, check_ids
+from api.views.board.status import check_ids
 
 
 def index(request):
     if request.method != "GET":
         return HttpResponse(status=404)
 
-    # 校验请求的参数合法性
-    if not check_args(json.loads(request.body.decode())):
-        return HttpResponse(status=400)
+    # 获取请求的参数
+    object_ids = request.GET.getlist("objectIDs")
+    start_time = request.GET.get("startTime")
+    end_time = request.GET.get("endTime")
+    items = request.GET.getlist("items[)")
+    density = int(request.GET.get("density"))
+    last = bool(request.GET.get("last"))
 
     # 校验ID的合法性
-    if not check_ids(json.loads(request.body.decode())["objectIDs"]):
+    if not check_ids(object_ids):
         return HttpResponse(json.dumps({"msg": "无效id"}), status=400)
-
-    # 获取请求的参数
-    object_ids = json.loads(request.body.decode())["objectIDs"]
-    start_time = json.loads(request.body.decode())["startTime"]
-    end_time = json.loads(request.body.decode())["endTime"]
-    items = json.loads(request.body.decode())["items"]
-    density = json.loads(request.body.decode())["density"]
-    last = bool(json.loads(request.body.decode())["last"])
 
     all_status = []
     for object_id in object_ids:

@@ -11,15 +11,14 @@ def index(request):
         return HttpResponse(status=404)
 
     # 获取请求的参数
-    object_ids = request.GET.getlist("objectIDs")
+    object_ids = request.GET.getlist("objectIDs[]")
     start_time = request.GET.get("startTime")
     end_time = request.GET.get("endTime")
-    items = request.GET.getlist("items[)")
+    items = request.GET.getlist("items[]")
     density = int(request.GET.get("density"))
-    last = bool(request.GET.get("last"))
-
+    last = request.GET.get("last").lower() == "true"
     # 校验ID的合法性
-    if not check_ids(json.loads(request.body.decode())["objectIDs"]):
+    if not check_ids(object_ids):
         return HttpResponse(json.dumps({"msg": "无效id"}), status=400)
 
     all_status = []

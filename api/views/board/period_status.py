@@ -12,13 +12,12 @@ def index(request):
         return HttpResponse(status=404)
 
     # 获取请求的参数
-    object_ids = request.GET.getlist("objectIDs")
+    object_ids = request.GET.getlist("objectIDs[]")
     start_time = request.GET.get("startTime")
     end_time = request.GET.get("endTime")
-    items = request.GET.getlist("items[)")
+    items = request.GET.getlist("items[]")
     density = int(request.GET.get("density"))
-    last = bool(request.GET.get("last"))
-
+    last = request.GET.get("last").lower() == "true"
     # 校验ID的合法性
     if not check_ids(object_ids):
         return HttpResponse(json.dumps({"msg": "无效id"}), status=400)
@@ -33,12 +32,14 @@ def index(request):
 
 
 def get_status(object_id, start_time, end_time, items: list, density, last) -> dict:
+    print(items, type(items))
     # 将时间戳转换为datetime对象,时区的设置不影响程序运行，仅避免数据库warning
     start_time = datetime.datetime.fromtimestamp(int(start_time), tz=datetime.timezone.utc)
     end_time = datetime.datetime.fromtimestamp(int(end_time), tz=datetime.timezone.utc)
+    print(start_time, end_time, last)
     # 按时间段查询
-    status = (PeriodStatus.objects.filter(objectID=object_id).
-              filter(startStamp__gte=start_time).filter(endStamp__lte=end_time))
+    status = ((PeriodStatus.objects.filter(objectID=object_id))
+              .filter(startStamp__gte=start_time, endStamp__lte=end_time))
     # 如果last为True，则只返回最后一条状态
     if last:
         status = status[:1]

@@ -47,7 +47,10 @@ def set_new_token(decive_id):
 
 def need_check(url_path):
     if contains(url_path, "board") and \
-            (contains(url_path, "note") or contains(url_path, "monitored-objects") or contains(url_path, "status")):
+            (contains(url_path, "note") or
+             contains(url_path, "monitored-objects") or
+             contains(url_path, "status") or
+             contains(url_path, "period-status")):
         return True
     return False
 

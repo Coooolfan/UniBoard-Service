@@ -32,11 +32,9 @@ def index(request):
 
 
 def get_status(object_id, start_time, end_time, items: list, density, last) -> dict:
-    print(items, type(items))
     # 将时间戳转换为datetime对象,时区的设置不影响程序运行，仅避免数据库warning
     start_time = datetime.datetime.fromtimestamp(int(start_time), tz=datetime.timezone.utc)
     end_time = datetime.datetime.fromtimestamp(int(end_time), tz=datetime.timezone.utc)
-    print(start_time, end_time, last)
     # 按时间段查询
     status = ((PeriodStatus.objects.filter(objectID=object_id))
               .filter(startStamp__gte=start_time, endStamp__lte=end_time))

@@ -36,14 +36,14 @@ def get_status(object_id, start_time, end_time, items: list, density, last) -> d
     end_time = datetime.datetime.fromtimestamp(int(end_time), tz=datetime.timezone.utc)
     # 按时间段查询
     status = Status.objects.filter(objectID=object_id).filter(reportStamp__range=(start_time, end_time))
-    # 如果last为True，则只返回最后一条状态
-    if last:
-        status = status[:1]
     # 筛选出时间段内的所有状态
     status = status.values("reportStamp", "status")
     # QuerySet转换为list并预处理datatime对象
     # 并按要求筛选出需要的状态
     list_data = list(status)
+    # 如果前端只需要最后一条数据，则只返回最后一条数据
+    if last:
+        list_data = list_data[-1:]
     formated_status: list = []
     for i in range(len(list_data)):
         reportStamp_int = int(list_data[i]["reportStamp"].timestamp())

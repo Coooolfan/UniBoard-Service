@@ -11,7 +11,7 @@
                 "min": 18
             },
             {
-                "statusName": "mstp",
+                "statusName": "mspt",
                 "threshold": true,
                 "max": 56,
                 "min": -1

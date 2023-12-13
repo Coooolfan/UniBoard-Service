@@ -1,7 +1,7 @@
-from django.apps import AppConfig
-import os
 import json
-from secrets import token_hex
+import os
+
+from django.apps import AppConfig
 
 
 class ApiConfig(AppConfig):

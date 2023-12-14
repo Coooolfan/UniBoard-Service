@@ -1,10 +1,8 @@
-# ！！！当前构建流程不可用
-
 # 使用官方 Python 镜像作为基础镜像
 FROM python:3.11.7-alpine3.19
 
-# 安装 Redis
-RUN apk add --update redis git
+# 安装 git
+RUN apk add --no-cache git
 
 # 设置工作目录
 WORKDIR /app
@@ -18,7 +16,9 @@ RUN pip install -r requirements.txt
 
 # 创建启动脚本
 RUN echo '#!/bin/sh' > start.sh && \
-    echo 'redis-server &' >> start.sh && \
+    echo 'python manage.py makemigrations' >> start.sh && \
+    echo 'python manage.py migrate' >> start.sh && \
+    echo 'python manage.py refresh --all true' >> start.sh && \
     echo 'python manage.py runserver --noreload 0.0.0.0:8000' >> start.sh && \
     chmod +x start.sh
 

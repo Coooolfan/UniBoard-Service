@@ -1,0 +1,16 @@
+version: '3'
+services:
+  app:
+    build: .
+    networks:
+      - networkA
+    volumes:
+      - ./path/to/.env:/app/UniBoard-Service/.env
+      - ./path/to/config.json:/app/UniBoard-Service/config.json
+      - ./data:/app/UniBoard-Service/data
+  redis:
+    image: redis
+    networks:
+      - networkA
+networks:
+  networkA:

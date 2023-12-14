@@ -3,14 +3,19 @@ services:
   app:
     build: .
     networks:
-      - networkA
+      - network-UniBoard
     volumes:
-      - ./path/to/.env:/app/UniBoard-Service/.env
-      - ./path/to/config.json:/app/UniBoard-Service/config.json
+      - ./.env:/app/UniBoard-Service/.env
+      - ./config.json:/app/UniBoard-Service/config.json
       - ./data:/app/UniBoard-Service/data
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports:
+    - "8000:8000"
   redis:
     image: redis
     networks:
-      - networkA
+      - network-UniBoard
 networks:
-  networkA:
+  network-UniBoard:

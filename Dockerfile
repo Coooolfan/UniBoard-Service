@@ -18,9 +18,10 @@ RUN pip install -r requirements.txt
 RUN echo '#!/bin/sh' > start.sh && \
     echo 'python manage.py makemigrations' >> start.sh && \
     echo 'python manage.py migrate' >> start.sh && \
-    echo 'python manage.py refresh --all true' >> start.sh && \
+    echo 'python manage.py refresh --all true &' >> start.sh && \
+    echo 'wait' >> start.sh && \
     echo 'python manage.py runserver --noreload 0.0.0.0:8000' >> start.sh && \
     chmod +x start.sh
 
 # 定义容器启动时执行的命令
-CMD ["sh", "start.sh"]
+CMD ["sh", "/app/UniBoard-Service/start.sh"]

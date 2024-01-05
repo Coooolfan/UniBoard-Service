@@ -11,7 +11,7 @@ class TrustedDevice(models.Model):
         indexes = [models.Index(fields=['deviceID'])]
 
     def __str__(self):
-        return "trusted_devices"
+        return "deviceID: " + f"{self.deviceID}"
 
 
 # 创建一个被监控对象的表，其中定义了被监控对象的ID，名称，类别，状态列表
@@ -27,7 +27,8 @@ class MonitoredObjects(models.Model):
         indexes = [models.Index(fields=['objectID', 'objectName', 'category', 'statusList'])]
 
     def __str__(self):
-        return "monitored_objects"
+        return "objectID: " + f"{self.objectID}" + ", objectName: " + f"{self.objectName}" + ", category: " + \
+            f"{self.category}" + ", statusList: " + f"{self.statusList}" + ", token: " + f"{self.token}"
 
 
 # 创建一个用于记录监控对象的状态的表，其中定义了被监控对象的ID，状态的时间戳，状态的值
@@ -43,7 +44,8 @@ class Status(models.Model):
         indexes = [models.Index(fields=['statusID', 'objectID', 'reportStamp'])]
 
     def __str__(self):
-        return "status"
+        return "statusID: " + f"{self.statusID}" + ", objectID: " + f"{self.objectID}" + ", insertStamp: " + \
+            f"{self.insertStamp}" + ", reportStamp: " + f"{self.reportStamp}" + ", status: " + f"{self.status}"
 
 
 class PeriodStatus(models.Model):
@@ -58,7 +60,8 @@ class PeriodStatus(models.Model):
         indexes = [models.Index(fields=['statusID', 'objectID'])]
 
     def __str__(self):
-        return "period_status"
+        return "statusID: " + f"{self.statusID}" + ", objectID: " + f"{self.objectID}" + ", startStamp: " + \
+            f"{self.startStamp}" + ", endStamp: " + f"{self.endStamp}" + ", status: " + f"{self.status}"
 
 
 class Configuration(models.Model):
@@ -66,4 +69,4 @@ class Configuration(models.Model):
     value = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.name
+        return "name: " + f"{self.name}" + ", value: " + f"{self.value}"

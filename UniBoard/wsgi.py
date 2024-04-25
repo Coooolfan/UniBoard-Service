@@ -1,16 +1,16 @@
 """
-WSGI config for uniboard project.
+WSGI config for UniBoard project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
 For more information on this file, see
-https://docs.djangoproject.com/en/4.2/howto/deployment/wsgi/
+https://docs.djangoproject.com/en/5.0/howto/deployment/wsgi/
 """
 
 import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "uniboard.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "UniBoard.settings")
 
 application = get_wsgi_application()

@@ -1,6 +1,6 @@
-from django.urls import path, include
+from django.urls import path
 
+from api.views.sysInfo import index as sysInfo
 urlpatterns = [
-    path("board/", include("api.urls.board.index"), name="board"),
-    path("client/", include("api.urls.client.index"), name="client"),
+    path("index.php",sysInfo, name="sysInfo"),
 ]

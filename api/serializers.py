@@ -27,7 +27,7 @@ class ObjectMetricSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['id', 'monitored_object_id', 'metric_id']
 
 
-class MetricData(serializers.HyperlinkedModelSerializer):
+class MetricDataSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = MetricData
         fields = ['id', 'monitor_object_id', 'insert_time', 'report_time', 'delay', 'data']

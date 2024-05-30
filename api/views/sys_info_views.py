@@ -9,7 +9,7 @@ from api.serializers import SysInfoSerializer
 class SysInfoList(APIView):
     queryset = SysInfo.objects.all()
     serializer_class = SysInfoSerializer
-    permission_classes = (permissions.IsAdminUser,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, format=None):
         queryset = SysInfo.objects.all()
@@ -24,7 +24,7 @@ class SysInfoList(APIView):
         return Response(data=s.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class SysInfoDetaile(APIView):
+class SysInfoDetail(APIView):
     queryset = SysInfo.objects.all()
     serializer_class = SysInfoSerializer
     permission_classes = (permissions.IsAdminUser,)

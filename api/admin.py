@@ -26,3 +26,9 @@ class MonitoredObjectAdmin(admin.ModelAdmin):
 class ObjectMetricAdmin(admin.ModelAdmin):
     list_display = ('monitored_object_id', 'metric_id')
     search_fields = ('monitored_object_id', 'metric_id')
+
+
+@admin.register(MetricData)
+class MetricDataAdmin(admin.ModelAdmin):
+    list_display = ('monitor_object_id', 'insert_time', 'report_time', 'delay', 'data')
+    search_fields = ('monitor_object_id', 'insert_time', 'report_time', 'delay', 'data')

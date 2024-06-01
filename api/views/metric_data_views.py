@@ -11,15 +11,9 @@ class MetricDataDetail(APIView):
     serializer_class = MetricDataSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-    def get_metric_by_id(self, pk):
-        try:
-            return MetricData.objects.get(pk=pk)
-        except MetricData.DoesNotExist:
-            return None
-
     def get_metric_by_object(self, object_id):
         try:
-            return MetricData.objects.filter(monitor_object_id=object_id)
+            return self.queryset.filter(monitor_object_id=object_id)
         except MetricData.DoesNotExist:
             return None
 

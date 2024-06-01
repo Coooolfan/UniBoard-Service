@@ -32,3 +32,9 @@ class ObjectMetricAdmin(admin.ModelAdmin):
 class MetricDataAdmin(admin.ModelAdmin):
     list_display = ('monitor_object_id', 'insert_time', 'report_time', 'delay', 'data')
     search_fields = ('monitor_object_id', 'insert_time', 'report_time', 'delay', 'data')
+
+
+@admin.register(Note)
+class NoteAdmin(admin.ModelAdmin):
+    list_display = ('title', 'value', 'insert_time', 'update_time')
+    search_fields = ('title', 'value', 'insert_time', 'update_time')

@@ -36,4 +36,7 @@ urlpatterns = [
     path('object-metrics/', ObjectMetricList.as_view(), name='object-metric-list'),
     path('object-metrics/<int:pk>/', ObjectMetricDetail.as_view(), name='object-metric-detail'),
 
+    path('note/', NoteList.as_view(), name='note-list'),
+    path('note/<int:pk>/', NoteDetail.as_view(), name='note-detail'),
+
 ]

@@ -11,7 +11,8 @@ from api.serializers import SysInfoSerializer
 class SysInfoList(APIView):
     queryset = SysInfo.objects.all()
     serializer_class = SysInfoSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    # 游客只能读取，登录用户可以写入
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, format=None):
         queryset = SysInfo.objects.all()
@@ -19,14 +20,22 @@ class SysInfoList(APIView):
         return Response(data=s.data, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
-        presetSysInfo = ['name', 'version', 'profile', 'avatat', 'contacts']
-
+        presetSysInfo = ['name', 'version', 'profile', 'avatar', 'contacts', 'slogan', 'banner']
         s = SysInfoSerializer(data=request.data)
         if not (s.is_valid() and request.data['name'] in presetSysInfo):
-            return Response(data=s.errors, status=status.HTTP_400_BAD_REQUEST)
+            err_data = {
+                'detail': "Invalid data or invalid name",
+            }
+            return Response(data=err_data, status=status.HTTP_400_BAD_REQUEST)
         if s.is_valid():
             if request.data['name'] == 'contacts' and not contact_check(request.data['value']):
                 return Response(data=s.errors, status=status.HTTP_400_BAD_REQUEST)
+            # 避免name相同的数据重复添加
+            if SysInfo.objects.filter(name=request.data['name']).exists():
+                err_data = {
+                    'detail': "Data with the same name already exists",
+                }
+                return Response(data=err_data, status=status.HTTP_400_BAD_REQUEST)
             s.save()
             return Response(data=request.data, status=status.HTTP_201_CREATED)
         else:
@@ -36,7 +45,7 @@ class SysInfoList(APIView):
 class SysInfoDetail(APIView):
     queryset = SysInfo.objects.all()
     serializer_class = SysInfoSerializer
-    permission_classes = (permissions.IsAdminUser,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, pk, format=None):
         try:

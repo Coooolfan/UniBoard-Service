@@ -6,7 +6,7 @@ from api.models import *
 class SysInfoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = SysInfo
-        fields = ['id', 'name', 'value']
+        fields = ['id', 'version', 'name', 'profile', 'contacts', 'slogan', 'avatar', 'banner']
 
 
 class MetricSerializer(serializers.HyperlinkedModelSerializer):
@@ -37,3 +37,9 @@ class NoteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Note
         fields = ['id', 'title', 'value', 'insert_time', 'update_time']
+
+
+class HyperLinkSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = HyperLink
+        fields = ['id', 'title', 'url', 'icon', 'color', 'desc']

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import mimetypes
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -22,6 +23,13 @@ mimetypes.add_type("image/svg+xml", ".svgz", True)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+DEBUG = True
+if DEBUG:
+    MEDIA_URL = 'http://localhost:8000/media/'
+else:
+    MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -32,9 +40,8 @@ SECRET_KEY = "django-insecure-yudv^)lg*wfa77*!7+2u5t+crr6lmb+^0eke&h6(h(7ulsofbl
 TOTP_SECRET_KEY = "JSSDURYRPAJGVAXIPCIIRWDTQRCVRZDJHFLPHKAUTEUHEGMSIOECPKWBWSHDGDEH"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 

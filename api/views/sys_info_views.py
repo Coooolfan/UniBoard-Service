@@ -6,6 +6,7 @@ from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from UniBoard.settings import DEBUG
 from api.models import SysInfo
 from api.serializers import SysInfoSerializer
 
@@ -22,28 +23,14 @@ class SysInfoList(APIView):
         return Response(data=s.data, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
-        presetSysInfo = ['name', 'version', 'profile', 'avatar', 'contacts', 'slogan', 'banner', 'links']
+        # 新增系统信息，只有DEBUG为True时才能新增，生产环境编辑此表应当使用SysInfoDetail的put方法
+        if not DEBUG:
+            return Response(status=status.HTTP_403_FORBIDDEN)
         s = SysInfoSerializer(data=request.data)
-        if not (s.is_valid() and request.data['name'] in presetSysInfo):
-            err_data = {
-                'detail': "Invalid data or invalid name",
-            }
-            return Response(data=err_data, status=status.HTTP_400_BAD_REQUEST)
         if s.is_valid():
-            if request.data['name'] == 'contacts' and not contact_check(request.data['value']):
-                return Response(data=s.errors, status=status.HTTP_400_BAD_REQUEST)
-            if request.data['name'] == 'links' and not link_check(request.data['value']):
-                return Response(data=s.errors, status=status.HTTP_400_BAD_REQUEST)
-            # 避免name相同的数据重复添加
-            if SysInfo.objects.filter(name=request.data['name']).exists():
-                err_data = {
-                    'detail': "Data with the same name already exists",
-                }
-                return Response(data=err_data, status=status.HTTP_400_BAD_REQUEST)
             s.save()
-            return Response(data=request.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(data=s.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=s.data, status=status.HTTP_201_CREATED)
+        return Response(data=s.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class SysInfoDetail(APIView):
@@ -67,20 +54,15 @@ class SysInfoDetail(APIView):
         except SysInfo.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def put(self, request, pk, format=None):
+    # 修改系统信息
+    def patch(self, request, pk, format=None):
         try:
             sysinfo = SysInfo.objects.get(pk=pk)
-            # 如果是contacts字段，检查是否符合格式
-            if sysinfo.name == 'contacts' and not contact_check(request.data['value']):
-                return Response(status=status.HTTP_400_BAD_REQUEST, data={'detail': 'Format Invalid'})
-            # 如果是links字段，检查是否符合格式
-            if sysinfo.name == 'links' and not link_check(request.data['value']):
-                return Response(data={'detail': 'Format Invalid'}, status=status.HTTP_400_BAD_REQUEST)
-            serializer = SysInfoSerializer(sysinfo, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            s = SysInfoSerializer(sysinfo, data=request.data, partial=True)
+            if s.is_valid():
+                s.save()
+                return Response(data=s.data, status=status.HTTP_200_OK)
+            return Response(data=s.errors, status=status.HTTP_400_BAD_REQUEST)
         except SysInfo.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 

@@ -6,8 +6,8 @@ from api.models import *
 # Register your models here.
 @admin.register(SysInfo)
 class SysInfoAdmin(admin.ModelAdmin):
-    list_display = ('name', 'value')
-    search_fields = ('name', 'value')
+    list_display = ('name', 'version', 'profile', 'avatar', 'contacts', 'slogan', 'banner')
+    search_fields = ('name', 'version', 'profile', 'avatar', 'contacts', 'slogan', 'banner')
 
 
 @admin.register(Metric)
@@ -38,3 +38,9 @@ class MetricDataAdmin(admin.ModelAdmin):
 class NoteAdmin(admin.ModelAdmin):
     list_display = ('title', 'value', 'insert_time', 'update_time')
     search_fields = ('title', 'value', 'insert_time', 'update_time')
+
+
+@admin.register(HyperLink)
+class HyperLinkAdmin(admin.ModelAdmin):
+    list_display = ('title', 'url', 'icon', 'color', 'desc')
+    search_fields = ('title', 'url', 'icon', 'color', 'desc')

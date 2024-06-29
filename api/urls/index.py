@@ -27,6 +27,9 @@ urlpatterns = [
     path('sysInfo/', SysInfoList.as_view(), name='sys-info-list'),
     path('sysInfo/<int:pk>/', SysInfoDetail.as_view(), name='sys-info-detail'),
 
+    path('hyperlinks/', HyperLinkList.as_view(), name='hyper-link-list'),
+    path('hyperlinks/<int:pk>/', HyperLinkDetail.as_view(), name='hyper-link-detail'),
+
     path('monitored-objects/', MonitoredObjectList.as_view(), name='monitored-object-list'),
     path('monitored-objects/<int:pk>/', MonitoredObjectDetail.as_view(), name='monitored-object-detail'),
     path('monitored-objects/<int:pk>/metrics/', MetricDataDetail.as_view(), name='monitored-object-metrics'),

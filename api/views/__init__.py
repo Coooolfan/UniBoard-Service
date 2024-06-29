@@ -1,4 +1,5 @@
 from .TOTP import TOTPDetail
+from .hyper_link_views import HyperLinkList, HyperLinkDetail
 from .metric_data_views import MetricDataDetail
 from .metric_views import MetricList, MetricDetail
 from .monitored_object_views import MonitoredObjectList, MonitoredObjectDetail

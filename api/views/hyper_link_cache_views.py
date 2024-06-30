@@ -31,3 +31,22 @@ class HyperLinkCacheList(APIView):
         new_hyper_link_cache.save()
         fetch_page_info_task.delay(new_hyper_link_cache.id)
         return Response(data={"id": new_hyper_link_cache.id}, status=status.HTTP_201_CREATED)
+
+
+class HyperLinkCacheDetail(APIView):
+    queryset = HyperLinkCache.objects.all()
+    serializer_class = HyperLinkCacheSerializer
+    permission_classes = (permissions.IsAdminUser,)
+
+    def get(self, request: Request, pk, format=None):
+        hyper_link_cache = HyperLinkCache.objects.get(pk=pk)
+        serializer = HyperLinkCacheSerializer(hyper_link_cache)
+        return Response(serializer.data)
+
+    def patch(self, request: Request, pk, format=None):
+        hyper_link_cache = HyperLinkCache.objects.get(pk=pk)
+        serializer = HyperLinkCacheSerializer(hyper_link_cache, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

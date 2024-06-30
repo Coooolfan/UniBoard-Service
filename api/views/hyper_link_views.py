@@ -1,5 +1,4 @@
 from rest_framework import status, permissions
-from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -43,15 +42,15 @@ class HyperLinkDetail(APIView):
         serializer = HyperLinkSerializer(hyper_link)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def put(self, request: Request, pk, format=None):
+    def patch(self, request, pk, format=None):
         hyper_link = self.get_object(pk)
         if hyper_link is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        s = HyperLinkSerializer(hyper_link, data=request.data)
-        if s.is_valid():
-            s.save()
-            return Response(s.data, status=status.HTTP_200_OK)
-        return Response(s.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = HyperLinkSerializer(hyper_link, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
         hyper_link = self.get_object(pk)

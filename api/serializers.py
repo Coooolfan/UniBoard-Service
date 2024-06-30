@@ -43,3 +43,9 @@ class HyperLinkSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = HyperLink
         fields = ['id', 'title', 'url', 'icon', 'color', 'desc']
+
+
+class HyperLinkCacheSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = HyperLinkCache
+        fields = ['id', 'finished', 'icon', 'title', 'desc', 'url', 'color']

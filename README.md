@@ -15,6 +15,8 @@ http://example.com/api/swagger/
 ##### for Developer
 
 ```shell
+# 激活虚拟环境
+source ~/.virtualenvs/UniBoard-Service/bin/activate
 # 启动消息队列
 # for linux
 celery -A UniBoard worker -l INFO

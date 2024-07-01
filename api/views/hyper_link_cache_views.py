@@ -1,3 +1,7 @@
+import base64
+import mimetypes
+
+import requests
 from rest_framework import status, permissions
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -41,7 +45,9 @@ class HyperLinkCacheDetail(APIView):
     def get(self, request: Request, pk, format=None):
         hyper_link_cache = HyperLinkCache.objects.get(pk=pk)
         serializer = HyperLinkCacheSerializer(hyper_link_cache)
-        return Response(serializer.data)
+        hyper_link_cache_base64 = serializer.data
+        hyper_link_cache_base64['icon'] = url_to_base64(hyper_link_cache_base64["icon"])
+        return Response(hyper_link_cache_base64, status=status.HTTP_200_OK)
 
     def patch(self, request: Request, pk, format=None):
         hyper_link_cache = HyperLinkCache.objects.get(pk=pk)
@@ -50,3 +56,21 @@ class HyperLinkCacheDetail(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def url_to_base64(url):
+    try:
+        # 使用requests获取URL的内容
+        response = requests.get(url)
+        # 猜测MIME类型
+        mime_type = mimetypes.guess_type(url)[0]
+        # 将获取的内容转换为base64编码
+        content_base64 = base64.b64encode(response.content)
+        # 将base64编码的内容转换为字符串
+        content_base64_str = content_base64.decode('utf-8')
+        # 生成完整的base64编码的图片URL
+        full_base64_str = f"data:{mime_type};base64,{content_base64_str}"
+    except Exception as e:
+        # 如果出现异常，返回None
+        full_base64_str = ""
+    return full_base64_str

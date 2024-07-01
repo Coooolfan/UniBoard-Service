@@ -1,5 +1,5 @@
 from .TOTP import TOTPDetail
-from .hyper_link_cache_views import HyperLinkCacheList
+from .hyper_link_cache_views import HyperLinkCacheList, HyperLinkCacheDetail
 from .hyper_link_views import HyperLinkList, HyperLinkDetail
 from .metric_data_views import MetricDataDetail
 from .metric_views import MetricList, MetricDetail

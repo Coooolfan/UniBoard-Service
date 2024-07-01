@@ -31,7 +31,7 @@ urlpatterns = [
     path('hyperlinks/<int:pk>/', HyperLinkDetail.as_view(), name='hyper-link-detail'),
 
     path('hyperlink-caches/', HyperLinkCacheList.as_view(), name='hyper-link-cache-list'),
-    # path('hyperlink-caches/<int:pk>/', HyperLinkCacheDetail.as_view(), name='hyper-link-cache-detail'),
+    path('hyperlink-caches/<int:pk>/', HyperLinkCacheDetail.as_view(), name='hyper-link-cache-detail'),
 
     path('monitored-objects/', MonitoredObjectList.as_view(), name='monitored-object-list'),
     path('monitored-objects/<int:pk>/', MonitoredObjectDetail.as_view(), name='monitored-object-detail'),

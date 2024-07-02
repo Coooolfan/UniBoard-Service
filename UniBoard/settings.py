@@ -20,17 +20,9 @@ from django.conf import settings
 mimetypes.add_type("image/svg+xml", ".svg", True)
 mimetypes.add_type("image/svg+xml", ".svgz", True)
 
-# 为django_celery_results存储Celery任务执行结果设置后台
-# 格式为：db+scheme://user:password@host:port/dbname
-# 支持数据库django-db和缓存django-cache存储任务状态及结果
 CELERY_BROKER_URL = "redis://:GdlkOVEmA3vp8JA6ZoAiqIPxSwZR5@127.0.0.1:6379/0"
-# # celery内容等消息的格式设置，默认json
-# CELERY_ACCEPT_CONTENT = ['application/json', ]
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
-# # 为任务设置超时时间，单位秒。超时即中止，执行下个任务。
-# CELERY_TASK_TIME_LIMIT = 3
 CELERY_WORKER_CONCURRENCY = 1
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

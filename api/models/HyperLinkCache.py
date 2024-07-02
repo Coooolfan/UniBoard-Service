@@ -3,7 +3,7 @@ from django.db import models
 
 class HyperLinkCache(models.Model):
     finished = models.BooleanField(default=False)
-    icon = models.ImageField(upload_to='hyperlinkcache_icon/', verbose_name="图标")
+    icon = models.FileField(upload_to='hyperlinkcache_icon/', verbose_name="图标")
     title = models.CharField(max_length=100, verbose_name="标题")
     desc = models.CharField(max_length=255, verbose_name="描述")
     url = models.URLField(verbose_name="链接")

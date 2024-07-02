@@ -12,8 +12,8 @@ class SysInfo(models.Model):
     profile = models.TextField(verbose_name="简介")
     contacts = models.JSONField(verbose_name="联系方式")
     slogan = models.CharField(max_length=SLOGAN_MAX_LENGTH, verbose_name="Slogan")
-    avatar = models.ImageField(upload_to='avatars/', verbose_name="头像")
-    banner = models.ImageField(upload_to='banners/', verbose_name="横幅图")
+    avatar = models.FileField(upload_to='avatars/', verbose_name="头像")
+    banner = models.FileField(upload_to='banners/', verbose_name="横幅图")
 
     class Meta:
         verbose_name = "系统信息"

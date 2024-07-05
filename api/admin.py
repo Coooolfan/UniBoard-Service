@@ -44,3 +44,9 @@ class NoteAdmin(admin.ModelAdmin):
 class HyperLinkAdmin(admin.ModelAdmin):
     list_display = ('title', 'url', 'icon', 'color', 'desc')
     search_fields = ('title', 'url', 'icon', 'color', 'desc')
+
+
+@admin.register(ShortUrl)
+class ShortUrlAdmin(admin.ModelAdmin):
+    list_display = ('long_url', 'short_url', 'gmt_create')
+    search_fields = ('long_url', 'short_url', 'gmt_create')

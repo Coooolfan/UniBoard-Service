@@ -53,3 +53,5 @@ urllib3==2.2.2
 vine==5.1.0
 wcwidth==0.2.13
 yarl==1.9.4
+
+mmh3~=4.1.0

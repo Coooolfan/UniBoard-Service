@@ -27,6 +27,8 @@ urlpatterns = [
     path('sysInfo/', SysInfoList.as_view(), name='sys-info-list'),
     path('sysInfo/<int:pk>/', SysInfoDetail.as_view(), name='sys-info-detail'),
 
+    path('short-urls/', ShortUrlList.as_view(), name='short-url-list'),
+
     path('hyperlinks/', HyperLinkList.as_view(), name='hyper-link-list'),
     path('hyperlinks/<int:pk>/', HyperLinkDetail.as_view(), name='hyper-link-detail'),
 

@@ -49,3 +49,9 @@ class HyperLinkCacheSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = HyperLinkCache
         fields = ['id', 'finished', 'icon', 'title', 'desc', 'url', 'color']
+
+
+class ShortUrlSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ShortUrl
+        fields = ['id', 'long_url', 'short_url', 'gmt_create']

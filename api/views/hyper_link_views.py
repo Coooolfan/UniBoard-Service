@@ -12,7 +12,7 @@ class HyperLinkList(APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request):
-        hyper_links = HyperLink.objects.all()
+        hyper_links = HyperLink.objects.all().order_by('id')
         serializer = HyperLinkSerializer(hyper_links, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

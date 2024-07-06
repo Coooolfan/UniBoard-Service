@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class SysInfo(models.Model):
+class UserInfo(models.Model):
     VERSION_MAX_LENGTH = 50
     NAME_MAX_LENGTH = 100
     SLOGAN_MAX_LENGTH = 255
@@ -21,7 +21,7 @@ class SysInfo(models.Model):
 
     def save(self, *args, **kwargs):
         self.pk = 1
-        super(SysInfo, self).save(*args, **kwargs)
+        super(UserInfo, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"系统信息 (ID: {self.pk})"

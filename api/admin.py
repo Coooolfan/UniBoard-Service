@@ -54,5 +54,5 @@ class ShortUrlAdmin(admin.ModelAdmin):
 
 @admin.register(SysConfig)
 class SysConfigAdmin(admin.ModelAdmin):
-    list_display = ('host')
-    search_fields = ('host')
+    list_display = ('host',)
+    search_fields = ('host',)

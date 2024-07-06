@@ -27,6 +27,9 @@ urlpatterns = [
     path('user-info/', UserInfoList.as_view(), name='user-info-list'),
     path('user-info/<int:pk>/', UserInfoDetail.as_view(), name='user-info-detail'),
 
+    path('sys-config/', SysConfigList.as_view(), name='sys-config-list'),
+    path('sys-config/<int:pk>/', SysConfigDetail.as_view(), name='sys-config-detail'),
+
     path('short-urls/', ShortUrlList.as_view(), name='short-url-list'),
     path('short-urls/<int:pk>/', ShortUrlDetails.as_view(), name='short-url-detail'),
 

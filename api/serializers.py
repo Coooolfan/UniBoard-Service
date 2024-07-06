@@ -3,9 +3,9 @@ from rest_framework import serializers
 from api.models import *
 
 
-class SysInfoSerializer(serializers.HyperlinkedModelSerializer):
+class UserInfoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = SysInfo
+        model = UserInfo
         fields = ['id', 'version', 'name', 'profile', 'contacts', 'slogan', 'avatar', 'banner']
 
 
@@ -55,3 +55,9 @@ class ShortUrlSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ShortUrl
         fields = ['id', 'long_url', 'short_url', 'gmt_create']
+
+
+class SysConfigSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = SysConfig
+        fields = ['id', 'host']

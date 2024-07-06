@@ -4,8 +4,8 @@ from api.models import *
 
 
 # Register your models here.
-@admin.register(SysInfo)
-class SysInfoAdmin(admin.ModelAdmin):
+@admin.register(UserInfo)
+class UserInfoAdmin(admin.ModelAdmin):
     list_display = ('name', 'version', 'profile', 'avatar', 'contacts', 'slogan', 'banner')
     search_fields = ('name', 'version', 'profile', 'avatar', 'contacts', 'slogan', 'banner')
 
@@ -50,3 +50,9 @@ class HyperLinkAdmin(admin.ModelAdmin):
 class ShortUrlAdmin(admin.ModelAdmin):
     list_display = ('long_url', 'short_url', 'gmt_create')
     search_fields = ('long_url', 'short_url', 'gmt_create')
+
+
+@admin.register(SysConfig)
+class SysConfigAdmin(admin.ModelAdmin):
+    list_display = ('host')
+    search_fields = ('host')

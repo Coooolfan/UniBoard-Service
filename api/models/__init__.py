@@ -6,4 +6,5 @@ from .MonitoredObject import MonitoredObject
 from .Note import Note
 from .ObjectMetric import ObjectMetric
 from .ShortUrl import ShortUrl
-from .SysInfo import SysInfo
+from .SysConfig import SysConfig
+from .UserInfo import UserInfo

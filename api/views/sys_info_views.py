@@ -7,63 +7,63 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from UniBoard.settings import DEBUG
-from api.models import SysInfo
-from api.serializers import SysInfoSerializer
+from api.models import UserInfo
+from api.serializers import UserInfoSerializer
 
 
-class SysInfoList(APIView):
-    queryset = SysInfo.objects.all()
-    serializer_class = SysInfoSerializer
+class UserInfoList(APIView):
+    queryset = UserInfo.objects.all()
+    serializer_class = UserInfoSerializer
     # 游客只能读取，登录用户可以写入
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, format=None):
-        queryset = SysInfo.objects.all()
-        s = SysInfoSerializer(queryset, many=True)
+        queryset = UserInfo.objects.all()
+        s = UserInfoSerializer(queryset, many=True)
         return Response(data=s.data, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
-        # 新增系统信息，只有DEBUG为True时才能新增，生产环境编辑此表应当使用SysInfoDetail的put方法
+        # 新增系统信息，只有DEBUG为True时才能新增，生产环境编辑此表应当使用UserInfoDetail的put方法
         if not DEBUG:
             return Response(status=status.HTTP_403_FORBIDDEN)
-        s = SysInfoSerializer(data=request.data)
+        s = UserInfoSerializer(data=request.data)
         if s.is_valid():
             s.save()
             return Response(data=s.data, status=status.HTTP_201_CREATED)
         return Response(data=s.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class SysInfoDetail(APIView):
-    queryset = SysInfo.objects.all()
-    serializer_class = SysInfoSerializer
+class UserInfoDetail(APIView):
+    queryset = UserInfo.objects.all()
+    serializer_class = UserInfoSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, pk, format=None):
         try:
-            sysinfo = SysInfo.objects.get(pk=pk)
-            serializer = SysInfoSerializer(sysinfo)
+            userInfo = UserInfo.objects.get(pk=pk)
+            serializer = UserInfoSerializer(userInfo)
             return Response(serializer.data)
-        except SysInfo.DoesNotExist:
+        except UserInfo.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def delete(self, request, pk, format=None):
         try:
-            sysinfo = SysInfo.objects.get(pk=pk)
-            sysinfo.delete()
+            userInfo = UserInfo.objects.get(pk=pk)
+            userInfo.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
-        except SysInfo.DoesNotExist:
+        except UserInfo.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     # 修改系统信息
     def patch(self, request, pk, format=None):
         try:
-            sysinfo = SysInfo.objects.get(pk=pk)
-            s = SysInfoSerializer(sysinfo, data=request.data, partial=True)
+            userInfo = UserInfo.objects.get(pk=pk)
+            s = UserInfoSerializer(userInfo, data=request.data, partial=True)
             if s.is_valid():
                 s.save()
                 return Response(data=s.data, status=status.HTTP_200_OK)
             return Response(data=s.errors, status=status.HTTP_400_BAD_REQUEST)
-        except SysInfo.DoesNotExist:
+        except UserInfo.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 

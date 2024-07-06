@@ -24,8 +24,8 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 
-    path('sysInfo/', SysInfoList.as_view(), name='sys-info-list'),
-    path('sysInfo/<int:pk>/', SysInfoDetail.as_view(), name='sys-info-detail'),
+    path('user-info/', UserInfoList.as_view(), name='user-info-list'),
+    path('user-info/<int:pk>/', UserInfoDetail.as_view(), name='user-info-detail'),
 
     path('short-urls/', ShortUrlList.as_view(), name='short-url-list'),
     path('short-urls/<int:pk>/', ShortUrlDetails.as_view(), name='short-url-detail'),

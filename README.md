@@ -1,39 +1,34 @@
 # UniBoard-Service
 
-Connect and view all your device (service). 
+Connect and view all your device (service).
 
-### Run with docker
+Only for Linux, this project is not supported on Windows.
 
-###### download Docker file from GitHub. 
+# 此分支正在使用Django 5重构项目……
 
-```shell
-mkdir  UniBoard-Service
-cd UniBoard-Service
-mkdir data
+### API doc
 
-wget https://raw.githubusercontent.com/Coooolfan/UniBoard-Service/main/docker-compose.yml
-wget https://raw.githubusercontent.com/Coooolfan/UniBoard-Service/main/Dockerfile
-wget https://raw.githubusercontent.com/Coooolfan/UniBoard-Service/main/.env.example
-wget https://raw.githubusercontent.com/Coooolfan/UniBoard-Service/main/config.json.example
+http://example.com/api/swagger/
 
-cp .env.example .env
-cp config.json.example config.json
+##### note
 
-```
-
-###### edit `.env` and `config.json` .
-
-###### run docker compose. 
+##### for Developer
 
 ```shell
-docker compose up -d
+# 激活虚拟环境
+source ~/.virtualenvs/UniBoard-Service/bin/activate
+# 启动消息队列
+# for linux
+celery -A UniBoard worker -l INFO
+# 启动Django服务
+python manage.py runserver
 ```
-
-or
 
 ```shell
-docker-compose up -d
+# 初始化celery数据库
+python manage.py migrate django_celery_results
+# 生成迁移文件
+python manage.py makemigrations 
+# 执行迁移文件
+python manage.py migrate 
 ```
-
-
-

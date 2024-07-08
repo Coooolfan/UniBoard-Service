@@ -1,0 +1,5 @@
+[my_service]
+host=localhost
+user=postgres
+dbname=uniboard
+port=5432

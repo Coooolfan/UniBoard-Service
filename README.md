@@ -1,18 +1,17 @@
 # UniBoard-Service
 
-Connect and view all your device (service).
+个人主页 + 导航页 + 笔记 + 短链接 + ……?
 
-Only for Linux, this project is not supported on Windows.
+此仓库仅为后端代码，使用 Django 构建。并以Restful风格设计API。[前端仓库地址点此访问。](https://github.com/Coooolfan/UniBoard)
 
-# 此分支正在使用Django 5重构项目……
+**详细介绍与部署请参照前端仓库的`README.md`文件**
 
 ### API doc
 
 http://example.com/api/swagger/
 
-##### note
 
-##### for Developer
+### for Developer
 
 ```shell
 # 激活虚拟环境

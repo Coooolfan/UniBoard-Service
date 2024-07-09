@@ -22,7 +22,7 @@ mimetypes.add_type("image/svg+xml", ".svgz", True)
 
 SHORT_URL_LENGTH = 4
 
-CELERY_BROKER_URL = "redis://:GdlkOVEmA3vp8JA6ZoAiqIPxSwZR5@127.0.0.1:6379/0"
+CELERY_BROKER_URL = "redis://:GdlkOVEmA3vp8JA6ZoAiqIPxSwZR5@redis:6379/0"
 CELERY_WORKER_CONCURRENCY = 1
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
@@ -30,10 +30,10 @@ CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = True
-if DEBUG:
-    MEDIA_URL = 'http://localhost:8000/media/'
-else:
-    MEDIA_URL = '/media/'
+# if DEBUG:
+#     MEDIA_URL = 'http://127.0.0.1:8000/media/'
+# else:
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Quick-start development settings - unsuitable for production
@@ -125,7 +125,7 @@ DATABASES = {
         'NAME': 'uniboard',
         'USER': 'postgres',
         'PASSWORD': 'XFdWwID02qJxerertfTrYFiok7G1bg',
-        'HOST': 'localhost',
+        'HOST': 'postgres',
         'PORT': '5432'
     }
 }
@@ -133,7 +133,7 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/0",
+        "LOCATION": "redis://redis:6379/0",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "PASSWORD": "GdlkOVEmA3vp8JA6ZoAiqIPxSwZR5"

@@ -24,6 +24,10 @@ python manage.py runserver
 ```
 
 ```shell
+# 导出默认的userInfo
+python manage.py dumpdata api.userinfo
+# 导入默认的userInfo
+python manage.py loaddata default_userinfo.json
 # 初始化celery数据库
 python manage.py migrate django_celery_results
 # 生成迁移文件

@@ -13,6 +13,9 @@ from UniBoard.settings import TOTP_SECRET_KEY
 class TOTPDetail(APIView):
 
     def post(self, request):
+        # 还没开发完，先返回400
+        return Response(status=400, data={"detail": "Invalid key"})
+
         keys = cache.keys("totp_*")
         if len(keys) >= 5:
             return Response(status=400, data={"detail": "Too many tries"})

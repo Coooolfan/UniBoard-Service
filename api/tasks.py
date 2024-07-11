@@ -45,7 +45,7 @@ def fetch_page_info_task(task_id):
             if not icon_link.startswith(('http://', 'https://')):
                 icon_link = url + icon_link
 
-            icon_response = requests.get(icon_link, timeout=3)
+            icon_response = requests.get(icon_link, headers=headers, timeout=3, )
             if icon_response.status_code == 200:
                 icon_name = icon_link.split("/")[-1]
                 print(icon_name)

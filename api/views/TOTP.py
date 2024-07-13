@@ -7,8 +7,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from UniBoard.settings import TOTP_SECRET_KEY
-
 
 class TOTPDetail(APIView):
 
@@ -20,6 +18,7 @@ class TOTPDetail(APIView):
         if len(keys) >= 5:
             return Response(status=400, data={"detail": "Too many tries"})
         key = request.data.get("key")
+        TOTP_SECRET_KEY = SysConfig.objects.get(pk=1).TOTP_SECRET_KEY
         OTP_code = TOTP(TOTP_SECRET_KEY).now()
         if key != OTP_code:
             # 失败才记录，成功不限制登录次数

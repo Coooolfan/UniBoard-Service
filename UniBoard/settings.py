@@ -29,7 +29,7 @@ CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = True
+DEBUG = False
 # if DEBUG:
 #     MEDIA_URL = 'http://127.0.0.1:8000/media/'
 # else:
@@ -39,13 +39,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-yudv^)lg*wfa77*!7+2u5t+crr6lmb+^0eke&h6(h(7ulsofbl"
-
-# TOTP_SECRET_KEY
-TOTP_SECRET_KEY = "JSSDURYRPAJGVAXIPCIIRWDTQRCVRZDJHFLPHKAUTEUHEGMSIOECPKWBWSHDGDEH"
-
-# SECURITY WARNING: don't run with debug turned on in production!
+with open("/app/SECRET_KEY") as f:
+    SECRET_KEY = f.read().strip()
 
 ALLOWED_HOSTS = ['*']
 

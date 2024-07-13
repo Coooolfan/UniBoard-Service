@@ -8,8 +8,9 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 # Copy the current directory contents into the container at /app
 COPY . .
-# Remove any existing migration files
+# Remove any existing migration files and the media directory
 RUN find /app/api/migrations -type f ! -name '__init__.py' -delete
+RUN rm -r /app/media
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 # Install supervisord

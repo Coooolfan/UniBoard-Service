@@ -5,6 +5,9 @@ set -e
 # 检查是否需要初始化
 if [ ! -f "/app/initialized" ]; then
     echo "Initializing Django database..."
+#    生成随机字符串
+    SECRET_KEY=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 64)
+    echo $SECRET_KEY > /app/SECRET_KEY
 #    生成迁移文件
     python manage.py makemigrations
 #    执行迁移

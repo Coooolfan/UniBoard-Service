@@ -3,11 +3,11 @@
 set -e
 
 # 检查是否需要初始化
-if [ ! -f "/app/initialized" ]; then
+if [ ! -f "/app/media/initialized" ]; then
     echo "Initializing Django database..."
 #    生成随机字符串
     SECRET_KEY=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 64)
-    echo $SECRET_KEY > /app/SECRET_KEY
+    echo $SECRET_KEY > /app/media/SECRET_KEY
 #    生成迁移文件
     python manage.py makemigrations
 #    执行迁移
@@ -21,7 +21,7 @@ if [ ! -f "/app/initialized" ]; then
     cp /app/img/paul-pastourmatzis-kN_v2HFm7Tw-banner.avif /app/media/banners/paul-pastourmatzis-kN_v2HFm7Tw-banner.avif
 #    创建默认userinfo
     python manage.py loaddata /app/default_userinfo.json
-    touch /app/initialized
+    touch /app/media/initialized
 else
     echo "Skipping initialization..."
 fi

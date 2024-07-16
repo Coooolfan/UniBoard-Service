@@ -26,21 +26,24 @@ CELERY_BROKER_URL = "redis://:GdlkOVEmA3vp8JA6ZoAiqIPxSwZR5@redis:6379/0"
 CELERY_WORKER_CONCURRENCY = 1
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
+DEBUG = True
+
+if DEBUG:
+    SECRET_KEY = "django-insecure-#ewnhroci3uyhfiue97v27923y0927678IN^Br&6&*t7%^%$#76*&(5089o83yrpn"
+    DATABASES_HOST = "localhost"
+else:
+    with open("/app/media/SECRET_KEY") as f:
+        SECRET_KEY = f.read().strip()
+    DATABASES_HOST = "postgres"
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = False
 # if DEBUG:
 #     MEDIA_URL = 'http://127.0.0.1:8000/media/'
 # else:
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
-
-with open("/app/SECRET_KEY") as f:
-    SECRET_KEY = f.read().strip()
 
 ALLOWED_HOSTS = ['*']
 
@@ -121,7 +124,7 @@ DATABASES = {
         'NAME': 'uniboard',
         'USER': 'postgres',
         'PASSWORD': 'XFdWwID02qJxerertfTrYFiok7G1bg',
-        'HOST': 'postgres',
+        'HOST': DATABASES_HOST,
         'PORT': '5432'
     }
 }

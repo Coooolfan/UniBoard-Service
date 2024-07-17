@@ -22,19 +22,21 @@ mimetypes.add_type("image/svg+xml", ".svgz", True)
 
 SHORT_URL_LENGTH = 4
 
-CELERY_BROKER_URL = "redis://:GdlkOVEmA3vp8JA6ZoAiqIPxSwZR5@redis:6379/0"
-CELERY_WORKER_CONCURRENCY = 1
-CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
-
 DEBUG = True
 
 if DEBUG:
     SECRET_KEY = "django-insecure-#ewnhroci3uyhfiue97v27923y0927678IN^Br&6&*t7%^%$#76*&(5089o83yrpn"
     DATABASES_HOST = "localhost"
+    CACHES_HOST = "localhost"
 else:
     with open("/app/media/SECRET_KEY") as f:
         SECRET_KEY = f.read().strip()
     DATABASES_HOST = "postgres"
+    CACHES_HOST = "redis"
+
+CELERY_BROKER_URL = "redis://:GdlkOVEmA3vp8JA6ZoAiqIPxSwZR5@" + CACHES_HOST + ":6379/0"
+CELERY_WORKER_CONCURRENCY = 1
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -44,7 +46,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # else:
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+print("MEDIA_ROOT:", MEDIA_ROOT)
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -132,7 +134,7 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379/0",
+        "LOCATION": "redis://" + CACHES_HOST + ":6379/0",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "PASSWORD": "GdlkOVEmA3vp8JA6ZoAiqIPxSwZR5"

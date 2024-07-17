@@ -9,6 +9,7 @@ class UserInfo(models.Model):
     id = models.IntegerField(primary_key=True, default=1, editable=False)
     version = models.CharField(max_length=VERSION_MAX_LENGTH, verbose_name="版本")
     name = models.CharField(max_length=NAME_MAX_LENGTH, verbose_name="姓名")
+    name_font = models.FileField(upload_to='fonts/', verbose_name="姓名字体")
     profile = models.TextField(verbose_name="简介")
     contacts = models.JSONField(verbose_name="联系方式")
     slogan = models.CharField(max_length=SLOGAN_MAX_LENGTH, verbose_name="Slogan")

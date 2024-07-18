@@ -47,6 +47,8 @@ class HyperLinkCacheDetail(APIView):
 
     def get(self, request: Request, pk, format=None):
         hyper_link_cache = HyperLinkCache.objects.get(pk=pk)
+        if not hyper_link_cache.finished:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = HyperLinkCacheSerializer(hyper_link_cache)
         hyper_link_cache_base64 = serializer.data
         hyper_link_cache_base64['icon'] = icon_to_base64(hyper_link_cache_base64["icon"])

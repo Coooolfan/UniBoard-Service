@@ -56,3 +56,9 @@ class ShortUrlAdmin(admin.ModelAdmin):
 class SysConfigAdmin(admin.ModelAdmin):
     list_display = ('host', 'TOTP_SECRET_KEY')
     search_fields = ('host', 'TOTP_SECRET_KEY')
+
+
+@admin.register(FileRecord)
+class FileRecordAdmin(admin.ModelAdmin):
+    list_display = ('file', 'desc', 'file_name', 'permission', 'password', 'create_time')
+    search_fields = ('file', 'desc', 'file_name', 'permission', 'password', 'create_time')

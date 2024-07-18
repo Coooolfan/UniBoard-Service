@@ -46,7 +46,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # else:
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-print("MEDIA_ROOT:", MEDIA_ROOT)
 ALLOWED_HOSTS = ['*']
 
 # Application definition

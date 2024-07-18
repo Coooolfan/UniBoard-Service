@@ -84,3 +84,9 @@ class SysConfigSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = SysConfig
         fields = ['id', 'host']
+
+
+class FileRecordSerializer(DynamicFieldsHyperlinkedModelSerializer):
+    class Meta:
+        model = FileRecord
+        fields = ['id', 'file', 'desc', 'file_name', 'permission', 'password', 'create_time']

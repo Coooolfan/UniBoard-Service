@@ -52,4 +52,6 @@ urlpatterns = [
     path('note/', NoteList.as_view(), name='note-list'),
     path('note/<int:pk>/', NoteDetail.as_view(), name='note-detail'),
 
+    path('file-records/', FileRecordList.as_view(), name='file-record-list'),
+    path('file-records/<int:pk>/', FileRecordDetail.as_view(), name='file-record-detail'),
 ]

@@ -40,7 +40,12 @@ class FileRecordList(APIView):
 class FileRecordDetail(APIView):
     queryset = FileRecord.objects.all()
     serializer_class = FileRecordSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def get(self, request, pk, format=None):
+        file_record = FileRecord.objects.get(pk=pk)
+        s = FileRecordSerializer(file_record, fields=('id', 'file', 'file_name', 'create_time', 'permission', 'desc'))
+        return Response(data=s.data, status=status.HTTP_200_OK)
 
     def patch(self, request, pk, format=None):
         file_record = FileRecord.objects.get(pk=pk)

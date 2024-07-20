@@ -19,10 +19,12 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+from api.views import FileRecordRedirect
 from api.views.redirect_view import redirect_view
 
 urlpatterns = [
                   path('s/<str:short_code>/', redirect_view, name='redirect_view'),
                   path("api/", include("api.urls.index")),
                   path("admin/", admin.site.urls),
+                  path("file/<str:pk>/", FileRecordRedirect.as_view(), name="file_redirect_view"),
               ] + static("media/", document_root=settings.MEDIA_ROOT)

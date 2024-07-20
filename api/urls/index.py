@@ -54,4 +54,6 @@ urlpatterns = [
 
     path('file-records/', FileRecordList.as_view(), name='file-record-list'),
     path('file-records/<int:pk>/', FileRecordDetail.as_view(), name='file-record-detail'),
+
+    path('file-records/<int:pk>/token/', FileRecordTokenDetail.as_view(), name='file-record-token-detail'),
 ]

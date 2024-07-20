@@ -44,6 +44,8 @@ class FileRecordDetail(APIView):
 
     def get(self, request, pk, format=None):
         file_record = FileRecord.objects.get(pk=pk)
+        if file_record.permission == FileRecord.Permission.PRIVATE.value and not request.user.is_superuser:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         s = FileRecordSerializer(file_record, fields=('id', 'file', 'file_name', 'create_time', 'permission', 'desc'))
         return Response(data=s.data, status=status.HTTP_200_OK)
 

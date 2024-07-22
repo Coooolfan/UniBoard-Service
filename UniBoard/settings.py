@@ -15,13 +15,13 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
-from django.conf import settings
-
 mimetypes.add_type("image/svg+xml", ".svg", True)
 mimetypes.add_type("image/svg+xml", ".svgz", True)
 
 SHORT_URL_LENGTH = 4
 
+# 不要担心，在Docker的构建过程中，这个值会被替换掉
+# do not worry, this value will be replaced during the Docker build process
 DEBUG = True
 
 if DEBUG:
@@ -68,7 +68,7 @@ INSTALLED_APPS = [
 
 # JWT配置
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  # Access Token的有效期
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  # Access Token的有效期
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Refresh Token的有效期
     # 刷新Refresh Token时是否将旧Token加入黑名单，如果设置为False，则旧的刷新令牌仍然可以用于获取新的访问令牌。
     # 需要将'rest_framework_simplejwt.token_blacklist'加入到'INSTALLED_APPS'的配置中

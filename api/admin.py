@@ -60,5 +60,5 @@ class SysConfigAdmin(admin.ModelAdmin):
 
 @admin.register(FileRecord)
 class FileRecordAdmin(admin.ModelAdmin):
-    list_display = ('file', 'desc', 'file_name', 'permission', 'password', 'create_time')
-    search_fields = ('file', 'desc', 'file_name', 'permission', 'password', 'create_time')
+    list_display = ('file', 'desc', 'file_name', 'share_code', 'permission', 'password', 'create_time')
+    search_fields = ('file', 'desc', 'file_name', 'share_code', 'permission', 'password', 'create_time')

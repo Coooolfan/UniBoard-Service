@@ -17,6 +17,8 @@ class FileRecord(models.Model):
 
     file_name = models.CharField(max_length=100, verbose_name="文件名")
     file = models.FileField(upload_to='file/', verbose_name="文件")
+    share_code = models.CharField(max_length=16, verbose_name="分享码", null=True, blank=True, default=None,
+                                  unique=True, db_index=True)
     desc = models.TextField(blank=True, verbose_name="文件描述")
     permission = models.IntegerField(choices=permission_choices, default=Permission.PRIVATE.value, verbose_name="权限")
     password = models.CharField(max_length=16, verbose_name="密码", null=True, blank=True, default=None)

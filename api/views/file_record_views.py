@@ -42,8 +42,12 @@ class FileRecordDetail(APIView):
     serializer_class = FileRecordSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
+    # 此接口只会从文件分享页发起
     def get(self, request, pk, format=None):
-        file_record = FileRecord.objects.get(pk=pk)
+        try:
+            file_record = FileRecord.objects.get(share_code=pk)
+        except FileRecord.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         if file_record.permission == FileRecord.Permission.PRIVATE.value and not request.user.is_superuser:
             return Response(status=status.HTTP_404_NOT_FOUND)
         s = FileRecordSerializer(file_record, fields=('id', 'file', 'file_name', 'create_time', 'permission', 'desc'))

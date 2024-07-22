@@ -1,24 +1,26 @@
-[{
-	"model": "api.userinfo",
-	"pk": 1,
-	"fields": {
-		"version": "2024-06-29 20:17:42",
-		"name": "Your Name",
-		"profile": "Programmer, Designer, Writer",
-		"contacts": {
-			"qq": "",
-			"email": "",
-			"weibo": "",
-			"zhihu": "",
-			"github": "https://github.com/Coooolfan/uniboard",
-			"twitter": "https://twitter.com/",
-			"facebook": "",
-			"linkedin": "",
-			"telegram": "https://t.me/",
-			"instagram": ""
-		},
-		"slogan": "Hi, Good Luck Every Day!",
-		"avatar": "avatars/jonas-leupe-QA0pL9yfxk0-avatar.avif",
-		"banner": "banners/paul-pastourmatzis-kN_v2HFm7Tw-banner.avif"
-	}
-}]
+[
+  {
+    "model": "api.userinfo",
+    "pk": 1,
+    "fields": {
+      "version": "2024-06-29 20:17:42",
+      "name": "Zhang San",
+      "profile": "Programmer, Designer, Writer",
+      "contacts": {
+        "qq": "",
+        "email": "",
+        "weibo": "",
+        "zhihu": "",
+        "github": "https://github.com/Coooolfan/uniboard",
+        "twitter": "https://twitter.com/",
+        "facebook": "",
+        "linkedin": "",
+        "telegram": "https://t.me/",
+        "instagram": ""
+      },
+      "slogan": "Hi, Good Luck Every Day!",
+      "avatar": "avatars/jonas-leupe-QA0pL9yfxk0-avatar.avif",
+      "banner": "banners/paul-pastourmatzis-kN_v2HFm7Tw-banner.avif"
+    }
+  }
+]

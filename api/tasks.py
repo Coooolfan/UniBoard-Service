@@ -1,6 +1,7 @@
 # myapp/tasks.py
 import logging
 from io import BytesIO
+from urllib.parse import urlparse
 
 import PIL
 import chardet
@@ -43,7 +44,8 @@ def fetch_page_info_task(task_id):
 
     try:
         if not icon_link.startswith(('http://', 'https://')):
-            icon_link = url + icon_link
+            parsed_url = urlparse(url)
+            icon_link = parsed_url.scheme + "://" + parsed_url.netloc + "/" + icon_link
 
         icon_response = requests.get(icon_link, headers=headers, timeout=3)
         icon_name = icon_link.split("/")[-1]

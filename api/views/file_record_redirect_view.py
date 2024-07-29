@@ -63,8 +63,8 @@ def response_file(file_id: int):
         # 线上环境使用nginx返回，重定向到/protected/路径下
         file_record = FileRecord.objects.get(pk=file_id)
         file_path = file_record.file
-        print("/protected/" + str(file_path))
         response = HttpResponse()
         del response['Content-Type']
         response['X-Accel-Redirect'] = ('/protected/' + str(file_path)).encode('utf-8')
+        response['Content-Disposition'] = 'attachment; filename=' + file_record.file_name
         return response

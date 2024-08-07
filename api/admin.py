@@ -48,8 +48,8 @@ class HyperLinkAdmin(admin.ModelAdmin):
 
 @admin.register(ShortUrl)
 class ShortUrlAdmin(admin.ModelAdmin):
-    list_display = ('long_url', 'short_url', 'gmt_create')
-    search_fields = ('long_url', 'short_url', 'gmt_create')
+    list_display = ('long_url', 'short_url', 'gmt_create', 'count')
+    search_fields = ('long_url', 'short_url', 'gmt_create', 'count')
 
 
 @admin.register(SysConfig)
@@ -60,5 +60,5 @@ class SysConfigAdmin(admin.ModelAdmin):
 
 @admin.register(FileRecord)
 class FileRecordAdmin(admin.ModelAdmin):
-    list_display = ('file', 'desc', 'file_name', 'share_code', 'permission', 'password', 'create_time')
-    search_fields = ('file', 'desc', 'file_name', 'share_code', 'permission', 'password', 'create_time')
+    list_display = ('file', 'desc', 'file_name', 'share_code', 'permission', 'password', 'create_time', 'count')
+    search_fields = ('file', 'desc', 'file_name', 'share_code', 'permission', 'password', 'create_time', 'count')

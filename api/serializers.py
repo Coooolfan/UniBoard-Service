@@ -80,7 +80,7 @@ class HyperLinkCacheSerializer(serializers.HyperlinkedModelSerializer):
 class ShortUrlSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ShortUrl
-        fields = ['id', 'long_url', 'short_url', 'gmt_create']
+        fields = ['id', 'long_url', 'short_url', 'gmt_create', 'count']
 
 
 class SysConfigSerializer(serializers.HyperlinkedModelSerializer):
@@ -92,7 +92,7 @@ class SysConfigSerializer(serializers.HyperlinkedModelSerializer):
 class FileRecordSerializer(DynamicFieldsHyperlinkedModelSerializer):
     class Meta:
         model = FileRecord
-        fields = ['id', 'file', 'desc', 'share_code', 'file_name', 'permission', 'password', 'create_time']
+        fields = ['id', 'file', 'desc', 'share_code', 'file_name', 'permission', 'password', 'create_time', 'count']
 
     def create(self, validated_data):
         # 在保存对象之前生成share_code

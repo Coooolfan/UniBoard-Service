@@ -1,4 +1,5 @@
 from django.core.cache import cache
+from django.db.models import F
 from django.http import HttpResponse
 from rest_framework import permissions
 from rest_framework.views import APIView
@@ -58,10 +59,14 @@ def response_file(file_id: int):
     # 通过django的HttpResponse返回文件
     if DEBUG:
         file = get_file(file_id)
+        # 更新文件下载次数，原子化操作，防止并发问题
+        FileRecord.objects.filter(pk=file_id).update(count=F('count') + 1)
         return HttpResponse(file, content_type='application/octet-stream')
     else:
         # 线上环境使用nginx返回，重定向到/protected/路径下
         file_record = FileRecord.objects.get(pk=file_id)
+        # 更新文件下载次数，原子化操作，防止并发问题
+        FileRecord.objects.filter(pk=file_id).update(count=F('count') + 1)
         file_path = file_record.file
         response = HttpResponse()
         del response['Content-Type']

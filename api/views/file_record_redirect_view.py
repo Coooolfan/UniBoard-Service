@@ -14,7 +14,7 @@ class FileRecordRedirect(APIView):
     serializer_class = FileRecordSerializer
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request, pk, format=None):
+    def get(self, request, pk, filename=None, format=None):
         # 对于直链，可以通过临时token直接下载文件，不需要鉴权
         if not pk.isdigit():
             file_id = cache.get("file_record_" + pk)

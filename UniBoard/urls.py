@@ -27,4 +27,5 @@ urlpatterns = [
                   path("api/", include("api.urls.index")),
                   path("admin/", admin.site.urls),
                   path("file/<str:pk>/", FileRecordRedirect.as_view(), name="file_redirect_view"),
+                  path("file/<str:pk>/<path:filename>", FileRecordRedirect.as_view(), name="file_redirect_view"),
               ] + static("media/", document_root=settings.MEDIA_ROOT)

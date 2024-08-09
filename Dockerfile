@@ -11,7 +11,7 @@ COPY . .
 # Check if the DEBUG mode is set to True
 RUN sed -i 's/DEBUG = True/DEBUG = False/' /app/UniBoard/settings.py
 # Remove any existing migration files and the media directory
-RUN find /app/api/migrations -type f ! -name '__init__.py' -delete
+RUN rm -r /app/api/migrations/*
 RUN rm -r /app/media
 # Set environment variables
 ENV PYTHONUNBUFFERED=1

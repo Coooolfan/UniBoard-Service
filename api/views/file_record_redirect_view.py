@@ -67,9 +67,8 @@ def response_file(file_id: int):
         file_record = FileRecord.objects.get(pk=file_id)
         # 更新文件下载次数，原子化操作，防止并发问题
         FileRecord.objects.filter(pk=file_id).update(count=F('count') + 1)
-        file_path = file_record.file
         response = HttpResponse()
         del response['Content-Type']
-        response['X-Accel-Redirect'] = ('/protected/' + str(file_path)).encode('utf-8')
+        response['X-Accel-Redirect'] = '/protected/' + str(file_record.file)
         response['Content-Disposition'] = 'attachment; filename=' + file_record.file_name
         return response

@@ -67,6 +67,10 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
 ]
 
+SWAGGER_SETTINGS = {
+    'DEFAULT_MODEL_RENDERING': 'example'
+}
+
 # JWT配置
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  # Access Token的有效期

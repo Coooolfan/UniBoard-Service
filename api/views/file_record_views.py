@@ -30,6 +30,7 @@ class FileRecordList(APIView):
         return Response(data=resp, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
+        # 上传文件，文件的share_code是自动生成，参见FileRecordSerializer的create方法
         s = FileRecordSerializer(data=request.data)
         if s.is_valid():
             s.save()
@@ -50,7 +51,7 @@ class FileRecordDetail(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         if file_record.permission == FileRecord.Permission.PRIVATE.value and not request.user.is_superuser:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        s = FileRecordSerializer(file_record, fields=('id', 'file', 'file_name', 'create_time', 'permission', 'desc'))
+        s = FileRecordSerializer(file_record, fields=('file', 'file_name', 'create_time', 'permission', 'desc'))
         return Response(data=s.data, status=status.HTTP_200_OK)
 
     def patch(self, request, pk, format=None):

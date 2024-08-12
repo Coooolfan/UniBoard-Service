@@ -103,7 +103,7 @@ class FileRecordSerializer(DynamicFieldsHyperlinkedModelSerializer):
     def generate_share_code(self):
         # 生成一个6位的随机字符串作为share_code
         share_code = ''.join(random.choices(string.ascii_letters + string.digits, k=4))
-        # 确保share_code是唯一的，这里只是一个示例，实际应用中可能需要更复杂的逻辑
+        # 确保share_code是唯一的
         while FileRecord.objects.filter(share_code=share_code).exists():
             share_code = ''.join(random.choices(string.ascii_letters + string.digits, k=4))
         return share_code

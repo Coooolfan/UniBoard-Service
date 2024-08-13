@@ -8,7 +8,6 @@ CURRENT_VERSION="0.2.1"
 if [ ! -f "/app/media/initialized" ]; then
     echo "Initializing Django database..."
     touch /app/api/migrations/__init__.py
-    ls -l /app/api/migrations/
 #    生成随机字符串
     SECRET_KEY=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 64)
     echo "$SECRET_KEY" > /app/media/SECRET_KEY

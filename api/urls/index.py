@@ -4,7 +4,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from api.views import *
 
 urlpatterns = [
-    path('token/totp/', TOTPDetail.as_view(), name='totp-detail'),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
@@ -24,21 +23,11 @@ urlpatterns = [
     path('hyperlink-caches/', HyperLinkCacheList.as_view(), name='hyper-link-cache-list'),
     path('hyperlink-caches/<int:pk>/', HyperLinkCacheDetail.as_view(), name='hyper-link-cache-detail'),
 
-    path('monitored-objects/', MonitoredObjectList.as_view(), name='monitored-object-list'),
-    path('monitored-objects/<int:pk>/', MonitoredObjectDetail.as_view(), name='monitored-object-detail'),
-    path('monitored-objects/<int:pk>/metrics/', MetricDataDetail.as_view(), name='monitored-object-metrics'),
-
-    path('metrics/', MetricList.as_view(), name='metric-list'),
-    path('metrics/<int:pk>/', MetricDetail.as_view(), name='metric-detail'),
-
-    path('object-metrics/', ObjectMetricList.as_view(), name='object-metric-list'),
-    path('object-metrics/<int:pk>/', ObjectMetricDetail.as_view(), name='object-metric-detail'),
-
     path('note/', NoteList.as_view(), name='note-list'),
     path('note/<int:pk>/', NoteDetail.as_view(), name='note-detail'),
 
     path('file-records/', FileRecordList.as_view(), name='file-record-list'),
-    path('file-records/<str:share_code>/', FileRecordDetail.as_view(), name='file-record-detail'),
+    path('file-records/<str:pk>/', FileRecordDetail.as_view(), name='file-record-detail'),
 
     path('file-records/<int:pk>/token/', FileRecordTokenDetail.as_view(), name='file-record-token-detail'),
 ]

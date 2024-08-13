@@ -35,30 +35,6 @@ class UserInfoSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['id', 'version', 'name', 'profile', 'contacts', 'slogan', 'avatar', 'banner', 'name_font']
 
 
-class MetricSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Metric
-        fields = ['id', 'name', 'type', 'unit', 'desc']
-
-
-class MonitoredObjectSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = MonitoredObject
-        fields = ['id', 'name', 'desc']
-
-
-class ObjectMetricSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = ObjectMetric
-        fields = ['id', 'monitored_object_id', 'metric_id']
-
-
-class MetricDataSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = MetricData
-        fields = ['id', 'monitor_object_id', 'insert_time', 'report_time', 'delay', 'data']
-
-
 class NoteSerializer(DynamicFieldsHyperlinkedModelSerializer):
     class Meta:
         model = Note

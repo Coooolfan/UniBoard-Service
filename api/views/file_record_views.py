@@ -30,7 +30,9 @@ class FileRecordList(APIView):
         return Response(data=resp, status=status.HTTP_200_OK)
 
     def post(self, request):
-        # 上传文件，文件的share_code是自动生成，参见FileRecordSerializer的create方法
+        # 上传文件
+        # 文件的share_code是自动生成，参见FileRecordSerializer的create方法
+        # 文件存储在硬盘上的文件名是UUID，参见FileRecordSerializer的create方法
         s = self.serializer_class(data=request.data)
         if s.is_valid():
             s.save()

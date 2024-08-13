@@ -1,5 +1,6 @@
 import random
 import string
+import uuid
 
 from rest_framework import serializers
 
@@ -74,6 +75,10 @@ class FileRecordSerializer(DynamicFieldsHyperlinkedModelSerializer):
         # 在保存对象之前生成share_code
         share_code = self.generate_share_code()
         validated_data['share_code'] = share_code
+        file = validated_data['file']
+        if file:
+            new_filename = str(uuid.uuid4())
+            file.name = new_filename
         return super().create(validated_data)
 
     def generate_share_code(self):

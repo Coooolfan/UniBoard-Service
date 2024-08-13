@@ -42,7 +42,7 @@ class FileRecordDetail(GenericAPIView, RetrieveModelMixin, UpdateModelMixin,
     queryset = FileRecord.objects.all()
     serializer_class = FileRecordSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    lookup_field = 'pk'
+    lookup_field = 'share_code'
 
     # 此接口只会从文件分享页发起
     def get(self, request, *args, **kwargs):

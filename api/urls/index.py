@@ -38,7 +38,7 @@ urlpatterns = [
     path('note/<int:pk>/', NoteDetail.as_view(), name='note-detail'),
 
     path('file-records/', FileRecordList.as_view(), name='file-record-list'),
-    path('file-records/<str:pk>/', FileRecordDetail.as_view(), name='file-record-detail'),
+    path('file-records/<str:share_code>/', FileRecordDetail.as_view(), name='file-record-detail'),
 
     path('file-records/<int:pk>/token/', FileRecordTokenDetail.as_view(), name='file-record-token-detail'),
 ]

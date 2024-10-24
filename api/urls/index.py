@@ -2,6 +2,7 @@ from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
 from api.views import *
+from api.views.note_file_view import NoteFileList
 
 urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -25,6 +26,8 @@ urlpatterns = [
 
     path('note/', NoteList.as_view(), name='note-list'),
     path('note/<int:pk>/', NoteDetail.as_view(), name='note-detail'),
+
+    path('note-files/', NoteFileList.as_view(), name='note-file-list'),
 
     path('file-records/', FileRecordList.as_view(), name='file-record-list'),
     path('file-records/<str:pk>/', FileRecordDetail.as_view(), name='file-record-detail'),

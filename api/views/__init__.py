@@ -1,6 +1,5 @@
-from .file_record_redirect_view import FileRecordRedirect
-from .file_record_token_views import FileRecordTokenDetail
-from .file_record_views import FileRecordList, FileRecordDetail
+from .file_record import FileRecordList, FileRecordDetail, FileRecordList, FileRecordDetail, FileRecordRedirect, \
+    FileRecordTokenDetail
 from .hyper_link_cache_views import HyperLinkCacheList, HyperLinkCacheDetail
 from .hyper_link_views import HyperLinkList, HyperLinkDetail
 from .note_view import NoteList, NoteDetail

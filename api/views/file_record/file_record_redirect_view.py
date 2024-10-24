@@ -59,7 +59,6 @@ def response_file(key: str):
         return HttpResponse(file, content_type='application/octet-stream')
     else:
         # 线上环境使用nginx返回，重定向到/protected/路径下
-
         # 更新文件下载次数，原子化操作，防止并发问题
         FileRecord.objects.filter(pk=file_record.id).update(count=F('count') + 1)
         response = HttpResponse()

@@ -42,6 +42,19 @@ class NoteSerializer(DynamicFieldsHyperlinkedModelSerializer):
         fields = ['id', 'title', 'value', 'insert_time', 'update_time']
 
 
+class NoteFileSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = NoteFile
+        fields = ['id', 'file', 'insert_time', 'update_time']
+
+    def create(self, validated_data):
+        file = validated_data['file']
+        if file:
+            new_filename = str(uuid.uuid4())
+            file.name = new_filename + file.name[file.name.rfind('.'):]
+        return super().create(validated_data)
+
+
 class HyperLinkSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = HyperLink
@@ -73,7 +86,7 @@ class FileRecordSerializer(DynamicFieldsHyperlinkedModelSerializer):
 
     def create(self, validated_data):
         # 在保存对象之前生成share_code
-        share_code = self.generate_share_code()
+        share_code = generate_filerecord_share_code()
         validated_data['share_code'] = share_code
         file = validated_data['file']
         if file:
@@ -81,10 +94,11 @@ class FileRecordSerializer(DynamicFieldsHyperlinkedModelSerializer):
             file.name = new_filename
         return super().create(validated_data)
 
-    def generate_share_code(self):
-        # 生成一个6位的随机字符串作为share_code
+
+def generate_filerecord_share_code():
+    # 生成一个6位的随机字符串作为share_code
+    share_code = ''.join(random.choices(string.ascii_letters + string.digits, k=4))
+    # 确保share_code是唯一的
+    while FileRecord.objects.filter(share_code=share_code).exists():
         share_code = ''.join(random.choices(string.ascii_letters + string.digits, k=4))
-        # 确保share_code是唯一的
-        while FileRecord.objects.filter(share_code=share_code).exists():
-            share_code = ''.join(random.choices(string.ascii_letters + string.digits, k=4))
-        return share_code
+    return share_code

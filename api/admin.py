@@ -16,6 +16,12 @@ class NoteAdmin(admin.ModelAdmin):
     search_fields = ('title', 'value', 'insert_time', 'update_time')
 
 
+@admin.register(NoteFile)
+class NoteFileAdmin(admin.ModelAdmin):
+    list_display = ('file', 'insert_time', 'update_time')
+    search_fields = ('file', 'insert_time', 'update_time')
+
+
 @admin.register(HyperLink)
 class HyperLinkAdmin(admin.ModelAdmin):
     list_display = ('title', 'url', 'icon', 'color', 'desc')

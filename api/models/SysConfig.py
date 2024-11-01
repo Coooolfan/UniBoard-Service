@@ -3,8 +3,8 @@ from django.db import models
 
 class SysConfig(models.Model):
     id = models.IntegerField(primary_key=True, default=1, editable=False)
-    host = models.CharField(max_length=255, verbose_name="主机地址")
-    TOTP_SECRET_KEY = models.TextField(verbose_name="TOTP密钥")
+    host = models.CharField(max_length=255, verbose_name="主机地址", default="", blank=True)
+    show_copyright = models.BooleanField(verbose_name="显示版权信息", default=True)
 
     class Meta:
         verbose_name = "系统设置"

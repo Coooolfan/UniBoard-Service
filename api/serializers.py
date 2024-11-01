@@ -76,7 +76,7 @@ class ShortUrlSerializer(serializers.HyperlinkedModelSerializer):
 class SysConfigSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = SysConfig
-        fields = ['id', 'host']
+        fields = ['id', 'host', 'show_copyright']
 
 
 class FileRecordSerializer(DynamicFieldsHyperlinkedModelSerializer):

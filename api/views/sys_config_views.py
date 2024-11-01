@@ -9,7 +9,7 @@ from api.serializers import SysConfigSerializer
 class SysConfigList(APIView):
     queryset = SysConfig.objects.all()
     serializer_class = SysConfigSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
 
     def get(self, request, format=None):
         queryset = SysConfig.objects.all()

@@ -2,7 +2,7 @@
 
 set -e
 
-CURRENT_VERSION="0.2.2"
+CURRENT_VERSION="0.2.4"
 
 # 检查是否需要初始化
 if [ ! -f "/app/media/initialized" ]; then

@@ -5,6 +5,7 @@
     "fields": {
       "version": "2024-06-29 20:17:42",
       "name": "Zhang San",
+      "name_font": "",
       "profile": "Programmer, Designer, Writer",
       "contacts": {
         "qq": "",
@@ -21,6 +22,14 @@
       "slogan": "Hi, Good Luck Every Day!",
       "avatar": "avatars/jonas-leupe-QA0pL9yfxk0-avatar.avif",
       "banner": "banners/paul-pastourmatzis-kN_v2HFm7Tw-banner.avif"
+    }
+  },
+  {
+    "model": "api.sysconfig",
+    "pk": 1,
+    "fields": {
+      "host": "",
+      "show_copyright": true
     }
   }
 ]

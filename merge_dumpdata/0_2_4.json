@@ -1,0 +1,10 @@
+[
+  {
+    "model": "api.sysconfig",
+    "pk": 1,
+    "fields": {
+      "host": "",
+      "show_copyright": true
+    }
+  }
+]

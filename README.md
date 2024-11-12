@@ -30,7 +30,7 @@ python manage.py migrate
 # 导出默认的userInfo
 # python manage.py dumpdata api.userinfo
 # 导入默认的userInfo
-python manage.py loaddata default_userinfo.json
+python manage.py loaddata default_dumpdata.json
 # 启动Django服务
 python manage.py runserver 0.0.0.0:8001
 # 启动消息队列（开第二个终端） 仅适用于 Linux 

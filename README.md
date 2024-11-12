@@ -32,7 +32,7 @@ python manage.py migrate
 # 导入默认的userInfo
 python manage.py loaddata default_userinfo.json
 # 启动Django服务
-python manage.py runserver
+python manage.py runserver 0.0.0.0:8001
 # 启动消息队列（开第二个终端） 仅适用于 Linux 
 celery -A UniBoard worker -l INFO
 ```

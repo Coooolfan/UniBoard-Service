@@ -20,7 +20,9 @@ clone本仓库到本地后，运行sql目录下的docker-compose.yml文件，启
 然后依次执行以下命令即可启动后端服务
 
 ```shell
-# 激活/安装 环境
+# 创建 环境（注意执行路径，会直接在当前路径下创建）
+# virtualenv UniBoard-Service
+# 激活 环境
 # source ~/.virtualenvs/UniBoard-Service/bin/activate
 pip install -r requirements.txt
 # 生成迁移文件

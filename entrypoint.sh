@@ -2,13 +2,24 @@
 
 set -e
 
-CURRENT_VERSION="0.2.4"
+CURRENT_VERSION="0.2.5"
+
+
 
 migrate_0_2_4() {
     echo "Upgrading to 0.2.4, loading data..."
     python manage.py loaddata /app/merge_dumpdata/0_2_4.json
+    echo "Upgraded to 0.2.4"
 }
 
+migrate_0_2_5() {
+    CURRENT_VERSION=$1
+    echo "Upgrading to 0.2.5, maybe loading data..."
+    if [ "$CURRENT_VERSION" != "0.2.4" ]; then
+        migrate_0_2_4
+    fi
+    echo "Upgraded to 0.2.5"
+}
 
 # 检查是否需要初始化
 if [ ! -f "/app/media/initialized" ]; then
@@ -45,7 +56,7 @@ else
       python manage.py migrate
 
       # 后续升级在 migrate 函数中添加逻辑
-      migrate_0_2_4
+      migrate_0_2_5 "$INSTALLED_VERSION"
 
       echo "$CURRENT_VERSION" > /app/media/version
     fi

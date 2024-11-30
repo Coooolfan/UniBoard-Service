@@ -11,8 +11,8 @@ COPY . .
 # Check if the DEBUG mode is set to True
 RUN sed -i 's/DEBUG = True/DEBUG = False/' /app/UniBoard/settings.py
 # Remove any existing migration files and the media directory
-RUN rm -r /app/api/migrations/*
-RUN rm -r /app/media
+RUN rm -rf /app/api/migrations/*
+RUN rm -rf /app/media
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 # Install supervisord

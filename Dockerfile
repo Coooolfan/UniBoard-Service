@@ -1,30 +1,28 @@
-# Use the official Python image from the Docker Hub
+# 使用官方的 Python 镜像
 FROM python:3.12.4-slim-bookworm
-# Set the working directory in the container
+# 设置容器内的工作目录
 WORKDIR /app
-# Copy the requirements file into the container
-COPY requirements.txt .
-# Install any dependencies specified in requirements.txt
-RUN pip install -r requirements.txt
-# Copy the current directory contents into the container at /app
+# 复制当前目录的内容到容器中的 /app 目录
 COPY . .
-# Check if the DEBUG mode is set to True
+# 安装 requirements.txt 中指定的依赖
+RUN pip install --no-cache-dir -r requirements.txt
+# 如果 DEBUG 模式设置为 True，则将其改为 False
 RUN sed -i 's/DEBUG = True/DEBUG = False/' /app/UniBoard/settings.py
-# Remove any existing migration files and the media directory
-RUN rm -rf /app/api/migrations/*
-RUN rm -rf /app/media
-# Set environment variables
+# 设置环境变量
 ENV PYTHONUNBUFFERED=1
-# Install supervisord
-RUN apt-get update && apt-get install -y supervisor
-# Copy the supervisord configuration file into the container
+# 安装 supervisord
+RUN apt-get update && apt-get install -y --no-install-recommends supervisor \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+# 复制 supervisord 配置文件到容器中
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-# Copy the entrypoint script into the container
+# 复制入口脚本到容器中
 COPY entrypoint.sh /entrypoint.sh
-# Make the entrypoint script executable
+# 使入口脚本可执行
 RUN chmod +x /entrypoint.sh
+# 暴露端口 8000
 EXPOSE 8000
-# Run the entrypoint script when the container starts
+# 容器启动时运行入口脚本
 ENTRYPOINT ["/entrypoint.sh"]
-# Command to run the application and celery
+# 运行应用程序和 celery
 CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

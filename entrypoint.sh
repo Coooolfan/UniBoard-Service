@@ -2,7 +2,7 @@
 
 set -e
 
-CURRENT_VERSION="0.2.5"
+CURRENT_VERSION="0.2.6"
 
 
 
@@ -13,12 +13,21 @@ migrate_0_2_4() {
 }
 
 migrate_0_2_5() {
-    CURRENT_VERSION=$1
+    local INSTALLED_VERSION=$1
     echo "Upgrading to 0.2.5, maybe loading data..."
-    if [ "$CURRENT_VERSION" != "0.2.4" ]; then
+    if [ "$INSTALLED_VERSION" == "0.2.4" ]; then
         migrate_0_2_4
     fi
     echo "Upgraded to 0.2.5"
+}
+
+migrate_0_2_6() {
+    local INSTALLED_VERSION=$1
+    echo "Upgrading to 0.2.6, maybe loading data..."
+    if [ "$INSTALLED_VERSION" == "0.2.5" ]; then
+        migrate_0_2_5 "$INSTALLED_VERSION"
+    fi
+    echo "Upgraded to 0.2.6"
 }
 
 # 检查是否需要初始化
@@ -56,7 +65,7 @@ else
       python manage.py migrate
 
       # 后续升级在 migrate 函数中添加逻辑
-      migrate_0_2_5 "$INSTALLED_VERSION"
+      migrate_0_2_6 "$INSTALLED_VERSION"
 
       echo "$CURRENT_VERSION" > /app/media/version
     fi

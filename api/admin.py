@@ -6,8 +6,8 @@ from api.models import *
 # Register your models here.
 @admin.register(UserInfo)
 class UserInfoAdmin(admin.ModelAdmin):
-    list_display = ('name', 'version', 'profile', 'avatar', 'contacts', 'slogan', 'banner', 'name_font')
-    search_fields = ('name', 'version', 'profile', 'avatar', 'contacts', 'slogan', 'banner', 'name_font')
+    list_display = ('name', 'profile', 'avatar', 'contacts', 'slogan', 'banner', 'name_font')
+    search_fields = ('name', 'profile', 'avatar', 'contacts', 'slogan', 'banner', 'name_font')
 
 
 @admin.register(Note)

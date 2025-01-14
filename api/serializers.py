@@ -33,7 +33,7 @@ class DynamicFieldsHyperlinkedModelSerializer(serializers.HyperlinkedModelSerial
 class UserInfoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = UserInfo
-        fields = ['id', 'version', 'name', 'profile', 'contacts', 'slogan', 'avatar', 'banner', 'name_font']
+        fields = ['id', 'name', 'profile', 'contacts', 'slogan', 'avatar', 'banner', 'name_font']
 
 
 class NoteSerializer(DynamicFieldsHyperlinkedModelSerializer):

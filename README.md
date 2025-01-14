@@ -38,3 +38,10 @@ python manage.py runserver 0.0.0.0:8001
 # 启动消息队列（开第二个终端） 仅适用于 Linux 
 celery -A UniBoard worker -l INFO
 ```
+
+
+build docker image
+
+```shell
+docker build -t coolfan1024/uniboard-service:latest .
+```

@@ -2,12 +2,10 @@ from django.db import models
 
 
 class UserInfo(models.Model):
-    VERSION_MAX_LENGTH = 50
     NAME_MAX_LENGTH = 100
     SLOGAN_MAX_LENGTH = 255
 
     id = models.IntegerField(primary_key=True, default=1, editable=False)
-    version = models.CharField(max_length=VERSION_MAX_LENGTH, verbose_name="版本")
     name = models.CharField(max_length=NAME_MAX_LENGTH, verbose_name="姓名")
     name_font = models.FileField(upload_to='fonts/', verbose_name="姓名字体")
     profile = models.TextField(verbose_name="简介")

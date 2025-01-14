@@ -36,8 +36,8 @@ class ShortUrlAdmin(admin.ModelAdmin):
 
 @admin.register(SysConfig)
 class SysConfigAdmin(admin.ModelAdmin):
-    list_display = ('host', 'show_copyright')
-    search_fields = ('host', 'show_copyright')
+    list_display = ('host', 'show_copyright', 'show_profile_page')
+    search_fields = ('host', 'show_copyright', 'show_profile_page')
 
 
 @admin.register(FileRecord)

@@ -7,7 +7,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-CURRENT_VERSION = "0.2.7"
+CURRENT_VERSION = "0.2.8"
 APP_DIR = Path("/app")
 MEDIA_DIR = APP_DIR / "media"
 

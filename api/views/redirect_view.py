@@ -1,12 +1,18 @@
 from django.db.models import F
 from django.shortcuts import get_object_or_404, redirect
+from django.core.cache import cache
+
 
 from api.models import ShortUrl
 
 
 def redirect_view(request, short_code):
-    short_url = get_object_or_404(ShortUrl, short_url=short_code)
+    cache_key = f"short_url_{short_code}"
+    long_url = cache.get(cache_key)
+    if long_url is None:
+        long_url = get_object_or_404(ShortUrl, short_url=short_code).long_url
+        cache.set(cache_key, long_url, 60)
+    # TODO: 重构统计逻辑：使用Celery异步入库count，不阻塞主线程
     # 更新短链跳转次数，原子化操作，防止并发问题
-    # 例子： FileRecord.objects.filter(pk=file_id).update(count=F('count') + 1)
-    ShortUrl.objects.filter(pk=short_url.pk).update(count=F('count') + 1)
-    return redirect(short_url.long_url)
+    # ShortUrl.objects.filter(pk=long_url).update(count=F("count") + 1)
+    return redirect(long_url)

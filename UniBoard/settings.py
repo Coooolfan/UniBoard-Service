@@ -34,9 +34,15 @@ else:
     DATABASES_HOST = "postgres"
     CACHES_HOST = "redis"
 
-CELERY_BROKER_URL = "redis://:GdlkOVEmA3vp8JA6ZoAiqIPxSwZR5@" + CACHES_HOST + ":6379/0"
-CELERY_WORKER_CONCURRENCY = 1
-CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+Q_CLUSTER = {
+    'name': 'DjangORM',
+    'workers': 4,
+    'timeout': 90,
+    'retry': 120,
+    'queue_limit': 50,
+    'bulk': 10,
+    'orm': 'default'
+}
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -61,9 +67,9 @@ INSTALLED_APPS = [
     "rest_framework",
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-    'django_celery_results',
     "api",
     'django_cleanup.apps.CleanupConfig',
+    'django_q',
 ]
 
 SWAGGER_SETTINGS = {

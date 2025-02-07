@@ -8,16 +8,15 @@ import chardet
 import requests
 from PIL import Image, ImageFilter
 from bs4 import BeautifulSoup
-from celery import shared_task
 from django.core.files.base import ContentFile
 
 from api.models import HyperLinkCache
 
-logger = logging.getLogger('celery')
+logger = logging.getLogger(__name__)
 
 
-@shared_task
 def fetch_page_info_task(task_id):
+    logger.info(f"fetch_page_info_task: {task_id}")
     hyper_link_cache = HyperLinkCache.objects.get(id=task_id)
     url = hyper_link_cache.url
     headers = {

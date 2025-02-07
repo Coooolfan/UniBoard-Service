@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from UniBoard.settings import MEDIA_ROOT
 from api.models import HyperLinkCache
 from api.serializers import HyperLinkCacheSerializer
-from api.tasks import fetch_page_info_task
+from django_q.tasks import async_task
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +36,7 @@ class HyperLinkCacheList(APIView):
         )
         # 保存到数据库并返回ID
         new_hyper_link_cache.save()
-        fetch_page_info_task.delay(new_hyper_link_cache.id)
+        async_task("api.views.hyper_link_cache_views.fetch_page_info_task", new_hyper_link_cache.id)
         return Response(data={"id": new_hyper_link_cache.id}, status=status.HTTP_201_CREATED)
 
 

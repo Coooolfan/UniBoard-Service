@@ -69,7 +69,7 @@ else
 
       echo "$CURRENT_VERSION" > /app/media/version
     fi
-    echo "Launch Django and Celery..."
+    echo "Launch Django and qcluster..."
 fi
 
 # 执行传入的命令（在这里是运行 supervisord）

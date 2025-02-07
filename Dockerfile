@@ -25,5 +25,5 @@ RUN chmod +x /entrypoint.py
 EXPOSE 8000
 # 容器启动时运行入口脚本
 ENTRYPOINT ["/entrypoint.py"]
-# 运行应用程序和 celery
+# 运行应用程序和 qcluster消息队列
 CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

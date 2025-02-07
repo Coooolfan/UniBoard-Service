@@ -77,7 +77,7 @@ def main():
             with open(MEDIA_DIR / "version", "w") as f:
                 f.write(CURRENT_VERSION)
 
-        print("Launch Django and Celery...")
+        print("Launch Django and qcluster...")
 
     # 执行后续命令
     if len(sys.argv) > 1:

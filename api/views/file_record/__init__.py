@@ -1,3 +1,0 @@
-from .file_record_redirect_view import FileRecordRedirect
-from .file_record_token_views import FileRecordTokenDetail
-from .file_record_views import FileRecordList, FileRecordDetail

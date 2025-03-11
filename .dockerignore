@@ -1,5 +1,0 @@
-# Ignore migration files
-api/migrations/*
-
-# Ignore media directory
-media

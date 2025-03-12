@@ -1,0 +1,34 @@
+# Only for Development
+# 仅用于开发环境
+services:
+  postgres:
+    image: postgres:16.3-bookworm
+    container_name: uniboard-postgres
+    environment:
+      POSTGRES_DB: uniboard
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database/postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  redis:
+    image: redis:7.4.0-bookworm
+    container_name: uniboard-redis
+    env_file:
+      - .env
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./database/redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 3s
+      timeout: 3s
+      retries: 10

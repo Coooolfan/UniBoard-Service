@@ -1,0 +1,7 @@
+export com.coooolfan.uniboard.model.ShortUrl
+
+input ShortUrlInsert {
+    longUrl
+    shortUrl
+}
+

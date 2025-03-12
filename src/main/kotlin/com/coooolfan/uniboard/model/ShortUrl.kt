@@ -12,11 +12,10 @@ interface ShortUrl {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long
 
-    @Key
     val longUrl: String
 
     @Key
-    val shortUrl: String
+    val shortUrl: String //  短链的字符串
 
     val visitCount: Long
 }

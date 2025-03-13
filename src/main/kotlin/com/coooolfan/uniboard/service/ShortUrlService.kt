@@ -1,6 +1,6 @@
 package com.coooolfan.uniboard.service
 
-import com.coooolfan.uniboard.repository.ShortUrlRepo
+import com.coooolfan.uniboard.repo.ShortUrlRepo
 import com.coooolfan.uniboard.model.dto.ShortUrlInsert
 import org.springframework.stereotype.Service
 import java.security.MessageDigest

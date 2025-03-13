@@ -2,7 +2,7 @@ package com.coooolfan.uniboard.controller
 
 import com.coooolfan.uniboard.model.ShortUrl
 import com.coooolfan.uniboard.model.dto.ShortUrlInsert
-import com.coooolfan.uniboard.repository.ShortUrlRepo
+import com.coooolfan.uniboard.repo.ShortUrlRepo
 import com.coooolfan.uniboard.service.ShortUrlService
 import org.babyfish.jimmer.Page
 import org.babyfish.jimmer.spring.repo.PageParam

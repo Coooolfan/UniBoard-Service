@@ -1,4 +1,4 @@
-package com.coooolfan.uniboard.repository
+package com.coooolfan.uniboard.repo
 
 import com.coooolfan.uniboard.model.ShortUrl
 import org.babyfish.jimmer.spring.repo.support.AbstractKotlinRepository

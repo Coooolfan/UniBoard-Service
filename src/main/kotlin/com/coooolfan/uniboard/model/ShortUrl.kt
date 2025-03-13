@@ -14,7 +14,6 @@ interface ShortUrl {
 
     val longUrl: String
 
-    @Key
     val shortUrl: String //  短链的字符串
 
     val visitCount: Long

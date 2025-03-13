@@ -1,0 +1,11 @@
+export com.coooolfan.uniboard.model.Note
+
+input NoteUpdate {
+    title?
+    content?
+}
+
+input NoteInsert {
+    title
+    content
+}

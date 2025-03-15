@@ -13,11 +13,11 @@ interface HyperLink {
 
     val title: String
 
-    val desc: String
+    val description: String
 
     val url: String
 
     val color: String
 
-    val icon: Byte
+    val icon: BaseSimpleFile
 }

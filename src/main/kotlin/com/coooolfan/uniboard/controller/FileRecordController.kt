@@ -28,10 +28,9 @@ class FileRecordController(private val service: FileRecordService) {
 //    @ApiIgnore
     @PostMapping("/files")
     fun uploadFile(
-        @RequestPart("metadata") insert: FileRecordInsert,
+        @RequestPart("insert") insert: FileRecordInsert,
         @RequestPart("file") file: MultipartFile
-    ) {
-        service.insert(insert, file)
-        // 处理逻辑
+    ):FileRecord {
+        return service.insert(insert, file)
     }
 }

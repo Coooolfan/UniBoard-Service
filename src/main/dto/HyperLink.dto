@@ -1,0 +1,25 @@
+export com.coooolfan.uniboard.model.HyperLink
+
+input HyperLinkInsert {
+    title
+
+    description
+
+    url
+
+    icon {
+        filename
+    }
+}
+
+input HyperLinkUpdate {
+    title
+
+    description
+
+    url
+
+    icon {
+        filename
+    }
+}

@@ -1,0 +1,26 @@
+export com.coooolfan.uniboard.model.FileRecord
+
+input FileRecordUpdate {
+
+    file {
+        filename
+    }
+
+    visibility
+
+    description
+
+    password
+}
+
+input FileRecordInsert{
+    file {
+        filename
+    }
+
+    visibility
+
+    description
+
+    password
+}

@@ -31,4 +31,6 @@ replay_pid*
 # VSCode
 .vscode/
 
+build/
 database/
+service/

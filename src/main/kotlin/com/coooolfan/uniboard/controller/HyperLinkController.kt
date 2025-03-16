@@ -25,8 +25,8 @@ class HyperLinkController(private val service:HyperLinkService) {
 
     @PostMapping("/files")
     fun uploadFile(
-        @RequestPart("insert") insert: HyperLinkInsert,
-        @RequestPart("file") file: MultipartFile
+        @RequestPart insert: HyperLinkInsert,
+        @RequestPart file: MultipartFile
     ): HyperLink {
         return service.insert(insert, file)
     }

@@ -9,9 +9,17 @@ import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/api/hyper-link")
-class HyperLinkController(private val service:HyperLinkService) {
+class HyperLinkController(private val service: HyperLinkService) {
     @GetMapping
     fun getAllHyperLinks() = service.findAll()
+
+    @PostMapping("/")
+    fun insertHyperlink(
+        @RequestPart insert: HyperLinkInsert,
+        @RequestPart file: MultipartFile
+    ): HyperLink {
+        return service.insert(insert, file)
+    }
 
     @PutMapping("/{id}")
     fun updateHyperLinkById(@PathVariable id: Long, @RequestBody update: HyperLinkUpdate) {
@@ -23,11 +31,5 @@ class HyperLinkController(private val service:HyperLinkService) {
         service.deleteById(id)
     }
 
-    @PostMapping("/files")
-    fun uploadFile(
-        @RequestPart insert: HyperLinkInsert,
-        @RequestPart file: MultipartFile
-    ): HyperLink {
-        return service.insert(insert, file)
-    }
+
 }

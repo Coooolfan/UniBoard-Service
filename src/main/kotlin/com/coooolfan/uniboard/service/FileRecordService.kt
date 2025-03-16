@@ -8,7 +8,7 @@ import com.coooolfan.uniboard.repo.FileRecordRepo
 import com.coooolfan.uniboard.utils.getHashedString
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
-import java.io.File
+import java.nio.file.Paths
 import java.util.*
 
 @Service
@@ -19,19 +19,18 @@ class FileRecordService(private val repo: FileRecordRepo) {
     fun findById(id: Long): FileRecord? = repo.findById(id)
 
     fun insert(insert: FileRecordInsert, file: MultipartFile): FileRecord {
-        if(insert.visibility== FileRecordVisibility.PASSWORD && insert.password.trim().isEmpty())
+        if (insert.visibility == FileRecordVisibility.PASSWORD && insert.password.trim().isEmpty())
             throw FileRecordException.EmptyPassword()
 
-        val programPath = System.getProperty("user.dir") + "/service/filerecord"
-        val path = File(programPath)
-        path.mkdirs()
-        val filePath = File(path, UUID.randomUUID().toString())
-        file.transferTo(filePath)
-        val shareCode = getHashedString(filePath.path)
+        val relativePath = Paths.get("service/filerecord/${UUID.randomUUID()}")
+        val filePath = Paths.get(System.getProperty("user.dir")).resolve(relativePath)
+        filePath.parent.toFile().mkdirs()
+        file.transferTo(filePath.toFile())
+        val shareCode = getHashedString(filePath.toString())
         return repo.insert(
             insert.toEntity {
                 this.shareCode = shareCode
-                this.file { this.filepath = filePath.path }
+                this.file { this.filepath = relativePath.toString() }
             },
         ).modifiedEntity
     }

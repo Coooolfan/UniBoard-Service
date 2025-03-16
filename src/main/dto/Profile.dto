@@ -1,0 +1,12 @@
+export com.coooolfan.uniboard.model.Profile
+
+input ProfileUpdate {
+    name
+
+    slogan
+
+    description
+
+    contacts
+
+}

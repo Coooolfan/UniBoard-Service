@@ -8,5 +8,10 @@ input ProfileUpdate {
     description
 
     contacts
+}
 
+input ProfileLogin {
+    loginName
+
+    loginPassword
 }

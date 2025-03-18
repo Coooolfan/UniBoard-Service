@@ -11,6 +11,10 @@ interface Profile {
 
     val name: String
 
+    val loginName: String
+
+    val loginPassword: String
+
     val description: String
 
     val slogan: String

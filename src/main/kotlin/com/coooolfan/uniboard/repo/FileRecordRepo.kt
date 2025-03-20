@@ -6,5 +6,4 @@ import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.springframework.stereotype.Repository
 
 @Repository
-class FileRecordRepo(sql: KSqlClient) : AbstractKotlinRepository<FileRecord, Long>(sql) {
-}
+class FileRecordRepo(sql: KSqlClient) : AbstractKotlinRepository<FileRecord, Long>(sql)

@@ -6,5 +6,4 @@ import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.springframework.stereotype.Repository
 
 @Repository
-class HyperLinkRepo(sql:KSqlClient):AbstractKotlinRepository<HyperLink,Long>(sql) {
-}
+class HyperLinkRepo(sql: KSqlClient) : AbstractKotlinRepository<HyperLink, Long>(sql)

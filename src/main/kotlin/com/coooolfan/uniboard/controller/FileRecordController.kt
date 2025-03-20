@@ -48,8 +48,11 @@ class FileRecordController(private val service: FileRecordService) {
         return service.insert(insert, file)
     }
 
-    private val PUBLIC_FILERECORD = newFetcher(FileRecord::class).by {
-        allScalarFields()
-        password(false)
+    companion object {
+        private val PUBLIC_FILERECORD = newFetcher(FileRecord::class).by {
+            allScalarFields()
+            password(false)
+        }
     }
+
 }

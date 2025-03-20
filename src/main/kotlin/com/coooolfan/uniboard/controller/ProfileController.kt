@@ -1,5 +1,6 @@
 package com.coooolfan.uniboard.controller
 
+import cn.dev33.satoken.annotation.SaCheckLogin
 import com.coooolfan.uniboard.model.Profile
 import com.coooolfan.uniboard.model.dto.ProfileUpdate
 import com.coooolfan.uniboard.service.ProfileService
@@ -25,6 +26,7 @@ class ProfileController(private val service: ProfileService) {
     }
 
     @PutMapping
+    @SaCheckLogin
     fun updateProfile(
         @RequestPart update: ProfileUpdate,
         @RequestPart(required = false) avatar: MultipartFile?,

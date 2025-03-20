@@ -1,5 +1,6 @@
 package com.coooolfan.uniboard.controller
 
+import cn.dev33.satoken.annotation.SaCheckLogin
 import cn.dev33.satoken.stp.StpUtil
 import com.coooolfan.uniboard.model.dto.ProfileLogin
 import com.coooolfan.uniboard.repo.ProfileRepo
@@ -20,6 +21,7 @@ class TokenController(private val repo: ProfileRepo) {
     }
 
     @DeleteMapping
+    @SaCheckLogin
     fun deleteToken() {
         StpUtil.logout()
     }

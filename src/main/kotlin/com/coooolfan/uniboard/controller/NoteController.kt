@@ -1,5 +1,6 @@
 package com.coooolfan.uniboard.controller
 
+import cn.dev33.satoken.annotation.SaCheckLogin
 import com.coooolfan.uniboard.model.Note
 import com.coooolfan.uniboard.model.dto.NoteInsert
 import com.coooolfan.uniboard.model.dto.NoteUpdate
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/note")
+@SaCheckLogin
 class NoteController(private val repo: NoteRepo) {
     @GetMapping
     fun getAllNotes(): List<Note> {

@@ -6,5 +6,4 @@ import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.springframework.stereotype.Repository
 
 @Repository
-class NoteRepo(sql: KSqlClient) : AbstractKotlinRepository<Note, Long>(sql) {
-}
+class NoteRepo(sql: KSqlClient) : AbstractKotlinRepository<Note, Long>(sql)

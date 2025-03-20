@@ -1,5 +1,6 @@
 package com.coooolfan.uniboard.controller
 
+import cn.dev33.satoken.annotation.SaCheckLogin
 import com.coooolfan.uniboard.model.dto.NotePicture
 import com.coooolfan.uniboard.service.FileService
 import jakarta.servlet.http.HttpServletResponse
@@ -17,11 +18,13 @@ class FileController(private val service: FileService) {
     }
 
     @PostMapping("/note")
+    @SaCheckLogin
     fun uploadNotePicture(@RequestPart file: MultipartFile): NotePicture {
         return service.uploadNotePicture(file)
     }
 
     @GetMapping("/note/{uuid}")
+    @SaCheckLogin
     fun downloadNotePicture(@PathVariable uuid: String, response: HttpServletResponse): StreamingResponseBody {
         return service.downloadNotePicture(uuid, response)
     }

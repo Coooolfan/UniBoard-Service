@@ -1,5 +1,6 @@
 package com.coooolfan.uniboard.controller
 
+import cn.dev33.satoken.annotation.SaCheckLogin
 import com.coooolfan.uniboard.model.ShortUrl
 import com.coooolfan.uniboard.model.dto.ShortUrlInsert
 import com.coooolfan.uniboard.repo.ShortUrlRepo
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/short-url")
+@SaCheckLogin
 class ShortUrlController(private val repo: ShortUrlRepo) {
     @GetMapping
     fun getShortUrl(@RequestParam pageIndex: Int, @RequestParam pageSize: Int): Page<ShortUrl> {
@@ -26,6 +28,8 @@ class ShortUrlController(private val repo: ShortUrlRepo) {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteShortUrl(@PathVariable(value = "id") id: Long) {
-        repo.deleteById(id)
+        if(repo.deleteById(id)!=1){
+            throw IllegalArgumentException("ShortUrl not found")
+        }
     }
 }

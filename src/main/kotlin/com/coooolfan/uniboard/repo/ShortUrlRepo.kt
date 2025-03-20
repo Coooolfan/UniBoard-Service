@@ -6,5 +6,4 @@ import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.springframework.stereotype.Repository
 
 @Repository
-class ShortUrlRepo(sql:KSqlClient) : AbstractKotlinRepository<ShortUrl, Long>(sql) {
-}
+class ShortUrlRepo(sql: KSqlClient) : AbstractKotlinRepository<ShortUrl, Long>(sql)

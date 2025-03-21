@@ -9,11 +9,11 @@ interface Profile {
     @Id
     val id: Long
 
-    val name: String
-
     val loginName: String
 
     val loginPassword: String
+
+    val name: String
 
     val description: String
 

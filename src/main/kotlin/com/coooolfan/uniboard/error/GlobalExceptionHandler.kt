@@ -15,7 +15,10 @@ import java.net.URI
 @RestControllerAdvice
 class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
 
-    @ExceptionHandler(NotLoginException::class)
+    @ExceptionHandler(
+        NotLoginException::class,
+        CommonException.AuthenticationFailed::class
+    )
     fun handleNotLoginException(ex: NotLoginException, request: WebRequest): ResponseEntity<Any?>? {
         val problemDetail = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED)
         problemDetail.type = URI.create("https://www.google.com/search?q=401+Unauthorized")

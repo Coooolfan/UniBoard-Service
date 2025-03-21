@@ -13,8 +13,12 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 class FileController(private val service: FileService) {
 
     @GetMapping("/{uuid}")
-    fun downloadFileRecord(@PathVariable uuid: String) {
-
+    fun downloadFileRecord(
+        @PathVariable uuid: String,
+        @RequestParam(required = false) pw: String?,
+        resp: HttpServletResponse
+    ) {
+        service.downloadFileRecord(uuid, pw, resp)
     }
 
     @PostMapping("/note")

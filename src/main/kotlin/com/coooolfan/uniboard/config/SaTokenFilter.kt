@@ -5,8 +5,6 @@ import cn.dev33.satoken.filter.SaServletFilter
 import cn.dev33.satoken.interceptor.SaInterceptor
 import cn.dev33.satoken.router.SaHttpMethod
 import cn.dev33.satoken.router.SaRouter
-import cn.dev33.satoken.stp.StpUtil
-import cn.dev33.satoken.util.SaResult
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
@@ -16,7 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 class SaTokenFilter : WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
         // 注册 Sa-Token 拦截器，打开注解式鉴权功能
-        registry.addInterceptor(SaInterceptor { StpUtil.checkLogin() })
+        registry.addInterceptor(SaInterceptor())
             // 所有接口都会检查是否登录
             .addPathPatterns("/**")
     }
@@ -29,10 +27,6 @@ class SaTokenFilter : WebMvcConfigurer {
         return SaServletFilter()
             // 指定 [拦截路由]
             .addInclude("/**")
-            // 异常处理函数：每次认证函数发生异常时执行此函数
-            .setError { e ->
-                SaResult.error(e.message)
-            }
             // 前置函数：在每次认证函数之前执行
             .setBeforeAuth {
                 SaHolder.getResponse()

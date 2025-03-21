@@ -33,4 +33,23 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
             request
         )
     }
+
+    @ExceptionHandler(CommonException.NotFound::class)
+    fun handleNotFound(ex:Exception,request: WebRequest): ResponseEntity<Any?>? {
+        val problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND)
+        problemDetail.type = URI.create("https://www.google.com/search?q=404+Not+Found")
+        val errorResponseException =
+            ErrorResponseException(
+                HttpStatus.NOT_FOUND,
+                problemDetail,
+                ex.cause
+            )
+        return handleExceptionInternal(
+            errorResponseException,
+            errorResponseException.body,
+            errorResponseException.headers,
+            errorResponseException.statusCode,
+            request
+        )
+    }
 }

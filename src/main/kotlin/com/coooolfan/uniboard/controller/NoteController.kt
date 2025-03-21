@@ -1,6 +1,7 @@
 package com.coooolfan.uniboard.controller
 
 import cn.dev33.satoken.annotation.SaCheckLogin
+import com.coooolfan.uniboard.error.CommonException
 import com.coooolfan.uniboard.model.Note
 import com.coooolfan.uniboard.model.dto.NoteInsert
 import com.coooolfan.uniboard.model.dto.NoteUpdate
@@ -19,7 +20,7 @@ class NoteController(private val repo: NoteRepo) {
 
     @GetMapping("/{id}")
     fun getNoteById(@PathVariable id: Long): Note {
-        return repo.findById(id) ?: throw IllegalArgumentException("Note not found")
+        return repo.findById(id) ?: throw CommonException.NotFound()
     }
 
     @PostMapping

@@ -1,6 +1,7 @@
 package com.coooolfan.uniboard.controller
 
 import cn.dev33.satoken.annotation.SaCheckLogin
+import com.coooolfan.uniboard.error.CommonException
 import com.coooolfan.uniboard.error.FileRecordException
 import com.coooolfan.uniboard.model.FileRecord
 import com.coooolfan.uniboard.model.by
@@ -29,7 +30,7 @@ class FileRecordController(private val service: FileRecordService) {
 
     @GetMapping("/{id}")
     fun getFileRecordById(@PathVariable id: Long): @FetchBy("PUBLIC_FILERECORD") FileRecord {
-        return service.findById(id, PUBLIC_FILERECORD) ?: throw IllegalArgumentException("FileRecord not found")
+        return service.findById(id, PUBLIC_FILERECORD) ?: throw CommonException.NotFound()
     }
 
     @DeleteMapping("/{id}")

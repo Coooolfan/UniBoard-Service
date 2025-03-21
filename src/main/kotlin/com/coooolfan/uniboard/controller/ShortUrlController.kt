@@ -1,6 +1,7 @@
 package com.coooolfan.uniboard.controller
 
 import cn.dev33.satoken.annotation.SaCheckLogin
+import com.coooolfan.uniboard.error.CommonException
 import com.coooolfan.uniboard.model.ShortUrl
 import com.coooolfan.uniboard.model.dto.ShortUrlInsert
 import com.coooolfan.uniboard.repo.ShortUrlRepo
@@ -29,7 +30,7 @@ class ShortUrlController(private val repo: ShortUrlRepo) {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteShortUrl(@PathVariable(value = "id") id: Long) {
         if(repo.deleteById(id)!=1){
-            throw IllegalArgumentException("ShortUrl not found")
+            throw CommonException.NotFound()
         }
     }
 }

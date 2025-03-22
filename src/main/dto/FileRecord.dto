@@ -1,7 +1,6 @@
 export com.coooolfan.uniboard.model.FileRecord
 
 input FileRecordUpdate {
-
     file {
         filename
     }
@@ -13,7 +12,7 @@ input FileRecordUpdate {
     password
 }
 
-input FileRecordInsert{
+input FileRecordInsert {
     file {
         filename
     }
@@ -23,4 +22,14 @@ input FileRecordInsert{
     description
 
     password
+}
+
+input FileRecordDirectLinkCreate {
+    id!
+}
+
+FileRecordDirectLinkResp {
+    id
+
+    directUUID :String
 }

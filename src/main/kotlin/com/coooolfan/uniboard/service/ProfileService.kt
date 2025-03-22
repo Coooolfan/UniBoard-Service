@@ -4,7 +4,9 @@ import cn.dev33.satoken.stp.StpUtil
 import com.coooolfan.uniboard.error.CommonException
 import com.coooolfan.uniboard.error.ProfileException
 import com.coooolfan.uniboard.model.Profile
+import com.coooolfan.uniboard.model.ProfileDraft
 import com.coooolfan.uniboard.model.dto.PasswordUpdate
+import com.coooolfan.uniboard.model.dto.ProfileCreate
 import com.coooolfan.uniboard.model.dto.ProfileLogin
 import com.coooolfan.uniboard.model.dto.ProfileUpdate
 import com.coooolfan.uniboard.repo.ProfileRepo
@@ -19,28 +21,29 @@ class ProfileService(private val repo: ProfileRepo) {
         return repo.findById(0) ?: throw ProfileException.SystemUninitialized()
     }
 
-    fun createProfile(update: ProfileUpdate, avatar: MultipartFile?, banner: MultipartFile?, font: MultipartFile?) {
+    fun createProfile(create: ProfileCreate, avatar: MultipartFile?, banner: MultipartFile?, font: MultipartFile?) {
         if (repo.count() > 0) throw ProfileException.SystemAlreadyInitialized()
-
-        repo.save(update.toEntity {
+        repo.save(create.toEntity {
             id = 0
-            saveProfileFile(avatar, "avatar")?.let { path -> avatar { filepath = path } }
-            saveProfileFile(banner, "banner")?.let { path -> banner { filepath = path } }
-            saveProfileFile(font, "font")?.let { path -> customFont { filepath = path } }
+            applyProfileFiles(this, avatar, banner, font)
+            loginPassword = hashPassword(create.loginPassword)
         })
     }
 
     fun updateProfile(update: ProfileUpdate, avatar: MultipartFile?, banner: MultipartFile?, font: MultipartFile?) {
         if (repo.count() == 0.toLong()) throw ProfileException.SystemUninitialized()
-        createProfile(update, avatar, banner, font)
+        repo.save(update.toEntity {
+            id = 0
+            applyProfileFiles(this, avatar, banner, font)
+        })
     }
 
     fun checkLogin(login: ProfileLogin) {
         val profile = repo.findById(0) ?: throw CommonException.AuthenticationFailed()
-        if (profile.loginName == login.loginName && profile.loginPassword == hashPassword(login.loginPassword))
-            StpUtil.login(profile.id)
-        else
-            throw CommonException.AuthenticationFailed()
+        if (profile.loginName == login.loginName && profile.loginPassword == hashPassword(login.loginPassword)) StpUtil.login(
+            profile.id
+        )
+        else throw CommonException.AuthenticationFailed()
     }
 
     fun updatePassword(update: PasswordUpdate) {
@@ -71,4 +74,28 @@ class ProfileService(private val repo: ProfileRepo) {
         file.transferTo(filePath)
         return relativePath.toString()
     }
+
+    private fun applyProfileFiles(
+        profile: ProfileDraft, avatar: MultipartFile?, banner: MultipartFile?, font: MultipartFile?
+    ) {
+        saveProfileFile(avatar, "avatar")?.let { path ->
+            profile.avatar {
+                filepath = path
+                filename = "avatar"
+            }
+        }
+        saveProfileFile(banner, "banner")?.let { path ->
+            profile.banner {
+                filepath = path
+                filename = "banner"
+            }
+        }
+        saveProfileFile(font, "font")?.let { path ->
+            profile.customFont {
+                filepath = path
+                filename = "font"
+            }
+        }
+    }
+
 }

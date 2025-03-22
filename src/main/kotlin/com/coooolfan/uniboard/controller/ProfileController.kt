@@ -5,6 +5,7 @@ import com.coooolfan.uniboard.error.CommonException
 import com.coooolfan.uniboard.error.ProfileException
 import com.coooolfan.uniboard.model.Profile
 import com.coooolfan.uniboard.model.dto.PasswordUpdate
+import com.coooolfan.uniboard.model.dto.ProfileCreate
 import com.coooolfan.uniboard.model.dto.ProfileUpdate
 import com.coooolfan.uniboard.service.ProfileService
 import org.springframework.web.bind.annotation.*
@@ -24,12 +25,12 @@ class ProfileController(private val service: ProfileService) {
         ProfileException.SystemAlreadyInitialized::class,
     )
     fun createProfile(
-        @RequestPart update: ProfileUpdate,
+        @RequestPart create: ProfileCreate,
         @RequestPart(required = false) avatar: MultipartFile?,
         @RequestPart(required = false) banner: MultipartFile?,
         @RequestPart(required = false) font: MultipartFile?
     ) {
-        service.createProfile(update, avatar, banner, font)
+        service.createProfile(create, avatar, banner, font)
     }
 
     @PutMapping

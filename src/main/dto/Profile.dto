@@ -10,6 +10,20 @@ input ProfileUpdate {
     contacts
 }
 
+input ProfileCreate {
+    name
+
+    slogan
+
+    description
+
+    contacts
+
+    loginName
+
+    loginPassword
+}
+
 input ProfileLogin {
     loginName
 

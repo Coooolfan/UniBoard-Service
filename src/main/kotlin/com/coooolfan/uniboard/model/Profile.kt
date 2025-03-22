@@ -23,7 +23,7 @@ interface Profile {
 
     @PropOverride(prop = "filename", columnName = "custom_font_filename")
     @PropOverride(prop = "filepath", columnName = "custom_font_filepath")
-    val customFont: BaseSimpleFile
+    val customFont: BaseSimpleFile?
 
     @PropOverride(prop = "filename", columnName = "avatar_name")
     @PropOverride(prop = "filepath", columnName = "avatar_path")

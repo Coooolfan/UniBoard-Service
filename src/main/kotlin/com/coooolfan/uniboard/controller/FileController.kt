@@ -17,8 +17,8 @@ class FileController(private val service: FileService) {
         @PathVariable uuid: String,
         @RequestParam(required = false) pw: String?,
         resp: HttpServletResponse
-    ) {
-        service.downloadFileRecord(uuid, pw, resp)
+    ) :StreamingResponseBody{
+       return service.downloadFileRecord(uuid, pw, resp)
     }
 
     @PostMapping("/note")

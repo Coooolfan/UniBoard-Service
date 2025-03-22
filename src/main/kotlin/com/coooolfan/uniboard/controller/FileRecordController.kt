@@ -5,6 +5,8 @@ import com.coooolfan.uniboard.error.CommonException
 import com.coooolfan.uniboard.error.FileRecordException
 import com.coooolfan.uniboard.model.FileRecord
 import com.coooolfan.uniboard.model.by
+import com.coooolfan.uniboard.model.dto.FileRecordDirectLinkCreate
+import com.coooolfan.uniboard.model.dto.FileRecordDirectLinkResp
 import com.coooolfan.uniboard.model.dto.FileRecordInsert
 import com.coooolfan.uniboard.model.dto.FileRecordUpdate
 import com.coooolfan.uniboard.service.FileRecordService
@@ -47,6 +49,12 @@ class FileRecordController(private val service: FileRecordService) {
         @RequestPart file: MultipartFile
     ): FileRecord {
         return service.insert(insert, file)
+    }
+
+    @PostMapping("/direct-link")
+    @SaCheckLogin
+    fun createDirectLink(create: FileRecordDirectLinkCreate):FileRecordDirectLinkResp {
+        return service.createDirectLink(create)
     }
 
     companion object {

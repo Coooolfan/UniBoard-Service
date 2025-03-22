@@ -6,26 +6,33 @@ import com.coooolfan.uniboard.model.FileRecord
 import com.coooolfan.uniboard.model.FileRecordVisibility
 import com.coooolfan.uniboard.model.dto.NotePicture
 import com.coooolfan.uniboard.repo.FileRecordRepo
+import com.github.benmanes.caffeine.cache.Cache
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody
 import java.io.File
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 
 @Service
-class FileService(private val repo: FileRecordRepo) {
-    fun downloadFileRecord(uuid: String, password: String?, resp: HttpServletResponse) {
-        if (uuid.contains('-')) {
-            // TODO 使用UUID直链下载文件，无需鉴权，从Redis中获取UUID对应的文件对象
-            println("使用UUID直链下载文件，无需鉴权，从Redis中获取UUID对应的文件对象")
+class FileService(
+    private val repo: FileRecordRepo,
+    private val directLinkCache: Cache<String, Long>
+) {
+    fun downloadFileRecord(key: String, password: String?, resp: HttpServletResponse): StreamingResponseBody {
+        if (key.contains('-')) {
+            // Use UUID direct link to download file without authentication
+            val fileId = directLinkCache.getIfPresent(key) ?: throw CommonException.NotFound()
+            val fileRecord = repo.findById(fileId) ?: throw CommonException.NotFound()
+            return returnFile2Response(fileRecord.file.filepath, resp, fileRecord.file.filename)
         }
 
-        val fileRecord = getFileRecord(uuid) ?: throw CommonException.NotFound()
-
+        val fileRecord = getFileRecord(key) ?: throw CommonException.NotFound()
         if (// 已登录可直接下载
             StpUtil.isLogin() ||
             // 未登录且文件为公开
@@ -33,7 +40,7 @@ class FileService(private val repo: FileRecordRepo) {
             // 未登录且文件为密码保护且密码正确
             (fileRecord.visibility == FileRecordVisibility.PASSWORD && fileRecord.password == password)
         )
-            returnFile2Response(fileRecord.file.filepath, "filerecord", resp)
+            return returnFile2Response(fileRecord.file.filepath, resp, fileRecord.file.filename)
 
         throw CommonException.NotFound()
     }
@@ -48,24 +55,33 @@ class FileService(private val repo: FileRecordRepo) {
     }
 
     fun downloadNotePicture(uuid: String, resp: HttpServletResponse): StreamingResponseBody {
-        return returnFile2Response(uuid, "note", resp)
+        return returnFile2Response(uuid, resp)
     }
 
     fun downloadHyperLinkPicture(uuid: String, resp: HttpServletResponse): StreamingResponseBody {
-        return returnFile2Response(uuid, "hyperlink", resp)
+        return returnFile2Response(uuid, resp)
     }
 
-    private fun returnFile2Response(uuid: String, funName: String, resp: HttpServletResponse): StreamingResponseBody {
-        val programPath = System.getProperty("user.dir") + "/service/" + funName
+    private fun returnFile2Response(
+        uuid: String,
+        resp: HttpServletResponse,
+        fileName: String? = null
+    ): StreamingResponseBody {
+        val programPath = System.getProperty("user.dir")
         val filePath: Path = Paths.get(programPath, uuid)
 
         val file = File(filePath.toString())
+        val encodedFileName: String = URLEncoder.encode(fileName ?: file.name, StandardCharsets.UTF_8)
+            .replace("+", "%20")
 
         val contentType = Files.probeContentType(filePath) ?: "application/octet-stream"
+
         resp.contentType = contentType
         resp.setContentLength(file.length().toInt())
-        resp.setHeader("Content-Disposition", "attachment; filename=\"${file.name}\"")
-
+        resp.setHeader(
+            "Content-Disposition",
+            "attachment; filename=\"${encodedFileName}\"; filename*=UTF-8''${encodedFileName}"
+        )
         return StreamingResponseBody { outputStream ->
             Files.copy(filePath, outputStream)
             outputStream.flush()

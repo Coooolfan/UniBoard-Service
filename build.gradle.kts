@@ -32,6 +32,8 @@ dependencies {
     implementation("org.babyfish.jimmer:jimmer-spring-boot-starter:${jimmerVersion}")
     ksp("org.babyfish.jimmer:jimmer-ksp:${jimmerVersion}")
     implementation("cn.dev33:sa-token-spring-boot3-starter:1.40.0")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.2.0")
+    implementation("org.springframework:spring-context-support")
 }
 
 kotlin {

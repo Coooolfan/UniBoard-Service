@@ -19,7 +19,7 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         NotLoginException::class,
         CommonException.AuthenticationFailed::class
     )
-    fun handleNotLoginException(ex: NotLoginException, request: WebRequest): ResponseEntity<Any?>? {
+    fun handleAuthenticationFailed(ex: Exception, request: WebRequest): ResponseEntity<Any>? {
         val problemDetail = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED)
         problemDetail.type = URI.create("https://www.google.com/search?q=401+Unauthorized")
         val errorResponseException =
@@ -38,7 +38,7 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
     }
 
     @ExceptionHandler(CommonException.NotFound::class)
-    fun handleNotFound(ex:Exception,request: WebRequest): ResponseEntity<Any?>? {
+    fun handleNotFound(ex: Exception, request: WebRequest): ResponseEntity<Any?>? {
         val problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND)
         problemDetail.type = URI.create("https://www.google.com/search?q=404+Not+Found")
         val errorResponseException =

@@ -4,10 +4,13 @@ import cn.dev33.satoken.annotation.SaCheckLogin
 import com.coooolfan.uniboard.error.CommonException
 import com.coooolfan.uniboard.error.ProfileException
 import com.coooolfan.uniboard.model.Profile
+import com.coooolfan.uniboard.model.by
 import com.coooolfan.uniboard.model.dto.PasswordUpdate
 import com.coooolfan.uniboard.model.dto.ProfileCreate
 import com.coooolfan.uniboard.model.dto.ProfileUpdate
 import com.coooolfan.uniboard.service.ProfileService
+import org.babyfish.jimmer.client.FetchBy
+import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
@@ -16,8 +19,8 @@ import org.springframework.web.multipart.MultipartFile
 class ProfileController(private val service: ProfileService) {
     @GetMapping
     @Throws(ProfileException.SystemUninitialized::class)
-    fun getProfile(): Profile {
-        return service.getProfile()
+    fun getProfile(): @FetchBy("PUBLIC_PROFILE") Profile {
+        return service.getProfile(PUBLIC_PROFILE)
     }
 
     @PostMapping
@@ -57,5 +60,13 @@ class ProfileController(private val service: ProfileService) {
         update:PasswordUpdate
     ) {
         service.updatePassword(update)
+    }
+
+    companion object {
+        private val PUBLIC_PROFILE = newFetcher(Profile::class).by {
+            allScalarFields()
+            loginName(false)
+            loginPassword(false)
+        }
     }
 }

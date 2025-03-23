@@ -10,6 +10,7 @@ import com.coooolfan.uniboard.model.dto.ProfileCreate
 import com.coooolfan.uniboard.model.dto.ProfileLogin
 import com.coooolfan.uniboard.model.dto.ProfileUpdate
 import com.coooolfan.uniboard.repo.ProfileRepo
+import org.babyfish.jimmer.sql.fetcher.Fetcher
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Paths
@@ -17,8 +18,8 @@ import java.security.MessageDigest
 
 @Service
 class ProfileService(private val repo: ProfileRepo) {
-    fun getProfile(): Profile {
-        return repo.findById(0) ?: throw ProfileException.SystemUninitialized()
+    fun getProfile(fetcher: Fetcher<Profile>): Profile {
+        return repo.findById(0, fetcher) ?: throw ProfileException.SystemUninitialized()
     }
 
     fun createProfile(create: ProfileCreate, avatar: MultipartFile?, banner: MultipartFile?, font: MultipartFile?) {

@@ -5,14 +5,13 @@ import org.babyfish.jimmer.sql.Serialized
 @Serialized
 data class ProfileContacts(
     val github: String,
-    val weibo: String,
+    val telegram: String,
     val qq: String,
-    val wechat: String,
     val email: String,
+    val weibo: String,
+    val zhihu: String,
     val twitter: String,
-    val linkedin: String,
     val facebook: String,
     val instagram: String,
-    val telegram: String,
-    val website: String
+    val linkedin: String
 )

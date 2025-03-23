@@ -10,6 +10,7 @@ import com.coooolfan.uniboard.model.dto.ProfileCreate
 import com.coooolfan.uniboard.model.dto.ProfileLogin
 import com.coooolfan.uniboard.model.dto.ProfileUpdate
 import com.coooolfan.uniboard.repo.ProfileRepo
+import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.fetcher.Fetcher
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -36,7 +37,7 @@ class ProfileService(private val repo: ProfileRepo) {
         repo.save(update.toEntity {
             id = 0
             applyProfileFiles(this, avatar, banner, font)
-        })
+        }, SaveMode.UPDATE_ONLY)
     }
 
     fun checkLogin(login: ProfileLogin) {
@@ -68,12 +69,11 @@ class ProfileService(private val repo: ProfileRepo) {
     private fun saveProfileFile(file: MultipartFile?, category: String): String? {
         if (file?.isEmpty != false) return null
 
-        val fileFormat = file.originalFilename?.substringAfterLast('.') ?: "jpg"
-        val relativePath = Paths.get("service/profile/${category}.$fileFormat")
+        val relativePath = Paths.get("service/profile/${category}")
         val filePath = Paths.get(System.getProperty("user.dir")).resolve(relativePath)
         filePath.parent.toFile().mkdirs()
         file.transferTo(filePath)
-        return relativePath.toString()
+        return relativePath.toString().replace("service", "file")
     }
 
     private fun applyProfileFiles(

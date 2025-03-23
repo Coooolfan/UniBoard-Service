@@ -37,4 +37,9 @@ class FileController(private val service: FileService) {
     fun downloadHyperLinkPicture(@PathVariable uuid: String, response: HttpServletResponse): StreamingResponseBody {
         return service.downloadHyperLinkPicture(uuid, response)
     }
+
+    @GetMapping("/profile/{category}")
+    fun downloadProfileFile(@PathVariable category: String, response: HttpServletResponse): StreamingResponseBody {
+        return service.downloadProfileFile(category, response)
+    }
 }

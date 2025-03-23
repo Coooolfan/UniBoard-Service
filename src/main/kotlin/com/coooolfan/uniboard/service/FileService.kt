@@ -62,13 +62,17 @@ class FileService(
         return returnFile2Response(uuid, resp)
     }
 
+    fun downloadProfileFile(category: String, resp: HttpServletResponse): StreamingResponseBody {
+        return returnFile2Response("service/profile/${category}", resp)
+    }
+
     private fun returnFile2Response(
-        uuid: String,
+        key: String,
         resp: HttpServletResponse,
         fileName: String? = null
     ): StreamingResponseBody {
         val programPath = System.getProperty("user.dir")
-        val filePath: Path = Paths.get(programPath, uuid)
+        val filePath: Path = Paths.get(programPath, key)
 
         val file = File(filePath.toString())
         val encodedFileName: String = URLEncoder.encode(fileName ?: file.name, StandardCharsets.UTF_8)

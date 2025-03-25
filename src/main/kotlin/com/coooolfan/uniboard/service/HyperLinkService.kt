@@ -16,7 +16,7 @@ class HyperLinkService(private val repo: HyperLinkRepo) {
 
     fun insert(insert: HyperLinkInsert, file: MultipartFile): HyperLink {
         val fileFormat = file.originalFilename?.substringAfterLast('.') ?: "jpg"
-        val relativePath = Paths.get("service/filerecord/${UUID.randomUUID()}.$fileFormat")
+        val relativePath = Paths.get("file/hyperlink/${UUID.randomUUID()}.$fileFormat")
         val filePath = Paths.get(System.getProperty("user.dir")).resolve(relativePath)
         filePath.parent.toFile().mkdirs()
         file.transferTo(filePath.toFile())

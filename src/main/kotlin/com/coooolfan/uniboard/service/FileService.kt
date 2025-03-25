@@ -59,7 +59,7 @@ class FileService(
     }
 
     fun downloadHyperLinkPicture(uuid: String, resp: HttpServletResponse): StreamingResponseBody {
-        return returnFile2Response(uuid, resp)
+        return returnFile2Response("service/hyper-link/${uuid}", resp)
     }
 
     fun downloadProfileFile(category: String, resp: HttpServletResponse): StreamingResponseBody {

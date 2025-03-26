@@ -27,7 +27,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(NotLoginException::class)
     fun handleAuthenticationFailed(ex: NotLoginException, request: WebRequest): ResponseEntity<Any>? {
         return ResponseEntity
-            .status(201)
+            .status(401)
             .body(resultMap(CommonException.AuthenticationFailed()))
     }
 

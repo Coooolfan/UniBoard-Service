@@ -13,5 +13,7 @@ input NoteInsert {
 }
 
 NotePicture {
-    url :String
+    originalFilename: String
+
+    url: String
 }

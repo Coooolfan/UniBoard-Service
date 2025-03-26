@@ -23,8 +23,10 @@ class FileController(private val service: FileService) {
 
     @PostMapping("/note")
     @SaCheckLogin
-    fun uploadNotePicture(@RequestPart file: MultipartFile): NotePicture {
-        return service.uploadNotePicture(file)
+    fun uploadNotePicture(@RequestParam("file[]") files: Array<MultipartFile>): List<NotePicture> {
+        return files.map { file ->
+            service.uploadNotePicture(file)
+        }
     }
 
     @GetMapping("/note/{uuid}")

@@ -3,9 +3,12 @@ package com.coooolfan.uniboard.controller
 import cn.dev33.satoken.annotation.SaCheckLogin
 import com.coooolfan.uniboard.error.CommonException
 import com.coooolfan.uniboard.model.Note
+import com.coooolfan.uniboard.model.by
 import com.coooolfan.uniboard.model.dto.NoteInsert
 import com.coooolfan.uniboard.model.dto.NoteUpdate
 import com.coooolfan.uniboard.repo.NoteRepo
+import org.babyfish.jimmer.client.FetchBy
+import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
@@ -14,19 +17,20 @@ import org.springframework.web.bind.annotation.*
 @SaCheckLogin
 class NoteController(private val repo: NoteRepo) {
     @GetMapping
-    fun getAllNotes(): List<Note> {
-        return repo.findAll()
+    fun getAllNotes(): List<@FetchBy("DEFAULT_NOTE") Note> {
+        return repo.findAll(DEFAULT_NOTE)
     }
 
     @GetMapping("/{id}")
-    fun getNoteById(@PathVariable id: Long): Note {
-        return repo.findById(id) ?: throw CommonException.NotFound()
+    @Throws(CommonException.NotFound::class)
+    fun getNoteById(@PathVariable id: Long): @FetchBy("DEFAULT_NOTE") Note {
+        return repo.findById(id, DEFAULT_NOTE) ?: throw CommonException.NotFound()
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun insertNote(@RequestBody insert: NoteInsert) {
-        repo.insert(insert)
+    fun insertNote(@RequestBody insert: NoteInsert): @FetchBy("DEFAULT_NOTE") Note {
+        return repo.insert(insert).modifiedEntity
     }
 
     @DeleteMapping("/{id}")
@@ -41,4 +45,9 @@ class NoteController(private val repo: NoteRepo) {
         repo.update(update.toEntity { this.id = id })
     }
 
+    companion object {
+        private val DEFAULT_NOTE = newFetcher(Note::class).by {
+            allScalarFields()
+        }
+    }
 }

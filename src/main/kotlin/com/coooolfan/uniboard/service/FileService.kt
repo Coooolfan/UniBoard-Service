@@ -47,15 +47,20 @@ class FileService(
 
     fun uploadNotePicture(file: MultipartFile): NotePicture {
         val fileFormat = file.originalFilename?.substringAfterLast('.') ?: "jpg"
-        val relativePath = Paths.get("service/note/${UUID.randomUUID()}.$fileFormat")
+        val uuid = UUID.randomUUID()
+        val relativePath = Paths.get("service/note/${uuid}.${fileFormat}")
         val filePath = Paths.get(System.getProperty("user.dir")).resolve(relativePath)
         filePath.parent.toFile().mkdirs()
+        println("file path: $filePath")
         file.transferTo(filePath.toFile())
-        return NotePicture(relativePath.toString())
+        return NotePicture(
+            file.originalFilename ?: "unknown",
+            "/file/note/${uuid}.${fileFormat}"
+        )
     }
 
     fun downloadNotePicture(uuid: String, resp: HttpServletResponse): StreamingResponseBody {
-        return returnFile2Response(uuid, resp)
+        return returnFile2Response("service/note/${uuid}", resp)
     }
 
     fun downloadHyperLinkPicture(uuid: String, resp: HttpServletResponse): StreamingResponseBody {

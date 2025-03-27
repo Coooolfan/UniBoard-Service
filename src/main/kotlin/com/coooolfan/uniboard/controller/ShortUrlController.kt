@@ -22,8 +22,8 @@ class ShortUrlController(private val repo: ShortUrlRepo) {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun insertShortUrl(@RequestBody insert: ShortUrlInsert) {
-        repo.insert(insert.toEntity { this.shortUrl = getHashedString(insert.longUrl) })
+    fun insertShortUrl(@RequestBody insert: ShortUrlInsert):ShortUrl {
+        return repo.insert(insert.toEntity { this.shortUrl = getHashedString(insert.longUrl) }).modifiedEntity
     }
 
     @DeleteMapping("/{id}")

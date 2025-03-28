@@ -10,6 +10,7 @@ import com.coooolfan.uniboard.model.dto.FileRecordDirectLinkResp
 import com.coooolfan.uniboard.model.dto.FileRecordInsert
 import com.coooolfan.uniboard.model.dto.FileRecordUpdate
 import com.coooolfan.uniboard.service.FileRecordService
+import org.babyfish.jimmer.Page
 import org.babyfish.jimmer.client.FetchBy
 import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
 import org.springframework.web.bind.annotation.*
@@ -20,8 +21,8 @@ import org.springframework.web.multipart.MultipartFile
 class FileRecordController(private val service: FileRecordService) {
     @GetMapping
     @SaCheckLogin
-    fun getAllFileRecords(): List<FileRecord> {
-        return service.findAll()
+    fun getAllFileRecords(@RequestParam pageIndex: Int, @RequestParam pageSize: Int): Page<FileRecord> {
+        return service.findByPage(pageIndex, pageSize)
     }
 
     @PutMapping("/{id}")
@@ -30,9 +31,9 @@ class FileRecordController(private val service: FileRecordService) {
         service.update(update.toEntity { this.id = id })
     }
 
-    @GetMapping("/{id}")
-    fun getFileRecordById(@PathVariable id: Long): @FetchBy("PUBLIC_FILERECORD") FileRecord {
-        return service.findById(id, PUBLIC_FILERECORD) ?: throw CommonException.NotFound()
+    @GetMapping("/{shareCode}")
+    fun getFileRecordById(@PathVariable shareCode: String): @FetchBy("PUBLIC_FILERECORD") FileRecord {
+        return service.findByByShareCode(shareCode, PUBLIC_FILERECORD) ?: throw CommonException.NotFound()
     }
 
     @DeleteMapping("/{id}")
@@ -53,7 +54,7 @@ class FileRecordController(private val service: FileRecordService) {
 
     @PostMapping("/direct-link")
     @SaCheckLogin
-    fun createDirectLink(create: FileRecordDirectLinkCreate):FileRecordDirectLinkResp {
+    fun createDirectLink(create: FileRecordDirectLinkCreate): FileRecordDirectLinkResp {
         return service.createDirectLink(create)
     }
 

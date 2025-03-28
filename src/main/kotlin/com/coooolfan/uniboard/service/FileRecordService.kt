@@ -9,6 +9,8 @@ import com.coooolfan.uniboard.model.dto.FileRecordInsert
 import com.coooolfan.uniboard.repo.FileRecordRepo
 import com.coooolfan.uniboard.utils.getHashedString
 import com.github.benmanes.caffeine.cache.Cache
+import org.babyfish.jimmer.Page
+import org.babyfish.jimmer.spring.repo.PageParam
 import org.babyfish.jimmer.sql.fetcher.Fetcher
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -20,10 +22,17 @@ class FileRecordService(
     private val repo: FileRecordRepo,
     private val directLinkCache: Cache<String, Long>
 ) {
-    fun findAll() = repo.findAll()
+    fun findByPage(pageIndex: Int, pageSize: Int): Page<FileRecord> {
+        return findByPage(PageParam.byNo(pageIndex, pageSize))
+    }
+
+    fun findByPage(pageParam: PageParam): Page<FileRecord> {
+        return repo.findPage(pageParam)
+    }
+
     fun deleteById(id: Long) = repo.deleteById(id)
     fun update(update: FileRecord) = repo.update(update)
-    fun findById(id: Long, fetcher: Fetcher<FileRecord>): FileRecord? = repo.findById(id, fetcher)
+    fun findByByShareCode(shareCode: String, fetcher: Fetcher<FileRecord>) = repo.findByShareCode(shareCode, fetcher)
 
     fun insert(insert: FileRecordInsert, file: MultipartFile): FileRecord {
         if (insert.visibility == FileRecordVisibility.PASSWORD && insert.password.trim().isEmpty())

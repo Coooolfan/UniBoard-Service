@@ -12,13 +12,23 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 @RequestMapping("/file")
 class FileController(private val service: FileService) {
 
+    @GetMapping("/{uuid}/{filename}")
+    fun downloadFileRecordWithFilename(
+        @PathVariable uuid: String,
+        @PathVariable filename: String,
+        @RequestParam(required = false) pw: String?,
+        resp: HttpServletResponse
+    ): StreamingResponseBody {
+        return service.downloadFileRecord(uuid, pw, resp)
+    }
+
     @GetMapping("/{uuid}")
     fun downloadFileRecord(
         @PathVariable uuid: String,
         @RequestParam(required = false) pw: String?,
         resp: HttpServletResponse
-    ) :StreamingResponseBody{
-       return service.downloadFileRecord(uuid, pw, resp)
+    ): StreamingResponseBody {
+        return service.downloadFileRecord(uuid, pw, resp)
     }
 
     @PostMapping("/note")

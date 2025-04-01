@@ -5,33 +5,32 @@ import org.babyfish.jimmer.error.CodeBasedRuntimeException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import org.springframework.web.context.request.WebRequest
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
-    @ExceptionHandler(CodeBasedRuntimeException::class)
-    fun handle(ex: CodeBasedRuntimeException): ResponseEntity<Map<String, Any>> {
-        val statusCode = when (ex.code) {
-            ProfileErrorCode.SYSTEM_UNINITIALIZED.toString() -> 404
-            ProfileErrorCode.SYSTEM_ALREADY_INITIALIZED.toString() -> 403
-            CommonErrorCode.NOT_FOUND.toString() -> 404
-            CommonErrorCode.AUTHENTICATION_FAILED.toString() -> 401
-            else -> 500
-        }
-        return ResponseEntity
-            .status(statusCode)
-            .body(resultMap(ex))
+@ExceptionHandler(CodeBasedRuntimeException::class)
+fun handle(ex: CodeBasedRuntimeException): ResponseEntity<Map<String, Any>> {
+    val statusCode = when (ex.code) {
+        ProfileErrorCode.SYSTEM_UNINITIALIZED.toString() -> 503 // Service Unavailable
+        ProfileErrorCode.SYSTEM_ALREADY_INITIALIZED.toString() -> 409 // Conflict
+        CommonErrorCode.NOT_FOUND.toString() -> 404 // Not Found
+        CommonErrorCode.AUTHENTICATION_FAILED.toString() -> 401 // Unauthorized
+        else -> 500 // Internal Server Error
     }
+    return ResponseEntity
+        .status(statusCode)
+        .body(resultMap(ex))
+}
 
 
     @ExceptionHandler(NotLoginException::class)
-    fun handleAuthenticationFailed(ex: NotLoginException, request: WebRequest): ResponseEntity<Any>? {
+    fun handleAuthenticationFailed(): ResponseEntity<Any>? {
         return ResponseEntity
             .status(401)
             .body(resultMap(CommonException.AuthenticationFailed()))
     }
 
-    protected fun resultMap(ex: CodeBasedRuntimeException): Map<String, Any> {
+    private fun resultMap(ex: CodeBasedRuntimeException): Map<String, Any> {
         val resultMap: MutableMap<String, Any> = LinkedHashMap()
         resultMap["family"] = ex.family
         resultMap["code"] = ex.code

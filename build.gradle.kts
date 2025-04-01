@@ -20,6 +20,7 @@ repositories {
 }
 
 val jimmerVersion = "0.9.64"
+val saTokenVersion = "1.41.0"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -31,7 +32,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.babyfish.jimmer:jimmer-spring-boot-starter:${jimmerVersion}")
     ksp("org.babyfish.jimmer:jimmer-ksp:${jimmerVersion}")
-    implementation("cn.dev33:sa-token-spring-boot3-starter:1.40.0")
+    implementation("cn.dev33:sa-token-spring-boot3-starter:${saTokenVersion}")
     implementation("com.github.ben-manes.caffeine:caffeine:3.2.0")
     implementation("org.springframework:spring-context-support")
 }

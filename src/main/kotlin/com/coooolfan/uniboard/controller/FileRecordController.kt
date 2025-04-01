@@ -27,13 +27,14 @@ class FileRecordController(private val service: FileRecordService) {
 
     @PutMapping("/{id}")
     @SaCheckLogin
-    fun updateFileRecordById(@PathVariable id: Long, @RequestBody update: FileRecordUpdate) {
-        service.update(update.toEntity { this.id = id })
+    @Throws(FileRecordException.EmptyPassword::class)
+    fun updateFileRecordById(@PathVariable id: Long, @RequestBody update: FileRecordUpdate): FileRecord {
+        return service.update(update.toEntity { this.id = id }).modifiedEntity
     }
 
     @GetMapping("/{shareCode}")
-    fun getFileRecordById(@PathVariable shareCode: String): @FetchBy("PUBLIC_FILERECORD") FileRecord {
-        return service.findByByShareCode(shareCode, PUBLIC_FILERECORD) ?: throw CommonException.NotFound()
+    fun getFileRecordByShareCode(@PathVariable shareCode: String): @FetchBy("PUBLIC_FILERECORD") FileRecord {
+        return service.findByByShareCode(shareCode, PUBLIC_FILERECORD) ?: throw CommonException.notFound()
     }
 
     @DeleteMapping("/{id}")
@@ -61,8 +62,8 @@ class FileRecordController(private val service: FileRecordService) {
     companion object {
         private val PUBLIC_FILERECORD = newFetcher(FileRecord::class).by {
             allScalarFields()
-            visibility(false)
             password(false)
+            downloadCount(false)
         }
     }
 

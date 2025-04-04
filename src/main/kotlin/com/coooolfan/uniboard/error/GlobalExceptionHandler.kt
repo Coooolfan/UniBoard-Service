@@ -15,6 +15,8 @@ fun handle(ex: CodeBasedRuntimeException): ResponseEntity<Map<String, Any>> {
         ProfileErrorCode.SYSTEM_ALREADY_INITIALIZED.toString() -> 409 // Conflict
         CommonErrorCode.NOT_FOUND.toString() -> 404 // Not Found
         CommonErrorCode.AUTHENTICATION_FAILED.toString() -> 401 // Unauthorized
+        CommonErrorCode.FORBIDDEN.toString() -> 403 // Forbidden
+        ProfileErrorCode.EMPTY_LOGIN_NAME.toString() -> 400 // Bad Request
         else -> 500 // Internal Server Error
     }
     return ResponseEntity

@@ -3,6 +3,7 @@ package com.coooolfan.uniboard.service
 import com.coooolfan.uniboard.model.HyperLink
 import com.coooolfan.uniboard.model.dto.HyperLinkInsert
 import com.coooolfan.uniboard.repo.HyperLinkRepo
+import org.babyfish.jimmer.sql.fetcher.Fetcher
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Paths
@@ -10,7 +11,7 @@ import java.util.*
 
 @Service
 class HyperLinkService(private val repo: HyperLinkRepo) {
-    fun findAll() = repo.findAll()
+    fun findAll(fetcher: Fetcher<HyperLink>) = repo.findAll(fetcher)
     fun deleteById(id: Long) = repo.deleteById(id)
     fun update(update: HyperLink) = repo.update(update)
 

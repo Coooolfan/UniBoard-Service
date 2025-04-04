@@ -34,3 +34,4 @@ replay_pid*
 /build/
 /database/
 /service/
+/bin/*

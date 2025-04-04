@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 class SystemConfigController(private val repo: SystemConfigRepo) {
     @GetMapping
     fun getSystemConfig(): @FetchBy("DEFAULT_SYSTEM_CONFIG") SystemConfig {
-        return repo.findById(1, DEFAULT_SYSTEM_CONFIG) ?: throw CommonException.NotFound()
+        return repo.findById(0, DEFAULT_SYSTEM_CONFIG) ?: throw CommonException.NotFound()
     }
 
     @PutMapping
@@ -23,7 +23,7 @@ class SystemConfigController(private val repo: SystemConfigRepo) {
     fun updateSystemConfig(
         @RequestBody update: SystemConfigUpdate
     ): @FetchBy("DEFAULT_SYSTEM_CONFIG") SystemConfig {
-        return repo.update(update.toEntity { id = 1 }).modifiedEntity
+        return repo.update(update.toEntity { id = 0 }).modifiedEntity
     }
 
     companion object {

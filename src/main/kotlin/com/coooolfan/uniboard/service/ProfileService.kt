@@ -5,11 +5,13 @@ import com.coooolfan.uniboard.error.CommonException
 import com.coooolfan.uniboard.error.ProfileException
 import com.coooolfan.uniboard.model.Profile
 import com.coooolfan.uniboard.model.ProfileDraft
+import com.coooolfan.uniboard.model.SystemConfigDraft
 import com.coooolfan.uniboard.model.dto.PasswordUpdate
 import com.coooolfan.uniboard.model.dto.ProfileCreate
 import com.coooolfan.uniboard.model.dto.ProfileLogin
 import com.coooolfan.uniboard.model.dto.ProfileUpdate
 import com.coooolfan.uniboard.repo.ProfileRepo
+import com.coooolfan.uniboard.repo.SystemConfigRepo
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.fetcher.Fetcher
 import org.springframework.stereotype.Service
@@ -18,7 +20,7 @@ import java.nio.file.Paths
 import java.security.MessageDigest
 
 @Service
-class ProfileService(private val repo: ProfileRepo) {
+class ProfileService(private val repo: ProfileRepo, private val sysRepo: SystemConfigRepo) {
     fun getProfile(fetcher: Fetcher<Profile>): Profile {
         return repo.findById(0, fetcher) ?: throw ProfileException.SystemUninitialized()
     }
@@ -29,7 +31,13 @@ class ProfileService(private val repo: ProfileRepo) {
             id = 0
             applyProfileFiles(this, avatar, banner, font)
             loginPassword = hashPassword(create.loginPassword)
-        })
+        }, SaveMode.INSERT_ONLY)
+        sysRepo.save(SystemConfigDraft.`$`.produce {
+            id = 0
+            host = ""
+            showProfile = true
+            showCopyRight = true
+        }, SaveMode.INSERT_ONLY)
     }
 
     fun updateProfile(update: ProfileUpdate, avatar: MultipartFile?, banner: MultipartFile?, font: MultipartFile?) {
@@ -49,8 +57,9 @@ class ProfileService(private val repo: ProfileRepo) {
     }
 
     fun updatePassword(update: PasswordUpdate) {
-        val profile = repo.findById(0) ?: throw CommonException.AuthenticationFailed()
-        if (profile.loginPassword != hashPassword(update.oldPassword)) throw CommonException.AuthenticationFailed()
+        val profile = repo.findById(0) ?: throw ProfileException.SystemUninitialized()
+        if (update.loginName.trim().isEmpty()) throw ProfileException.EmptyLoginName()
+        if (profile.loginPassword != hashPassword(update.oldPassword)) throw CommonException.Forbidden()
         repo.save(Profile {
             id = 0
             loginPassword = hashPassword(update.newPassword)

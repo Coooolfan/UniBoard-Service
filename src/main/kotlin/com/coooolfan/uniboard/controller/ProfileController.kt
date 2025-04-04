@@ -54,10 +54,11 @@ class ProfileController(private val service: ProfileService) {
     @SaCheckLogin
     @Throws(
         ProfileException.SystemUninitialized::class,
-        CommonException.AuthenticationFailed::class
+        ProfileException.EmptyLoginName::class,
+        CommonException.Forbidden::class
     )
     fun updatePassword(
-        update:PasswordUpdate
+        update: PasswordUpdate
     ) {
         service.updatePassword(update)
     }

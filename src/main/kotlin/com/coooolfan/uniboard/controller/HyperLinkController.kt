@@ -2,7 +2,6 @@ package com.coooolfan.uniboard.controller
 
 import cn.dev33.satoken.annotation.SaCheckLogin
 import com.coooolfan.uniboard.model.HyperLink
-import com.coooolfan.uniboard.model.SystemConfig
 import com.coooolfan.uniboard.model.by
 import com.coooolfan.uniboard.model.dto.HyperLinkInsert
 import com.coooolfan.uniboard.model.dto.HyperLinkUpdate
@@ -22,7 +21,7 @@ class HyperLinkController(private val service: HyperLinkService) {
     @SaCheckLogin
     fun insertHyperlink(
         @RequestPart insert: HyperLinkInsert,
-        @RequestPart file: MultipartFile
+        @RequestPart(required = true) file: MultipartFile
     ): @FetchBy("DEFAULT_HYPER_LINK") HyperLink {
         return service.insert(insert, file)
     }
@@ -31,9 +30,10 @@ class HyperLinkController(private val service: HyperLinkService) {
     @SaCheckLogin
     fun updateHyperLinkById(
         @PathVariable id: Long,
-        @RequestBody update: HyperLinkUpdate
+        @RequestPart update: HyperLinkUpdate,
+        @RequestPart(required = false) file: MultipartFile?
     ): @FetchBy("DEFAULT_HYPER_LINK") HyperLink {
-        return service.update(update.toEntity { this.id = id }).modifiedEntity
+        return service.update(update.toEntity { this.id = id }, file)
     }
 
     @DeleteMapping("/{id}")

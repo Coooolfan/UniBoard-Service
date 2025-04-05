@@ -7,9 +7,7 @@ input HyperLinkInsert {
 
     url
 
-    icon {
-        filename
-    }
+    color
 }
 
 input HyperLinkUpdate {
@@ -19,7 +17,5 @@ input HyperLinkUpdate {
 
     url
 
-    icon {
-        filename
-    }
+    color
 }

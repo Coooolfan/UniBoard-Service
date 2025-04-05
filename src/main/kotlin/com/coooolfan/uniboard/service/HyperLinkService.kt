@@ -16,10 +16,12 @@ class HyperLinkService(private val repo: HyperLinkRepo) {
     fun findAll(fetcher: Fetcher<HyperLink>) = repo.findAll(fetcher)
     fun deleteById(id: Long) = repo.deleteById(id)
 
-    fun update(update: HyperLink, file: MultipartFile?): HyperLink {
-        if (file == null) return repo.save(update, SaveMode.UPDATE_ONLY).modifiedEntity
+    fun update(update: HyperLink, file: MultipartFile?, fetcher: Fetcher<HyperLink>): HyperLink {
+        if (file == null) {
+            return repo.saveCommand(update, SaveMode.UPDATE_ONLY).execute(fetcher).modifiedEntity
+        }
         val (relativePath, fileName) = saveFile(file)
-        return repo.save(
+        return repo.saveCommand(
             HyperLinkDraft.`$`.produce(update) {
                 this.icon {
                     this.filename = fileName
@@ -27,12 +29,12 @@ class HyperLinkService(private val repo: HyperLinkRepo) {
                 }
             },
             SaveMode.UPDATE_ONLY
-        ).modifiedEntity
+        ).execute(fetcher).modifiedEntity
     }
 
-    fun insert(insert: HyperLinkInsert, file: MultipartFile): HyperLink {
+    fun insert(insert: HyperLinkInsert, file: MultipartFile, fetcher: Fetcher<HyperLink>): HyperLink {
         val (relativePath, fileName) = saveFile(file)
-        return repo.save(
+        return repo.saveCommand(
             insert.toEntity {
                 this.icon {
                     this.filename = fileName
@@ -40,7 +42,7 @@ class HyperLinkService(private val repo: HyperLinkRepo) {
                 }
             },
             SaveMode.INSERT_ONLY
-        ).modifiedEntity
+        ).execute(fetcher).modifiedEntity
     }
 
     /**

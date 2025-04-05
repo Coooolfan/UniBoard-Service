@@ -21,15 +21,21 @@ import org.springframework.web.multipart.MultipartFile
 class FileRecordController(private val service: FileRecordService) {
     @GetMapping
     @SaCheckLogin
-    fun getAllFileRecords(@RequestParam pageIndex: Int, @RequestParam pageSize: Int): Page<FileRecord> {
-        return service.findByPage(pageIndex, pageSize)
+    fun getAllFileRecords(
+        @RequestParam pageIndex: Int,
+        @RequestParam pageSize: Int
+    ): Page<@FetchBy("DEFAULT_FILERECORD") FileRecord> {
+        return service.findByPage(pageIndex, pageSize, DEFAULT_FILERECORD)
     }
 
     @PutMapping("/{id}")
     @SaCheckLogin
     @Throws(FileRecordException.EmptyPassword::class)
-    fun updateFileRecordById(@PathVariable id: Long, @RequestBody update: FileRecordUpdate): FileRecord {
-        return service.update(update.toEntity { this.id = id }).modifiedEntity
+    fun updateFileRecordById(
+        @PathVariable id: Long,
+        @RequestBody update: FileRecordUpdate
+    ): @FetchBy("DEFAULT_FILERECORD") FileRecord {
+        return service.update(update.toEntity { this.id = id }, DEFAULT_FILERECORD)
     }
 
     @GetMapping("/{shareCode}")
@@ -49,8 +55,8 @@ class FileRecordController(private val service: FileRecordService) {
     fun uploadFile(
         @RequestPart insert: FileRecordInsert,
         @RequestPart file: MultipartFile
-    ): FileRecord {
-        return service.insert(insert, file)
+    ): @FetchBy("DEFAULT_FILERECORD") FileRecord {
+        return service.insert(insert, file, DEFAULT_FILERECORD)
     }
 
     @PostMapping("/direct-link")
@@ -64,6 +70,10 @@ class FileRecordController(private val service: FileRecordService) {
             allScalarFields()
             password(false)
             downloadCount(false)
+        }
+
+        private val DEFAULT_FILERECORD = newFetcher(FileRecord::class).by {
+            allScalarFields()
         }
     }
 

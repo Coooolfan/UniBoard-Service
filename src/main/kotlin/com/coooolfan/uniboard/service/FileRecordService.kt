@@ -11,6 +11,7 @@ import com.coooolfan.uniboard.utils.getHashedString
 import com.github.benmanes.caffeine.cache.Cache
 import org.babyfish.jimmer.Page
 import org.babyfish.jimmer.spring.repo.PageParam
+import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.fetcher.Fetcher
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -22,19 +23,22 @@ class FileRecordService(
     private val repo: FileRecordRepo,
     private val directLinkCache: Cache<String, Long>
 ) {
-    fun findByPage(pageIndex: Int, pageSize: Int): Page<FileRecord> {
-        return findByPage(PageParam.byNo(pageIndex, pageSize))
+    fun findByPage(pageIndex: Int, pageSize: Int, fetcher: Fetcher<FileRecord>): Page<FileRecord> {
+        return findByPage(PageParam.byNo(pageIndex, pageSize), fetcher)
     }
 
-    fun findByPage(pageParam: PageParam): Page<FileRecord> {
-        return repo.findPage(pageParam)
+    fun findByPage(pageParam: PageParam, fetcher: Fetcher<FileRecord>): Page<FileRecord> {
+        return repo.findPage(pageParam, fetcher)
     }
 
     fun deleteById(id: Long) = repo.deleteById(id)
-    fun update(update: FileRecord) = repo.update(update)
+    fun update(update: FileRecord, fetcher: Fetcher<FileRecord>): FileRecord {
+        return repo.saveCommand(update, SaveMode.UPDATE_ONLY).execute(fetcher).modifiedEntity
+    }
+
     fun findByByShareCode(shareCode: String, fetcher: Fetcher<FileRecord>) = repo.findByShareCode(shareCode, fetcher)
 
-    fun insert(insert: FileRecordInsert, file: MultipartFile): FileRecord {
+    fun insert(insert: FileRecordInsert, file: MultipartFile, fetcher: Fetcher<FileRecord>): FileRecord {
         if (insert.visibility == FileRecordVisibility.PASSWORD && insert.password.trim().isEmpty())
             throw FileRecordException.EmptyPassword()
 
@@ -43,12 +47,13 @@ class FileRecordService(
         filePath.parent.toFile().mkdirs()
         file.transferTo(filePath.toFile())
         val shareCode = getHashedString(filePath.toString())
-        return repo.insert(
+        return repo.saveCommand(
             insert.toEntity {
                 this.shareCode = shareCode
                 this.file { this.filepath = relativePath.toString() }
             },
-        ).modifiedEntity
+            SaveMode.INSERT_ONLY
+        ).execute(fetcher).modifiedEntity
     }
 
     fun createDirectLink(create: FileRecordDirectLinkCreate): FileRecordDirectLinkResp {

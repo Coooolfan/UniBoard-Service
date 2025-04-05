@@ -19,7 +19,7 @@ repositories {
     mavenCentral()
 }
 
-val jimmerVersion = "0.9.64"
+val jimmerVersion = "0.9.71"
 val saTokenVersion = "1.41.0"
 
 dependencies {

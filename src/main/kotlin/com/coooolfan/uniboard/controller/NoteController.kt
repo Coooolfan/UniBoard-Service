@@ -8,6 +8,7 @@ import com.coooolfan.uniboard.model.dto.NoteInsert
 import com.coooolfan.uniboard.model.dto.NoteUpdate
 import com.coooolfan.uniboard.repo.NoteRepo
 import org.babyfish.jimmer.client.FetchBy
+import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -30,7 +31,7 @@ class NoteController(private val repo: NoteRepo) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun insertNote(@RequestBody insert: NoteInsert): @FetchBy("DEFAULT_NOTE") Note {
-        return repo.insert(insert).modifiedEntity
+        return repo.saveCommand(insert, SaveMode.INSERT_ONLY).execute(DEFAULT_NOTE).modifiedEntity
     }
 
     @DeleteMapping("/{id}")
@@ -42,7 +43,7 @@ class NoteController(private val repo: NoteRepo) {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun updateNoteById(@PathVariable id: Long, @RequestBody update: NoteUpdate) {
-        repo.update(update.toEntity { this.id = id })
+        repo.saveCommand(update.toEntity { this.id = id }, SaveMode.UPDATE_ONLY).execute(DEFAULT_NOTE).modifiedEntity
     }
 
     companion object {

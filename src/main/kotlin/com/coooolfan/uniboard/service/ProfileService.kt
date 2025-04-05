@@ -27,25 +27,25 @@ class ProfileService(private val repo: ProfileRepo, private val sysRepo: SystemC
 
     fun createProfile(create: ProfileCreate, avatar: MultipartFile?, banner: MultipartFile?, font: MultipartFile?) {
         if (repo.count() > 0) throw ProfileException.SystemAlreadyInitialized()
-        repo.save(create.toEntity {
+        repo.saveCommand(create.toEntity {
             id = 0
             applyProfileFiles(this, avatar, banner, font)
             loginPassword = hashPassword(create.loginPassword)
-        }, SaveMode.INSERT_ONLY)
-        sysRepo.save(SystemConfigDraft.`$`.produce {
+        }, SaveMode.INSERT_ONLY).execute()
+        sysRepo.saveCommand(SystemConfigDraft.`$`.produce {
             id = 0
             host = ""
             showProfile = true
             showCopyRight = true
-        }, SaveMode.INSERT_ONLY)
+        }, SaveMode.INSERT_ONLY).execute()
     }
 
     fun updateProfile(update: ProfileUpdate, avatar: MultipartFile?, banner: MultipartFile?, font: MultipartFile?) {
         if (repo.count() == 0.toLong()) throw ProfileException.SystemUninitialized()
-        repo.save(update.toEntity {
+        repo.saveCommand(update.toEntity {
             id = 0
             applyProfileFiles(this, avatar, banner, font)
-        }, SaveMode.UPDATE_ONLY)
+        }, SaveMode.UPDATE_ONLY).execute()
     }
 
     fun checkLogin(login: ProfileLogin) {

@@ -23,7 +23,7 @@ class SystemConfigController(private val repo: SystemConfigRepo) {
     fun updateSystemConfig(
         @RequestBody update: SystemConfigUpdate
     ): @FetchBy("DEFAULT_SYSTEM_CONFIG") SystemConfig {
-        return repo.update(update.toEntity { id = 0 }).modifiedEntity
+        return repo.saveCommand(update.toEntity { id = 0 }).execute(DEFAULT_SYSTEM_CONFIG).modifiedEntity
     }
 
     companion object {

@@ -23,7 +23,7 @@ class HyperLinkController(private val service: HyperLinkService) {
         @RequestPart insert: HyperLinkInsert,
         @RequestPart(required = true) file: MultipartFile
     ): @FetchBy("DEFAULT_HYPER_LINK") HyperLink {
-        return service.insert(insert, file)
+        return service.insert(insert, file, DEFAULT_HYPER_LINK)
     }
 
     @PutMapping("/{id}")
@@ -33,7 +33,7 @@ class HyperLinkController(private val service: HyperLinkService) {
         @RequestPart update: HyperLinkUpdate,
         @RequestPart(required = false) file: MultipartFile?
     ): @FetchBy("DEFAULT_HYPER_LINK") HyperLink {
-        return service.update(update.toEntity { this.id = id }, file)
+        return service.update(update.toEntity { this.id = id }, file, DEFAULT_HYPER_LINK)
     }
 
     @DeleteMapping("/{id}")

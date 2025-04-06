@@ -1,6 +1,7 @@
 package com.coooolfan.uniboard.controller
 
 import cn.dev33.satoken.annotation.SaCheckLogin
+import com.coooolfan.uniboard.config.CacheConfig
 import com.coooolfan.uniboard.error.CommonException
 import com.coooolfan.uniboard.model.ShortUrl
 import com.coooolfan.uniboard.model.by
@@ -14,6 +15,7 @@ import org.babyfish.jimmer.spring.repo.PageParam
 import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
+import com.github.benmanes.caffeine.cache.Cache
 
 @RestController
 @RequestMapping("/api/short-url")
@@ -52,10 +54,14 @@ class ShortUrlController(private val repo: ShortUrlRepo) {
 @RestController
 @RequestMapping("/s")
 @ResponseStatus(HttpStatus.TEMPORARY_REDIRECT)
-class RedirectController(private val repo: ShortUrlRepo) {
+class RedirectController(private val repo: ShortUrlRepo, private val shortUrlCountCache: Cache<Long, Long>) {
     @GetMapping("/{shortUrlCode}")
     fun redirect(@PathVariable(value = "shortUrlCode") shortUrlCode: String, resp: HttpServletResponse) {
         val entity = repo.findByShortUrlCode(shortUrlCode) ?: throw CommonException.NotFound()
+        // 原子操作
+        shortUrlCountCache.asMap().compute(entity.id) { _, currentCount ->
+            (currentCount ?: entity.visitCount) + 1
+        }
         resp.sendRedirect(entity.longUrl)
         resp.flushBuffer()
     }

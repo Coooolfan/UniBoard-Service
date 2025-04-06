@@ -22,30 +22,39 @@ import java.util.*
 @Service
 class FileService(
     private val repo: FileRecordRepo,
-    private val directLinkCache: Cache<String, Long>
+    private val directLinkCache: Cache<String, Long>,
+    private val fileRecordCountCache: Cache<Long, Long>
 ) {
     fun downloadFileRecord(key: String, password: String?, resp: HttpServletResponse): StreamingResponseBody {
         if (key.contains('-')) {
             // 使用 UUID 直链下载无需鉴权
             val fileId = directLinkCache.getIfPresent(key) ?: throw CommonException.NotFound()
             val fileRecord = repo.findById(fileId) ?: throw CommonException.NotFound()
-            return returnFile2Response(fileRecord.file.filepath, resp, fileRecord.file.filename)
+            return returnFileRecord2Response(fileRecord, resp)
         }
         // 已登录可直接下载
         if (StpUtil.isLogin()) {
             val fileRecord = getFileRecord(key) ?: throw CommonException.NotFound()
-            return returnFile2Response(fileRecord.file.filepath, resp, fileRecord.file.filename)
+            return returnFileRecord2Response(fileRecord, resp)
         }
         // 未登录下只允许使用 ShreCode 下载
         val fileRecord = repo.findByShareCode(key) ?: throw CommonException.NotFound()
         // 未登录且文件为公开
         if (fileRecord.visibility == FileRecordVisibility.PUBLIC)
-            return returnFile2Response(fileRecord.file.filepath, resp, fileRecord.file.filename)
+            return returnFileRecord2Response(fileRecord, resp)
         // 未登录且文件为密码保护且密码正确
         if (fileRecord.visibility == FileRecordVisibility.PASSWORD && fileRecord.password == password)
-            return returnFile2Response(fileRecord.file.filepath, resp, fileRecord.file.filename)
+            return returnFileRecord2Response(fileRecord, resp)
 
         throw CommonException.NotFound()
+    }
+
+    private fun returnFileRecord2Response(fileRecord: FileRecord, resp: HttpServletResponse): StreamingResponseBody {
+        // 原子操作
+        fileRecordCountCache.asMap().compute(fileRecord.id) { _, currentCount ->
+            (currentCount ?: fileRecord.downloadCount) + 1
+        }
+        return returnFile2Response(fileRecord.file.filepath, resp, fileRecord.file.filename)
     }
 
     fun uploadNotePicture(file: MultipartFile): NotePicture {

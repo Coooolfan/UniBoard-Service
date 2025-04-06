@@ -1,8 +1,8 @@
 package com.coooolfan.uniboard.controller
 
 import cn.dev33.satoken.annotation.SaCheckLogin
-import com.coooolfan.uniboard.error.CommonException
 import com.coooolfan.uniboard.model.SystemConfig
+import com.coooolfan.uniboard.model.SystemConfigDraft
 import com.coooolfan.uniboard.model.by
 import com.coooolfan.uniboard.model.dto.SystemConfigUpdate
 import com.coooolfan.uniboard.repo.SystemConfigRepo
@@ -15,7 +15,12 @@ import org.springframework.web.bind.annotation.*
 class SystemConfigController(private val repo: SystemConfigRepo) {
     @GetMapping
     fun getSystemConfig(): @FetchBy("DEFAULT_SYSTEM_CONFIG") SystemConfig {
-        return repo.findById(0, DEFAULT_SYSTEM_CONFIG) ?: throw CommonException.NotFound()
+        return repo.findById(0, DEFAULT_SYSTEM_CONFIG) ?: SystemConfigDraft.`$`.produce {
+            id = 0
+            host = ""
+            showProfile = true
+            showCopyRight = true
+        }
     }
 
     @PutMapping

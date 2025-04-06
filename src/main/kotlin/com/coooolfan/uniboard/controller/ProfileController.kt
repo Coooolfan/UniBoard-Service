@@ -26,7 +26,8 @@ class ProfileController(private val service: ProfileService) {
     @PostMapping
     @Throws(
         ProfileException.SystemAlreadyInitialized::class,
-    )
+        ProfileException.EmptyLoginName::class,
+        )
     fun createProfile(
         @RequestPart create: ProfileCreate,
         @RequestPart(required = false) avatar: MultipartFile?,

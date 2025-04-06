@@ -15,6 +15,7 @@ import com.coooolfan.uniboard.repo.SystemConfigRepo
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.fetcher.Fetcher
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Paths
 import java.security.MessageDigest
@@ -25,8 +26,10 @@ class ProfileService(private val repo: ProfileRepo, private val sysRepo: SystemC
         return repo.findById(0, fetcher) ?: throw ProfileException.SystemUninitialized()
     }
 
+    @Transactional
     fun createProfile(create: ProfileCreate, avatar: MultipartFile?, banner: MultipartFile?, font: MultipartFile?) {
         if (repo.count() > 0) throw ProfileException.SystemAlreadyInitialized()
+        if (create.loginName.trim().isEmpty()) throw ProfileException.EmptyLoginName()
         repo.saveCommand(create.toEntity {
             id = 0
             applyProfileFiles(this, avatar, banner, font)
@@ -37,7 +40,7 @@ class ProfileService(private val repo: ProfileRepo, private val sysRepo: SystemC
             host = ""
             showProfile = true
             showCopyRight = true
-        }, SaveMode.INSERT_ONLY).execute()
+        }, SaveMode.UPSERT).execute()
     }
 
     fun updateProfile(update: ProfileUpdate, avatar: MultipartFile?, banner: MultipartFile?, font: MultipartFile?) {

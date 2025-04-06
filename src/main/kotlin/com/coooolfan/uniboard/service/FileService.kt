@@ -26,20 +26,23 @@ class FileService(
 ) {
     fun downloadFileRecord(key: String, password: String?, resp: HttpServletResponse): StreamingResponseBody {
         if (key.contains('-')) {
-            // Use UUID direct link to download file without authentication
+            // 使用 UUID 直链下载无需鉴权
             val fileId = directLinkCache.getIfPresent(key) ?: throw CommonException.NotFound()
             val fileRecord = repo.findById(fileId) ?: throw CommonException.NotFound()
             return returnFile2Response(fileRecord.file.filepath, resp, fileRecord.file.filename)
         }
-
-        val fileRecord = getFileRecord(key) ?: throw CommonException.NotFound()
-        if (// 已登录可直接下载
-            StpUtil.isLogin() ||
-            // 未登录且文件为公开
-            fileRecord.visibility == FileRecordVisibility.PUBLIC ||
-            // 未登录且文件为密码保护且密码正确
-            (fileRecord.visibility == FileRecordVisibility.PASSWORD && fileRecord.password == password)
-        )
+        // 已登录可直接下载
+        if (StpUtil.isLogin()) {
+            val fileRecord = getFileRecord(key) ?: throw CommonException.NotFound()
+            return returnFile2Response(fileRecord.file.filepath, resp, fileRecord.file.filename)
+        }
+        // 未登录下只允许使用 ShreCode 下载
+        val fileRecord = repo.findByShareCode(key) ?: throw CommonException.NotFound()
+        // 未登录且文件为公开
+        if (fileRecord.visibility == FileRecordVisibility.PUBLIC)
+            return returnFile2Response(fileRecord.file.filepath, resp, fileRecord.file.filename)
+        // 未登录且文件为密码保护且密码正确
+        if (fileRecord.visibility == FileRecordVisibility.PASSWORD && fileRecord.password == password)
             return returnFile2Response(fileRecord.file.filepath, resp, fileRecord.file.filename)
 
         throw CommonException.NotFound()

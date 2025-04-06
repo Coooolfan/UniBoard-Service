@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.*
 class NoteController(private val repo: NoteRepo) {
     @GetMapping
     fun getAllNotes(): List<@FetchBy("DEFAULT_NOTE") Note> {
-        return repo.findAll(DEFAULT_NOTE)
+        return repo.findAll(DEFAULT_NOTE) {
+            asc(Note::id)
+        }
     }
 
     @GetMapping("/{id}")

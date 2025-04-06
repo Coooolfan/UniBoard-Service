@@ -28,7 +28,9 @@ class FileRecordService(
     }
 
     fun findByPage(pageParam: PageParam, fetcher: Fetcher<FileRecord>): Page<FileRecord> {
-        return repo.findPage(pageParam, fetcher)
+        return repo.findPage(pageParam, fetcher) {
+            asc(FileRecord::id)
+        }
     }
 
     fun deleteById(id: Long) = repo.deleteById(id)

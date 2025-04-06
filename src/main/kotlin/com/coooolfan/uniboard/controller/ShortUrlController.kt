@@ -1,13 +1,13 @@
 package com.coooolfan.uniboard.controller
 
 import cn.dev33.satoken.annotation.SaCheckLogin
-import com.coooolfan.uniboard.config.CacheConfig
 import com.coooolfan.uniboard.error.CommonException
 import com.coooolfan.uniboard.model.ShortUrl
 import com.coooolfan.uniboard.model.by
 import com.coooolfan.uniboard.model.dto.ShortUrlInsert
 import com.coooolfan.uniboard.repo.ShortUrlRepo
 import com.coooolfan.uniboard.utils.getHashedString
+import com.github.benmanes.caffeine.cache.Cache
 import jakarta.servlet.http.HttpServletResponse
 import org.babyfish.jimmer.Page
 import org.babyfish.jimmer.client.FetchBy
@@ -15,7 +15,6 @@ import org.babyfish.jimmer.spring.repo.PageParam
 import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
-import com.github.benmanes.caffeine.cache.Cache
 
 @RestController
 @RequestMapping("/api/short-url")
@@ -26,7 +25,9 @@ class ShortUrlController(private val repo: ShortUrlRepo) {
         @RequestParam pageIndex: Int,
         @RequestParam pageSize: Int
     ): Page<@FetchBy("DEFAULT_SHORT_URL") ShortUrl> {
-        return repo.findPage(PageParam.byNo(pageIndex, pageSize), DEFAULT_SHORT_URL)
+        return repo.findPage(PageParam.byNo(pageIndex, pageSize), DEFAULT_SHORT_URL) {
+            asc(ShortUrl::id)
+        }
     }
 
     @PostMapping

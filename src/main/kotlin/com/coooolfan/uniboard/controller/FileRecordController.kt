@@ -66,11 +66,6 @@ class FileRecordController(private val service: FileRecordService) {
     }
 
     companion object {
-        private val PUBLIC_FILERECORD = newFetcher(FileRecord::class).by {
-            allScalarFields()
-            password(false)
-            downloadCount(false)
-        }
 
         private val DEFAULT_FILERECORD = newFetcher(FileRecord::class).by {
             allScalarFields()

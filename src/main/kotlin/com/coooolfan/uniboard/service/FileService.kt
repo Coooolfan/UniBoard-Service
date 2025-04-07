@@ -106,10 +106,4 @@ class FileService(
         }
     }
 
-    private fun getFileRecord(key: String): FileRecord? {
-        if (key.all { it.isDigit() })
-            return repo.findById(key.toLong())
-        return repo.findByShareCode(key)
-    }
-
 }

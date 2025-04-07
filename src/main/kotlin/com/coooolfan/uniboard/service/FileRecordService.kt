@@ -1,11 +1,13 @@
 package com.coooolfan.uniboard.service
 
+import com.coooolfan.uniboard.error.CommonException
 import com.coooolfan.uniboard.error.FileRecordException
 import com.coooolfan.uniboard.model.FileRecord
 import com.coooolfan.uniboard.model.FileRecordVisibility
 import com.coooolfan.uniboard.model.dto.FileRecordDirectLinkCreate
 import com.coooolfan.uniboard.model.dto.FileRecordDirectLinkResp
 import com.coooolfan.uniboard.model.dto.FileRecordInsert
+import com.coooolfan.uniboard.model.dto.FileRecordPublic
 import com.coooolfan.uniboard.repo.FileRecordRepo
 import com.coooolfan.uniboard.utils.getHashedString
 import com.github.benmanes.caffeine.cache.Cache
@@ -33,12 +35,18 @@ class FileRecordService(
         }
     }
 
+    fun findByByShareCode(shareCode: String): FileRecordPublic {
+        val findByShareCode = repo.findByShareCode(shareCode)
+            ?: throw CommonException.notFound()
+        return FileRecordPublic(findByShareCode)
+    }
+
     fun deleteById(id: Long) = repo.deleteById(id)
     fun update(update: FileRecord, fetcher: Fetcher<FileRecord>): FileRecord {
         return repo.saveCommand(update, SaveMode.UPDATE_ONLY).execute(fetcher).modifiedEntity
     }
 
-    fun findByByShareCode(shareCode: String, fetcher: Fetcher<FileRecord>) = repo.findByShareCode(shareCode, fetcher)
+//    fun findByByShareCode(shareCode: String, fetcher: Fetcher<FileRecord>) = repo.findByShareCode(shareCode, fetcher)
 
     fun insert(insert: FileRecordInsert, file: MultipartFile, fetcher: Fetcher<FileRecord>): FileRecord {
         if (insert.visibility == FileRecordVisibility.PASSWORD && insert.password.trim().isEmpty())
@@ -67,4 +75,5 @@ class FileRecordService(
             directUUID = uuid,
         )
     }
+
 }

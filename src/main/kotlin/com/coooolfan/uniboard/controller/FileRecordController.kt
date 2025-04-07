@@ -1,14 +1,10 @@
 package com.coooolfan.uniboard.controller
 
 import cn.dev33.satoken.annotation.SaCheckLogin
-import com.coooolfan.uniboard.error.CommonException
 import com.coooolfan.uniboard.error.FileRecordException
 import com.coooolfan.uniboard.model.FileRecord
 import com.coooolfan.uniboard.model.by
-import com.coooolfan.uniboard.model.dto.FileRecordDirectLinkCreate
-import com.coooolfan.uniboard.model.dto.FileRecordDirectLinkResp
-import com.coooolfan.uniboard.model.dto.FileRecordInsert
-import com.coooolfan.uniboard.model.dto.FileRecordUpdate
+import com.coooolfan.uniboard.model.dto.*
 import com.coooolfan.uniboard.service.FileRecordService
 import org.babyfish.jimmer.Page
 import org.babyfish.jimmer.client.FetchBy
@@ -38,9 +34,13 @@ class FileRecordController(private val service: FileRecordService) {
         return service.update(update.toEntity { this.id = id }, DEFAULT_FILERECORD)
     }
 
+    /*
+    * @GetMapping("/{id}")
+    * 公共接口，用于文件分享页的内容获取
+     */
     @GetMapping("/{shareCode}")
-    fun getFileRecordByShareCode(@PathVariable shareCode: String): @FetchBy("PUBLIC_FILERECORD") FileRecord {
-        return service.findByByShareCode(shareCode, PUBLIC_FILERECORD) ?: throw CommonException.notFound()
+    fun getFileRecordByShareCode(@PathVariable shareCode: String): FileRecordPublic {
+        return service.findByByShareCode(shareCode)
     }
 
     @DeleteMapping("/{id}")

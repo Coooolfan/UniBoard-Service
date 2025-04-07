@@ -33,3 +33,13 @@ FileRecordDirectLinkResp {
 
     directUUID :String
 }
+
+FileRecordPublic {
+    #allScalars
+
+    -id
+
+    -password
+
+    -downloadCount
+}

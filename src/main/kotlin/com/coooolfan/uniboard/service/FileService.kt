@@ -32,16 +32,13 @@ class FileService(
             val fileRecord = repo.findById(fileId) ?: throw CommonException.NotFound()
             return returnFileRecord2Response(fileRecord, resp)
         }
-        // 已登录可直接下载
-        if (StpUtil.isLogin()) {
-            val fileRecord = getFileRecord(key) ?: throw CommonException.NotFound()
-            return returnFileRecord2Response(fileRecord, resp)
-        }
-        // 未登录下只允许使用 ShreCode 下载
+        // 获取文件记录
         val fileRecord = repo.findByShareCode(key) ?: throw CommonException.NotFound()
-        // 未登录且文件为公开
-        if (fileRecord.visibility == FileRecordVisibility.PUBLIC)
+
+        // 已登录或文件为公开可直接下载
+        if (StpUtil.isLogin() || fileRecord.visibility == FileRecordVisibility.PUBLIC)
             return returnFileRecord2Response(fileRecord, resp)
+
         // 未登录且文件为密码保护且密码正确
         if (fileRecord.visibility == FileRecordVisibility.PASSWORD && fileRecord.password == password)
             return returnFileRecord2Response(fileRecord, resp)

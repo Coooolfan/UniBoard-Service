@@ -4,6 +4,7 @@ import org.babyfish.jimmer.sql.Entity
 import org.babyfish.jimmer.sql.GeneratedValue
 import org.babyfish.jimmer.sql.GenerationType
 import org.babyfish.jimmer.sql.Id
+import org.babyfish.jimmer.sql.Key
 
 @Entity
 interface FileRecord {
@@ -13,13 +14,14 @@ interface FileRecord {
 
     val file: BaseSimpleFile
 
-    val shareCode:String
+    @Key
+    val shareCode: String
 
-    val description:String
+    val description: String
 
     val visibility: FileRecordVisibility
 
-    val password:String
+    val password: String
 
-    val downloadCount : Long
+    val downloadCount: Long
 }

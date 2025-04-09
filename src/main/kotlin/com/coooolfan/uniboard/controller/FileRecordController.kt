@@ -34,9 +34,9 @@ class FileRecordController(private val service: FileRecordService) {
         return service.update(update.toEntity { this.id = id }, DEFAULT_FILERECORD)
     }
 
-    /*
-    * @GetMapping("/{id}")
-    * 公共接口，用于文件分享页的内容获取
+    /**
+     * @GetMapping("/{id}")
+     * 公共接口，用于文件分享页的内容获取
      */
     @GetMapping("/{shareCode}")
     fun getFileRecordByShareCode(@PathVariable shareCode: String): FileRecordPublic {

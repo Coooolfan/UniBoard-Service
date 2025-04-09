@@ -19,8 +19,9 @@ repositories {
     mavenCentral()
 }
 
-val jimmerVersion = "0.9.71"
+val jimmerVersion = "0.9.72"
 val saTokenVersion = "1.41.0"
+val flywayVersion = "11.4.0"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -38,6 +39,8 @@ dependencies {
     implementation("org.springframework:spring-context-support")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+    implementation("org.flywaydb:flyway-core:${flywayVersion}")
+    implementation("org.flywaydb:flyway-database-postgresql:${flywayVersion}")
 }
 
 kotlin {

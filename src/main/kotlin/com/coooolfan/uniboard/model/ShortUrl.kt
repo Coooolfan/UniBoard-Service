@@ -4,6 +4,7 @@ import org.babyfish.jimmer.sql.Entity
 import org.babyfish.jimmer.sql.GeneratedValue
 import org.babyfish.jimmer.sql.GenerationType
 import org.babyfish.jimmer.sql.Id
+import org.babyfish.jimmer.sql.Key
 
 @Entity
 interface ShortUrl {
@@ -13,6 +14,7 @@ interface ShortUrl {
 
     val longUrl: String
 
+    @Key
     val shortUrl: String //  短链的字符串
 
     val visitCount: Long

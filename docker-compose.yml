@@ -1,6 +1,20 @@
 # Only for Development
 # 仅用于开发环境
 services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: uniboard-server
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./service:/app/service
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --spider --quiet http://localhost:8080/api/system-config" ]
+
   postgres:
     image: postgres:16.3-bookworm
     container_name: uniboard-postgres
@@ -13,7 +27,7 @@ services:
     volumes:
       - ./database/postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      test: [ 'CMD-SHELL', 'pg_isready -U postgres' ]
       interval: 10s
       timeout: 10s
       retries: 10

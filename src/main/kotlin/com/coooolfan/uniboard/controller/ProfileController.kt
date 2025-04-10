@@ -27,7 +27,8 @@ class ProfileController(private val service: ProfileService) {
     @Throws(
         ProfileException.SystemAlreadyInitialized::class,
         ProfileException.EmptyLoginName::class,
-        )
+        ProfileException.EmptyName::class,
+    )
     fun createProfile(
         @RequestPart create: ProfileCreate,
         @RequestPart(required = false) avatar: MultipartFile?,
@@ -40,7 +41,8 @@ class ProfileController(private val service: ProfileService) {
     @PutMapping
     @SaCheckLogin
     @Throws(
-        ProfileException.SystemUninitialized::class
+        ProfileException.SystemUninitialized::class,
+        ProfileException.EmptyName::class,
     )
     fun updateProfile(
         @RequestPart update: ProfileUpdate,

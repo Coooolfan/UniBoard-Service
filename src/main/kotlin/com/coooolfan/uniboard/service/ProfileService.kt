@@ -30,6 +30,7 @@ class ProfileService(private val repo: ProfileRepo, private val sysRepo: SystemC
     fun createProfile(create: ProfileCreate, avatar: MultipartFile?, banner: MultipartFile?, font: MultipartFile?) {
         if (repo.count() > 0) throw ProfileException.SystemAlreadyInitialized()
         if (create.loginName.trim().isEmpty()) throw ProfileException.EmptyLoginName()
+        if (create.name.trim().isEmpty()) throw ProfileException.EmptyName()
         repo.saveCommand(create.toEntity {
             id = 0
             applyProfileFiles(this, avatar, banner, font)
@@ -45,6 +46,7 @@ class ProfileService(private val repo: ProfileRepo, private val sysRepo: SystemC
 
     fun updateProfile(update: ProfileUpdate, avatar: MultipartFile?, banner: MultipartFile?, font: MultipartFile?) {
         if (repo.count() == 0.toLong()) throw ProfileException.SystemUninitialized()
+        if (update.name.trim().isEmpty()) throw ProfileException.EmptyName()
         repo.saveCommand(update.toEntity {
             id = 0
             applyProfileFiles(this, avatar, banner, font)

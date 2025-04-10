@@ -8,4 +8,5 @@ enum class ProfileErrorCode {
     SYSTEM_ALREADY_INITIALIZED,
     PASSWORD_NOT_MATCH,
     EMPTY_LOGIN_NAME,
+    EMPTY_NAME,
 }

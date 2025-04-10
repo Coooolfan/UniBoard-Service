@@ -4,6 +4,7 @@ import com.coooolfan.uniboard.model.HyperLink
 import com.coooolfan.uniboard.model.HyperLinkDraft
 import com.coooolfan.uniboard.model.dto.HyperLinkInsert
 import com.coooolfan.uniboard.repo.HyperLinkRepo
+import com.coooolfan.uniboard.utils.SaveFileResult
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.fetcher.Fetcher
 import org.springframework.stereotype.Service
@@ -57,7 +58,4 @@ class HyperLinkService(private val repo: HyperLinkRepo) {
         file.transferTo(filePath.toFile())
         return SaveFileResult("file/hyper-link/${fileName}", fileName)
     }
-
-    data class SaveFileResult(val relativePath: String, val fileName: String)
-
 }

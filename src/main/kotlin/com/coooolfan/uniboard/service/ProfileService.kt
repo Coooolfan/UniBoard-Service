@@ -12,6 +12,7 @@ import com.coooolfan.uniboard.model.dto.ProfileLogin
 import com.coooolfan.uniboard.model.dto.ProfileUpdate
 import com.coooolfan.uniboard.repo.ProfileRepo
 import com.coooolfan.uniboard.repo.SystemConfigRepo
+import com.coooolfan.uniboard.utils.SaveFileResult
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.fetcher.Fetcher
 import org.springframework.stereotype.Service
@@ -80,35 +81,42 @@ class ProfileService(private val repo: ProfileRepo, private val sysRepo: SystemC
         }
     }
 
-    private fun saveProfileFile(file: MultipartFile?, category: String): String? {
+    private fun saveProfileFile(file: MultipartFile?, category: String): SaveFileResult? {
         if (file?.isEmpty != false) return null
 
-        val relativePath = Paths.get("service/profile/${category}")
+        // 获取原始文件名的扩展名
+        val originalFilename = file.originalFilename ?: ""
+        val extension = originalFilename.substringAfterLast('.', "")
+
+        // 构建带扩展名的文件名
+        val filename = if (extension.isNotEmpty()) "$category.$extension" else category
+
+        val relativePath = Paths.get("service/profile/$filename")
         val filePath = Paths.get(System.getProperty("user.dir")).resolve(relativePath)
         filePath.parent.toFile().mkdirs()
         file.transferTo(filePath)
-        return relativePath.toString().replace("service", "file")
+        return SaveFileResult(relativePath.toString().replace("service", "file"), filename)
     }
 
     private fun applyProfileFiles(
         profile: ProfileDraft, avatar: MultipartFile?, banner: MultipartFile?, font: MultipartFile?
     ) {
-        saveProfileFile(avatar, "avatar")?.let { path ->
+        saveProfileFile(avatar, "avatar")?.let { res ->
             profile.avatar {
-                filepath = path
-                filename = "avatar"
+                filepath = res.relativePath
+                filename = res.fileName
             }
         }
-        saveProfileFile(banner, "banner")?.let { path ->
+        saveProfileFile(banner, "banner")?.let { res ->
             profile.banner {
-                filepath = path
-                filename = "banner"
+                filepath = res.relativePath
+                filename = res.fileName
             }
         }
-        saveProfileFile(font, "font")?.let { path ->
+        saveProfileFile(font, "font")?.let { res ->
             profile.customFont {
-                filepath = path
-                filename = "font"
+                filepath = res.relativePath
+                filename = res.fileName
             }
         }
     }

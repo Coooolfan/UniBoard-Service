@@ -1,6 +1,7 @@
 package com.coooolfan.uniboard.config
 
 import com.coooolfan.uniboard.model.FileRecordDraft
+import com.coooolfan.uniboard.model.ShortUrl
 import com.coooolfan.uniboard.model.ShortUrlDraft
 import com.coooolfan.uniboard.repo.FileRecordRepo
 import com.coooolfan.uniboard.repo.ShortUrlRepo
@@ -43,8 +44,36 @@ class CacheConfig(
     fun directLinkCache(): Cache<String, Long> {
         return Caffeine.newBuilder()
             .expireAfterWrite(5, TimeUnit.MINUTES)
+            .build()
+    }
+
+    @Bean
+    fun shortUrlCache(): Cache<String, ShortUrl> {
+        return Caffeine.newBuilder()
+            .expireAfterWrite(5, TimeUnit.MINUTES)
             .maximumSize(1000)
             .build()
+    }
+
+    @Bean
+    fun shortUrlCountCache(): Cache<Long, Long> {
+        return createCountCache { shortUrlId, count ->
+            shortUrlRepo.saveCommand(ShortUrlDraft.`$`.produce {
+                TimeUnit.MINUTES.sleep(1)
+                id = shortUrlId
+                visitCount = count
+            }, SaveMode.UPDATE_ONLY).execute()
+        }
+    }
+
+    @Bean
+    fun fileRecordCountCache(): Cache<Long, Long> {
+        return createCountCache { fileRecordId, count ->
+            fileRecordRepo.saveCommand(FileRecordDraft.`$`.produce {
+                id = fileRecordId
+                downloadCount = count
+            }, SaveMode.UPDATE_ONLY).execute()
+        }
     }
 
     // 创建通用的计数缓存构建器
@@ -70,27 +99,6 @@ class CacheConfig(
                 }
             }
             .build()
-    }
-
-    @Bean
-    fun shortUrlCountCache(): Cache<Long, Long> {
-        return createCountCache { shortUrlId, count ->
-            shortUrlRepo.saveCommand(ShortUrlDraft.`$`.produce {
-                TimeUnit.MINUTES.sleep(1)
-                id = shortUrlId
-                visitCount = count
-            }, SaveMode.UPDATE_ONLY).execute()
-        }
-    }
-
-    @Bean
-    fun fileRecordCountCache(): Cache<Long, Long> {
-        return createCountCache { fileRecordId, count ->
-            fileRecordRepo.saveCommand(FileRecordDraft.`$`.produce {
-                id = fileRecordId
-                downloadCount = count
-            }, SaveMode.UPDATE_ONLY).execute()
-        }
     }
 
     companion object {

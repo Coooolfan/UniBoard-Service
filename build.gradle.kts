@@ -19,7 +19,7 @@ repositories {
     mavenCentral()
 }
 
-val jimmerVersion = "0.9.72"
+val jimmerVersion = "0.9.73"
 val saTokenVersion = "1.41.0"
 val flywayVersion = "11.4.0"
 

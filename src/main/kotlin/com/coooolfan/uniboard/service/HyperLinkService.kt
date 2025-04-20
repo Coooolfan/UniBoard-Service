@@ -1,7 +1,6 @@
 package com.coooolfan.uniboard.service
 
 import com.coooolfan.uniboard.model.HyperLink
-import com.coooolfan.uniboard.model.HyperLinkDraft
 import com.coooolfan.uniboard.model.dto.HyperLinkInsert
 import com.coooolfan.uniboard.repo.HyperLinkRepo
 import com.coooolfan.uniboard.utils.SaveFileResult
@@ -23,7 +22,7 @@ class HyperLinkService(private val repo: HyperLinkRepo) {
         }
         val (relativePath, fileName) = saveFile(file)
         return repo.saveCommand(
-            HyperLinkDraft.`$`.produce(update) {
+            HyperLink(update) {
                 this.icon {
                     this.filename = fileName
                     this.filepath = relativePath

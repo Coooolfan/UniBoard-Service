@@ -1,8 +1,7 @@
 package com.coooolfan.uniboard.config
 
-import com.coooolfan.uniboard.model.FileRecordDraft
+import com.coooolfan.uniboard.model.FileRecord
 import com.coooolfan.uniboard.model.ShortUrl
-import com.coooolfan.uniboard.model.ShortUrlDraft
 import com.coooolfan.uniboard.repo.FileRecordRepo
 import com.coooolfan.uniboard.repo.ShortUrlRepo
 import com.github.benmanes.caffeine.cache.Cache
@@ -58,7 +57,7 @@ class CacheConfig(
     @Bean
     fun shortUrlCountCache(): Cache<Long, Long> {
         return createCountCache { shortUrlId, count ->
-            shortUrlRepo.saveCommand(ShortUrlDraft.`$`.produce {
+            shortUrlRepo.saveCommand(ShortUrl {
                 TimeUnit.MINUTES.sleep(1)
                 id = shortUrlId
                 visitCount = count
@@ -69,7 +68,7 @@ class CacheConfig(
     @Bean
     fun fileRecordCountCache(): Cache<Long, Long> {
         return createCountCache { fileRecordId, count ->
-            fileRecordRepo.saveCommand(FileRecordDraft.`$`.produce {
+            fileRecordRepo.saveCommand(FileRecord {
                 id = fileRecordId
                 downloadCount = count
             }, SaveMode.UPDATE_ONLY).execute()

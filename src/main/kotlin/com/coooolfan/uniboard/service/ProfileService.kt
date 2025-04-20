@@ -5,7 +5,7 @@ import com.coooolfan.uniboard.error.CommonException
 import com.coooolfan.uniboard.error.ProfileException
 import com.coooolfan.uniboard.model.Profile
 import com.coooolfan.uniboard.model.ProfileDraft
-import com.coooolfan.uniboard.model.SystemConfigDraft
+import com.coooolfan.uniboard.model.SystemConfig
 import com.coooolfan.uniboard.model.dto.PasswordUpdate
 import com.coooolfan.uniboard.model.dto.ProfileCreate
 import com.coooolfan.uniboard.model.dto.ProfileLogin
@@ -37,7 +37,7 @@ class ProfileService(private val repo: ProfileRepo, private val sysRepo: SystemC
             applyProfileFiles(this, avatar, banner, font)
             loginPassword = hashPassword(create.loginPassword)
         }, SaveMode.INSERT_ONLY).execute()
-        sysRepo.saveCommand(SystemConfigDraft.`$`.produce {
+        sysRepo.saveCommand(SystemConfig {
             id = 0
             host = ""
             showProfile = true

@@ -58,7 +58,6 @@ class CacheConfig(
     fun shortUrlCountCache(): Cache<Long, Long> {
         return createCountCache { shortUrlId, count ->
             shortUrlRepo.saveCommand(ShortUrl {
-                TimeUnit.MINUTES.sleep(1)
                 id = shortUrlId
                 visitCount = count
             }, SaveMode.UPDATE_ONLY).execute()
@@ -76,16 +75,16 @@ class CacheConfig(
     }
 
     // 创建通用的计数缓存构建器
-    private fun <K : Any> createCountCache(
+    private fun createCountCache(
         expirationTime: Long = 3,
         timeUnit: TimeUnit = TimeUnit.SECONDS,
         maxSize: Long = 1000,
-        updateAction: suspend (K, Long) -> Unit
-    ): Cache<K, Long> {
+        updateAction: suspend (Long, Long) -> Unit
+    ): Cache<Long, Long> {
         return Caffeine.newBuilder()
             .expireAfterWrite(expirationTime, timeUnit)
             .maximumSize(maxSize)
-            .removalListener<K, Long> { key, count, cause ->
+            .removalListener<Long, Long> { key, count, cause ->
                 if (key == null || count == null) return@removalListener
                 if (cause == RemovalCause.EXPIRED) {
                     cacheScope.launch {

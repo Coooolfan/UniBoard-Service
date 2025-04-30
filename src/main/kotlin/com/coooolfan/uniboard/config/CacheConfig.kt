@@ -10,7 +10,6 @@ import com.github.benmanes.caffeine.cache.RemovalCause
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
-import org.slf4j.LoggerFactory
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.cache.caffeine.CaffeineCacheManager
@@ -40,7 +39,7 @@ class CacheConfig(
     }
 
     @Bean
-    fun directLinkCache(): Cache<String, Long> {
+    fun directDownloadLinkCache(): Cache<String, Long> {
         return Caffeine.newBuilder()
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build()
@@ -56,7 +55,7 @@ class CacheConfig(
 
     @Bean
     fun shortUrlCountCache(): Cache<Long, Long> {
-        return createCountCache { shortUrlId, count ->
+        return commonCountCache { shortUrlId, count ->
             shortUrlRepo.saveCommand(ShortUrl {
                 id = shortUrlId
                 visitCount = count
@@ -66,7 +65,7 @@ class CacheConfig(
 
     @Bean
     fun fileRecordCountCache(): Cache<Long, Long> {
-        return createCountCache { fileRecordId, count ->
+        return commonCountCache { fileRecordId, count ->
             fileRecordRepo.saveCommand(FileRecord {
                 id = fileRecordId
                 downloadCount = count
@@ -75,7 +74,7 @@ class CacheConfig(
     }
 
     // 创建通用的计数缓存构建器
-    private fun createCountCache(
+    private fun commonCountCache(
         expirationTime: Long = 3,
         timeUnit: TimeUnit = TimeUnit.SECONDS,
         maxSize: Long = 1000,
@@ -87,19 +86,10 @@ class CacheConfig(
             .removalListener<Long, Long> { key, count, cause ->
                 if (key == null || count == null) return@removalListener
                 if (cause == RemovalCause.EXPIRED) {
-                    cacheScope.launch {
-                        try {
-                            updateAction(key, count)
-                        } catch (e: Exception) {
-                            log.error("Failed to update count for key: $key", e)
-                        }
-                    }
+                    cacheScope.launch { updateAction(key, count) }
                 }
             }
             .build()
     }
 
-    companion object {
-        private val log = LoggerFactory.getLogger(CacheConfig::class.java)
-    }
 }

@@ -22,13 +22,13 @@ import java.util.*
 @Service
 class FileService(
     private val repo: FileRecordRepo,
-    private val directLinkCache: Cache<String, Long>,
+    private val directDownloadLinkCache: Cache<String, Long>,
     private val fileRecordCountCache: Cache<Long, Long>
 ) {
     fun downloadFileRecord(key: String, password: String?, resp: HttpServletResponse): StreamingResponseBody {
         if (key.contains('-')) {
             // 使用 UUID 直链下载无需鉴权
-            val fileId = directLinkCache.getIfPresent(key) ?: throw CommonException.NotFound()
+            val fileId = directDownloadLinkCache.getIfPresent(key) ?: throw CommonException.NotFound()
             val fileRecord = repo.findById(fileId) ?: throw CommonException.NotFound()
             return returnFileRecord2Response(fileRecord, resp)
         }

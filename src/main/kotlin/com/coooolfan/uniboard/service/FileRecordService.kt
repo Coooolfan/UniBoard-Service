@@ -23,7 +23,7 @@ import java.util.*
 @Service
 class FileRecordService(
     private val repo: FileRecordRepo,
-    private val directLinkCache: Cache<String, Long>
+    private val directDownloadLinkCache: Cache<String, Long>
 ) {
     fun findByPage(pageIndex: Int, pageSize: Int, fetcher: Fetcher<FileRecord>): Page<FileRecord> {
         return findByPage(PageParam.byNo(pageIndex, pageSize), fetcher)
@@ -68,8 +68,7 @@ class FileRecordService(
 
     fun createDirectLink(create: FileRecordDirectLinkCreate): FileRecordDirectLinkResp {
         val uuid = UUID.randomUUID().toString()
-        // Store the mapping between UUID and file ID in the cache, expires after 5 minutes
-        directLinkCache.put(uuid, create.id)
+        directDownloadLinkCache.put(uuid, create.id)
         return FileRecordDirectLinkResp(
             id = create.id,
             directUUID = uuid,

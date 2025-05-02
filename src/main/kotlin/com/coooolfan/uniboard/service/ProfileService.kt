@@ -56,20 +56,20 @@ class ProfileService(private val repo: ProfileRepo, private val sysRepo: SystemC
 
     fun checkLogin(login: ProfileLogin) {
         val profile = repo.findById(0) ?: throw CommonException.AuthenticationFailed()
-        if (profile.loginName == login.loginName && profile.loginPassword == hashPassword(login.loginPassword)) StpUtil.login(
-            profile.id
-        )
+        if (profile.loginName == login.loginName && profile.loginPassword == hashPassword(login.loginPassword))
+            StpUtil.login(0)
         else throw CommonException.AuthenticationFailed()
     }
 
     fun updatePassword(update: PasswordUpdate) {
         val profile = repo.findById(0) ?: throw ProfileException.SystemUninitialized()
-        if (update.loginName.trim().isEmpty()) throw ProfileException.EmptyLoginName()
         if (profile.loginPassword != hashPassword(update.oldPassword)) throw CommonException.Forbidden()
-        repo.save(Profile {
+        if (update.newLoginName.trim().isEmpty()) throw ProfileException.EmptyLoginName()
+        repo.saveCommand(Profile {
             id = 0
+            loginName = update.newLoginName
             loginPassword = hashPassword(update.newPassword)
-        })
+        }, SaveMode.UPDATE_ONLY).execute()
     }
 
     private fun hashPassword(password: String): String {

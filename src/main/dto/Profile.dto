@@ -31,9 +31,9 @@ input ProfileLogin {
 }
 
 input PasswordUpdate {
-    loginName
-
     oldPassword :String
+
+    newLoginName :String
 
     newPassword :String
 }

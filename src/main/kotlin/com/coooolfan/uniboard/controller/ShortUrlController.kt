@@ -62,16 +62,16 @@ class RedirectController(
 ) {
     @GetMapping("/{shortUrlCode}")
     fun redirect(@PathVariable(value = "shortUrlCode") shortUrlCode: String, resp: HttpServletResponse) {
-        // 优先从缓存中获取
-        val entity = shortUrlCache.getIfPresent(shortUrlCode)
-            ?: repo.findByShortUrlCode(shortUrlCode)
-            ?: throw CommonException.NotFound()
-        // 原子操作
-        shortUrlCountCache.asMap().compute(entity.id) { _, currentCount ->
-            (currentCount ?: entity.visitCount) + 1
+        // 尝试从缓存中获取
+        var entity = shortUrlCache.getIfPresent(shortUrlCode)
+        if (entity == null) {
+            entity = repo.findByShortUrlCode(shortUrlCode) ?: throw CommonException.NotFound()
+            shortUrlCache.put(shortUrlCode, entity)
         }
-        // 刷新缓存
-        shortUrlCache.put(shortUrlCode, entity)
+        shortUrlCountCache.asMap().compute(entity.id) { _, lastCachedIncrement ->
+            // 当 lastCachedCount 为 null 时，说明是第一次访问, 从1开始计数
+            (lastCachedIncrement ?: 0) + 1
+        }
         resp.sendRedirect(entity.longUrl)
         resp.flushBuffer()
     }

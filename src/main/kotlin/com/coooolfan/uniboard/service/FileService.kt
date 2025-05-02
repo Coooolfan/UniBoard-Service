@@ -48,8 +48,8 @@ class FileService(
 
     private fun returnFileRecord2Response(fileRecord: FileRecord, resp: HttpServletResponse): StreamingResponseBody {
         // 原子操作
-        fileRecordCountCache.asMap().compute(fileRecord.id) { _, currentCount ->
-            (currentCount ?: fileRecord.downloadCount) + 1
+        fileRecordCountCache.asMap().compute(fileRecord.id) { _, lastCachedIncrement ->
+            (lastCachedIncrement ?: 0) + 1
         }
         return returnFile2Response(fileRecord.file.filepath, resp, fileRecord.file.filename)
     }

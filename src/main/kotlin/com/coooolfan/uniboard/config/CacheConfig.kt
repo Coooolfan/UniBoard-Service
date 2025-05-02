@@ -1,15 +1,14 @@
 package com.coooolfan.uniboard.config
 
-import com.coooolfan.uniboard.model.FileRecord
-import com.coooolfan.uniboard.model.ShortUrl
-import com.coooolfan.uniboard.repo.FileRecordRepo
-import com.coooolfan.uniboard.repo.ShortUrlRepo
+import com.coooolfan.uniboard.model.*
 import com.github.benmanes.caffeine.cache.Cache
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.RemovalCause
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.babyfish.jimmer.sql.ast.mutation.SaveMode
+import org.babyfish.jimmer.sql.kt.KSqlClient
+import org.babyfish.jimmer.sql.kt.ast.expression.eq
+import org.babyfish.jimmer.sql.kt.ast.expression.plus
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.cache.caffeine.CaffeineCacheManager
@@ -22,8 +21,7 @@ import java.util.concurrent.TimeUnit
 @EnableCaching
 @EnableScheduling
 class CacheConfig(
-    private val shortUrlRepo: ShortUrlRepo,
-    private val fileRecordRepo: FileRecordRepo,
+    private val sql: KSqlClient,
     private val cacheScope: CoroutineScope
 ) {
 
@@ -38,6 +36,8 @@ class CacheConfig(
         return cacheManager
     }
 
+    // 缓存文件记录的下载直链
+    // Key: UUID Value: 文件记录ID
     @Bean
     fun directDownloadLinkCache(): Cache<String, Long> {
         return Caffeine.newBuilder()
@@ -45,6 +45,9 @@ class CacheConfig(
             .build()
     }
 
+    // 缓存短链接
+    // shortUrlCode 和 ShortUrl.longUrl 的关系不会发生更改，无需考虑一致性问题
+    // Key: 短链接shortUrlCode Value: 短链接对象
     @Bean
     fun shortUrlCache(): Cache<String, ShortUrl> {
         return Caffeine.newBuilder()
@@ -53,23 +56,33 @@ class CacheConfig(
             .build()
     }
 
+    // 缓存缓存短链接的访问次数（增量）
+    // Key: 短链接ID Value: 访问次数（增量）
     @Bean
     fun shortUrlCountCache(): Cache<Long, Long> {
         return commonCountCache { shortUrlId, count ->
-            shortUrlRepo.saveCommand(ShortUrl {
-                id = shortUrlId
-                visitCount = count
-            }, SaveMode.UPDATE_ONLY).execute()
+            sql.createUpdate(ShortUrl::class) {
+                set(
+                    table.visitCount,
+                    table.visitCount + count
+                )
+                where(table.id eq shortUrlId)
+            }.execute()
         }
     }
 
+    // 缓存缓存文件记录的下载次数（增量）
+    // Key: 文件记录ID Value: 下载次数（增量）
     @Bean
     fun fileRecordCountCache(): Cache<Long, Long> {
         return commonCountCache { fileRecordId, count ->
-            fileRecordRepo.saveCommand(FileRecord {
-                id = fileRecordId
-                downloadCount = count
-            }, SaveMode.UPDATE_ONLY).execute()
+            sql.createUpdate(FileRecord::class) {
+                set(
+                    table.downloadCount,
+                    table.downloadCount + count
+                )
+                where(table.id eq fileRecordId)
+            }.execute()
         }
     }
 

@@ -12,7 +12,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(CodeBasedRuntimeException::class)
     fun handle(ex: CodeBasedRuntimeException): ResponseEntity<Map<String, Any>> {
         val statusCode = when (ex.code) {
-            ProfileErrorCode.SYSTEM_UNINITIALIZED.toString() -> 503 // Service Unavailable
+            ProfileErrorCode.SYSTEM_UNINITIALIZED.toString() -> 404 // Service Unavailable
             ProfileErrorCode.SYSTEM_ALREADY_INITIALIZED.toString() -> 409 // Conflict
             CommonErrorCode.NOT_FOUND.toString() -> 404 // Not Found
             CommonErrorCode.AUTHENTICATION_FAILED.toString() -> 401 // Unauthorized

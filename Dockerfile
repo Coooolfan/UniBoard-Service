@@ -16,7 +16,7 @@ COPY src/ ./src/
 RUN gradle build --no-daemon --exclude-task test
 
 # 第二阶段：运行阶段
-FROM eclipse-temurin:23
+FROM ibm-semeru-runtimes:open-23-jre-noble
 WORKDIR /app
 
 # 从构建阶段复制构建结果

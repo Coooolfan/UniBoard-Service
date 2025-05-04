@@ -19,8 +19,8 @@ repositories {
     mavenCentral()
 }
 
-val jimmerVersion = "0.9.73"
-val saTokenVersion = "1.41.0"
+val jimmerVersion = "0.9.81"
+val saTokenVersion = "1.42.0"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")

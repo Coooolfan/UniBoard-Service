@@ -17,6 +17,7 @@ import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.fetcher.Fetcher
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import java.io.File
 import java.nio.file.Paths
 import java.util.*
 
@@ -46,8 +47,6 @@ class FileRecordService(
         return repo.saveCommand(update, SaveMode.UPDATE_ONLY).execute(fetcher).modifiedEntity
     }
 
-//    fun findByByShareCode(shareCode: String, fetcher: Fetcher<FileRecord>) = repo.findByShareCode(shareCode, fetcher)
-
     fun insert(insert: FileRecordInsert, file: MultipartFile, fetcher: Fetcher<FileRecord>): FileRecord {
         if (insert.visibility == FileRecordVisibility.PASSWORD && insert.password.trim().isEmpty())
             throw FileRecordException.EmptyPassword()
@@ -75,4 +74,52 @@ class FileRecordService(
         )
     }
 
+    fun cleanFileRecordsFromDisk() {
+        // FileRecord 在插入的时候先将文件存储在磁盘上，然后再将文件记录插入到数据库中
+        // 在判断时候需要删除的时候，先读读取数据库中的记录，再读取磁盘上的文件
+        // 以避免在写盘和插入之间触发清理的情况
+
+        val fileRecordDir =
+            Paths.get(System.getProperty("user.dir")).resolve("service/filerecord").toFile()
+        if (!fileRecordDir.exists() || !fileRecordDir.isDirectory)
+            return
+
+        // 第一次检查
+        val filesToDelete1 = findFilesToDelete(fileRecordDir)
+
+        Thread.sleep(3000)
+
+        // 第二次检查
+        val filesToDelete2 = findFilesToDelete(fileRecordDir)
+        // 计算两次检查的交集
+        val filesToDeleteFinal = filesToDelete1.intersect(filesToDelete2)
+
+        // 删除确认的文件
+        filesToDeleteFinal.forEach { file ->
+            if (file.exists()) file.delete()
+        }
+    }
+
+    /**
+     * 查找需要删除的文件
+     *
+     * @param fileRecordDir 文件存储目录
+     * @return 需要删除的文件列表
+     */
+    private fun findFilesToDelete(fileRecordDir: File): List<File> {
+        val filesInDb = repo.findAll()
+        val filesOnDisk = fileRecordDir.walkTopDown().filter { it.isFile }.toList()
+
+        // 构建数据库文件路径的 Set，提高查找效率
+        val normalizedDbPaths = filesInDb
+            .map { it.file.filepath.replace('/', File.separatorChar) }
+            .toSet()
+
+        return filesOnDisk.filter { fileOnDisk ->
+            val canonicalPath = fileOnDisk.canonicalPath
+            normalizedDbPaths.none { dbPath ->
+                canonicalPath.endsWith(dbPath)
+            }
+        }
+    }
 }

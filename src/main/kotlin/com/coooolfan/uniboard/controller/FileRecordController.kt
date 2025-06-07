@@ -66,7 +66,6 @@ class FileRecordController(private val service: FileRecordService) {
     }
 
     companion object {
-
         private val DEFAULT_FILERECORD = newFetcher(FileRecord::class).by {
             allScalarFields()
         }

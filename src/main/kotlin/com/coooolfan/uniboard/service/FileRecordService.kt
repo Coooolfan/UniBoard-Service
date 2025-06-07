@@ -43,6 +43,7 @@ class FileRecordService(
     }
 
     fun deleteById(id: Long) = repo.deleteById(id)
+
     fun update(update: FileRecord, fetcher: Fetcher<FileRecord>): FileRecord {
         return repo.saveCommand(update, SaveMode.UPDATE_ONLY).execute(fetcher).modifiedEntity
     }

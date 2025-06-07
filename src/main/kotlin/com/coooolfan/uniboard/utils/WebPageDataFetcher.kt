@@ -4,13 +4,6 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.net.URI
 
-/** 从网页提取的元数据 */
-data class WebPageMetadata(
-    val title: String,
-    val description: String,
-    val iconUrl: String?,
-)
-
 /**
  * 获取并提取网页元数据
  * @param url 要获取的网页URL
@@ -40,8 +33,6 @@ fun fetchWebPageMetadata(url: String, timeout: Int = 30000): WebPageMetadata {
 
     // 查找网站图标
     val iconUrl = findIconUrl(doc, normalizedUrl)
-
-    // 检查是否可能是AJAX网站
 
     return WebPageMetadata(title, description, iconUrl)
 }

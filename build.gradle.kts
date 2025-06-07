@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.coooolfan"
-version = "0.3.1-BETA"
+version = "0.3.2-BETA"
 
 java {
     toolchain {

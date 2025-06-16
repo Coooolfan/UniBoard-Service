@@ -35,3 +35,4 @@ replay_pid*
 /database/
 /service/
 /bin/*
+/src/main/resources/static/

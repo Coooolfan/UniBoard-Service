@@ -15,9 +15,7 @@ fun fetchWebPageMetadata(url: String, timeout: Int = 30000): WebPageMetadata {
     // 尝试使用Jsoup直接连接
     val doc: Document =
         Jsoup.connect(normalizedUrl)
-            .userAgent(
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-            )
+            .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 Edg/137.0.0.0")
             .timeout(timeout)
             .followRedirects(true)
             .get()

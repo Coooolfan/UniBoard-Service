@@ -1,8 +1,13 @@
 package com.coooolfan.uniboard.utils
 
+import com.coooolfan.uniboard.error.HyperLinkException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import java.io.File
 import java.net.URI
+
+const val USER_AGENT =
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 Edg/137.0.0.0"
 
 /**
  * 获取并提取网页元数据
@@ -13,12 +18,15 @@ import java.net.URI
 fun fetchWebPageMetadata(url: String, timeout: Int = 30000): WebPageMetadata {
     val normalizedUrl = normalizeUrl(url)
     // 尝试使用Jsoup直接连接
-    val doc: Document =
+    val doc: Document = try {
         Jsoup.connect(normalizedUrl)
-            .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 Edg/137.0.0.0")
+            .userAgent(USER_AGENT)
             .timeout(timeout)
             .followRedirects(true)
             .get()
+    } catch (e: Exception) {
+        throw HyperLinkException.fetchSnapshotFailed(e.message)
+    }
 
     val title = doc.title()
 
@@ -35,6 +43,41 @@ fun fetchWebPageMetadata(url: String, timeout: Int = 30000): WebPageMetadata {
     return WebPageMetadata(title, description, iconUrl)
 }
 
+/**
+ * 获取一个文件对象，表示网页图标
+ *
+ * @param url 图标的URL
+ * @return 返回一个File对象，表示图标文件
+ */
+fun fetchIconFile(url: String): File? {
+    val normalizedUrl = normalizeUrl(url)
+    return try {
+        // 创建临时文件用于保存图标
+        val iconFile = File.createTempFile("icon_", ".ico")
+
+        // 使用Jsoup连接并下载图标
+        val connection = Jsoup.connect(normalizedUrl)
+            .userAgent(USER_AGENT)
+            .timeout(10000)
+            .followRedirects(true)
+            .ignoreContentType(true) // 设置为true以允许下载非HTML内容
+
+        // 获取二进制数据并写入文件
+        val bytes = connection.execute().bodyAsBytes()
+        iconFile.writeBytes(bytes)
+
+        // 如果文件为空，则视为下载失败
+        if (iconFile.length() == 0L) {
+            iconFile.delete()
+            return null
+        }
+
+        iconFile
+    } catch (_: Exception) {
+        // 下载失败时返回null
+        null
+    }
+}
 
 /** 从文档中查找图标URL */
 private fun findIconUrl(doc: Document, baseUrl: String): String? {

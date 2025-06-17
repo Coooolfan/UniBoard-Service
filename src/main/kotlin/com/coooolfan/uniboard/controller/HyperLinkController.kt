@@ -1,13 +1,13 @@
 package com.coooolfan.uniboard.controller
 
 import cn.dev33.satoken.annotation.SaCheckLogin
+import com.coooolfan.uniboard.error.HyperLinkException
 import com.coooolfan.uniboard.model.HyperLink
 import com.coooolfan.uniboard.model.by
 import com.coooolfan.uniboard.model.dto.HyperLinkInsert
+import com.coooolfan.uniboard.model.dto.HyperLinkInsertBySnapShot
 import com.coooolfan.uniboard.model.dto.HyperLinkUpdate
 import com.coooolfan.uniboard.service.HyperLinkService
-import com.coooolfan.uniboard.utils.WebPageMetadata
-import com.coooolfan.uniboard.utils.fetchWebPageMetadata
 import org.babyfish.jimmer.client.FetchBy
 import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
 import org.springframework.web.bind.annotation.*
@@ -44,8 +44,7 @@ class HyperLinkController(private val service: HyperLinkService) {
     @PostMapping("/")
     @SaCheckLogin
     fun insertHyperlink(
-        @RequestPart insert: HyperLinkInsert,
-        @RequestPart(required = true) file: MultipartFile
+        @RequestPart insert: HyperLinkInsert, @RequestPart(required = true) file: MultipartFile
     ): @FetchBy("DEFAULT_HYPER_LINK") HyperLink {
         return service.insert(insert, file, DEFAULT_HYPER_LINK)
     }
@@ -85,10 +84,23 @@ class HyperLinkController(private val service: HyperLinkService) {
         service.deleteById(id)
     }
 
-    @GetMapping("/snapshot")
+    /**
+     * 仅使用URL创建新的超链接
+     *
+     * 根据提供的URL获取超链接的快照信息，包括标题、描述、缩略图
+     * 此方法不需要上传图片文件，直接从URL获取快照
+     * 需要登录验证
+     *
+     * @param insert 要获取快照的超链接URL
+     * @return HyperLink 创建的超链接对象
+     */
+    @PostMapping("/snapshot")
     @SaCheckLogin
-    fun getHyperLinkSnapshot(@RequestParam url: String): WebPageMetadata {
-        return fetchWebPageMetadata(url)
+    @Throws(HyperLinkException.FetchSnapshotFailed::class)
+    fun insertHyperLinkBySnapshot(
+        @RequestBody insert: HyperLinkInsertBySnapShot
+    ): @FetchBy("DEFAULT_HYPER_LINK") HyperLink {
+        return service.insertHyperLinkBySnapshot(insert, DEFAULT_HYPER_LINK)
     }
 
     companion object {

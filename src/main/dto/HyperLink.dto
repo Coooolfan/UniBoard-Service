@@ -10,6 +10,10 @@ input HyperLinkInsert {
     color
 }
 
+input HyperLinkInsertBySnapShot {
+    url
+}
+
 input HyperLinkUpdate {
     title
 

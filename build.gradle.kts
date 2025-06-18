@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.coooolfan"
-version = "0.3.2-BETA"
+version = "0.4.0-BETA"
 
 java {
     toolchain {
@@ -19,7 +19,7 @@ repositories {
     mavenCentral()
 }
 
-val jimmerVersion = "0.9.91"
+val jimmerVersion = "0.9.93"
 val saTokenVersion = "1.43.0"
 
 dependencies {

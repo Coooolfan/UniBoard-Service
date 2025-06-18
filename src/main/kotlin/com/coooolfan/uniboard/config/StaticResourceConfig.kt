@@ -19,7 +19,7 @@ class StaticResourceConfig : WebMvcConfigurer {
     fun spaRouter(): RouterFunction<ServerResponse?> {
         return RouterFunctions.route()
             .GET(
-                "/{path:^(?!api|actuator).*}"
+                "/{path:^(?!api|actuator|openapi).*}"
             ) { request: ServerRequest? ->
                 ServerResponse.ok()
                     .contentType(MediaType.TEXT_HTML)

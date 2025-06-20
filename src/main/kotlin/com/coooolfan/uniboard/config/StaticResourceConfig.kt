@@ -54,15 +54,12 @@ class StaticResourceConfig : WebMvcConfigurer {
         }
     }
 
-    private fun getPatternSlot(): String {
-        val dynamicPathCollection = mutableListOf("api")
-        if (!openApiEnabled)
-            return dynamicPathCollection.joinToString("|")
-
-        if (openapiPath.isNotBlank()) dynamicPathCollection.add(openapiPath.replace("/", ""))
-        if (tsPath.isNotBlank()) dynamicPathCollection.add(tsPath.replace("/", ""))
-        if (uiPath.isNotBlank()) dynamicPathCollection.add(uiPath.replace("/", ""))
-
-        return dynamicPathCollection.joinToString("|")
-    }
+    private fun getPatternSlot(): String = buildList {
+        add("api")
+        if (openApiEnabled) {
+            listOf(openapiPath, tsPath, uiPath)
+                .filter { it.isNotBlank() }
+                .mapTo(this) { it.removePrefix("/") }
+        }
+    }.joinToString("|")
 }

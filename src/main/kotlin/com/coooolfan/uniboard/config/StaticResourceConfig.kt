@@ -1,5 +1,7 @@
 package com.coooolfan.uniboard.config
 
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.ClassPathResource
@@ -15,11 +17,26 @@ import java.nio.file.Files
 @Configuration
 class StaticResourceConfig : WebMvcConfigurer {
 
+    private val log = LoggerFactory.getLogger(OpenApiFilterConfig::class.java)
+
+    @Value("\${jimmer.client.enable:true}")
+    private var openApiEnabled: Boolean = true
+
+    @Value("\${jimmer.client.openapi.path:/openapi.yml}")
+    private lateinit var openapiPath: String
+
+    @Value("\${jimmer.client.ts.path:/openapi.zip}")
+    private lateinit var tsPath: String
+
+    @Value("\${jimmer.client.openapi.ui-path:/openapi.html}")
+    private lateinit var uiPath: String
+
     @Bean
     fun spaRouter(): RouterFunction<ServerResponse?> {
+        log.info("Service Pattern: /{path:^(?!${getPatternSlot()}).*}")
         return RouterFunctions.route()
             .GET(
-                "/{path:^(?!api|actuator|openapi).*}"
+                "/{path:^(?!${getPatternSlot()}).*}"
             ) { request: ServerRequest? ->
                 ServerResponse.ok()
                     .contentType(MediaType.TEXT_HTML)
@@ -35,5 +52,17 @@ class StaticResourceConfig : WebMvcConfigurer {
         } catch (_: Exception) {
             return "Error loading index.html"
         }
+    }
+
+    private fun getPatternSlot(): String {
+        val dynamicPathCollection = mutableListOf("api")
+        if (!openApiEnabled)
+            return dynamicPathCollection.joinToString("|")
+
+        if (openapiPath.isNotBlank()) dynamicPathCollection.add(openapiPath.replace("/", ""))
+        if (tsPath.isNotBlank()) dynamicPathCollection.add(tsPath.replace("/", ""))
+        if (uiPath.isNotBlank()) dynamicPathCollection.add(uiPath.replace("/", ""))
+
+        return dynamicPathCollection.joinToString("|")
     }
 }

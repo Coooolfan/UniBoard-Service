@@ -6,12 +6,11 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.MediaType
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.function.RouterFunction
 import org.springframework.web.servlet.function.RouterFunctions
-import org.springframework.web.servlet.function.ServerRequest
 import org.springframework.web.servlet.function.ServerResponse
-import java.nio.file.Files
 
 
 @Configuration
@@ -31,26 +30,48 @@ class StaticResourceConfig : WebMvcConfigurer {
     @Value("\${jimmer.client.openapi.ui-path:/openapi.html}")
     private lateinit var uiPath: String
 
+    // 延迟初始化缓存
+    private val indexHtmlContent: String by lazy {
+        loadIndexHtml()
+    }
+
+    override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+        registry.addResourceHandler("/**")
+            .addResourceLocations("classpath:/static/")
+            .setCachePeriod(3600 * 24 * 7)
+    }
+
     @Bean
-    fun spaRouter(): RouterFunction<ServerResponse?> {
-        log.info("Service Pattern: /{path:^(?!${getPatternSlot()}).*}")
+    fun spaRouter(): RouterFunction<ServerResponse> {
+        val pattern = "/{path:^(?!${getPatternSlot()}).*}"
+        log.info("SPA Router Pattern: $pattern")
+
         return RouterFunctions.route()
-            .GET(
-                "/{path:^(?!${getPatternSlot()}).*}"
-            ) { request: ServerRequest? ->
+            .GET(pattern) {
                 ServerResponse.ok()
                     .contentType(MediaType.TEXT_HTML)
-                    .body(getIndexHtml())
+                    .body(indexHtmlContent)
             }
             .build()
     }
 
-    private fun getIndexHtml(): String {
-        try {
+    private fun loadIndexHtml(): String {
+        return try {
             val resource = ClassPathResource("static/index.html")
-            return Files.readString(resource.getFile().toPath())
+            resource.inputStream.use { inputStream ->
+                inputStream.bufferedReader(Charsets.UTF_8).use { reader ->
+                    reader.readText()
+                }
+            }
         } catch (e: Exception) {
-            return "Error loading index.html: ${e.message}"
+            log.error("Failed to load index.html", e)
+            """
+            <!DOCTYPE html>
+            <html>
+            <head><title>Error</title></head>
+            <body><h1>Error loading application</h1><p>${e.message}</p></body>
+            </html>
+            """.trimIndent()
         }
     }
 

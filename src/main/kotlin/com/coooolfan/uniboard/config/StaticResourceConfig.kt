@@ -49,8 +49,8 @@ class StaticResourceConfig : WebMvcConfigurer {
         try {
             val resource = ClassPathResource("static/index.html")
             return Files.readString(resource.getFile().toPath())
-        } catch (_: Exception) {
-            return "Error loading index.html"
+        } catch (e: Exception) {
+            return "Error loading index.html: ${e.message}"
         }
     }
 

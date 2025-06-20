@@ -1,1 +1,1 @@
-rootProject.name = "Uniboard-Service"
+rootProject.name = "uniboard-web"

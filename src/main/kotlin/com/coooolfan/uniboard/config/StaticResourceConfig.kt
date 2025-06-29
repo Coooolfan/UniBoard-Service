@@ -30,9 +30,13 @@ class StaticResourceConfig : WebMvcConfigurer {
     @Value("\${jimmer.client.openapi.ui-path:/openapi.html}")
     private lateinit var uiPath: String
 
-    // 延迟初始化缓存
+    // 延迟初始化
     private val indexHtmlContent: String by lazy {
         loadIndexHtml()
+    }
+
+    private val staticResourcePattern: String by lazy {
+        "/{path:^(?!${getPatternSlot()}).*}"
     }
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
@@ -43,11 +47,8 @@ class StaticResourceConfig : WebMvcConfigurer {
 
     @Bean
     fun spaRouter(): RouterFunction<ServerResponse> {
-        val pattern = "/{path:^(?!${getPatternSlot()}).*}"
-        log.info("SPA Router Pattern: $pattern")
-
         return RouterFunctions.route()
-            .GET(pattern) {
+            .GET(staticResourcePattern) {
                 ServerResponse.ok()
                     .contentType(MediaType.TEXT_HTML)
                     .body(indexHtmlContent)

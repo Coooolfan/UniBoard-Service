@@ -51,7 +51,3 @@ kotlin {
         kotlin.srcDir("build/generated/ksp/main/kotlin")
     }
 }
-
-tasks.withType<Test> {
-    useJUnitPlatform()
-}

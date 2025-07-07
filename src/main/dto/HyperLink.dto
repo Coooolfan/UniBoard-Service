@@ -8,6 +8,8 @@ input HyperLinkInsert {
     url
 
     color
+
+    public
 }
 
 input HyperLinkInsertBySnapShot {
@@ -22,4 +24,6 @@ input HyperLinkUpdate {
     url
 
     color
+
+    public
 }

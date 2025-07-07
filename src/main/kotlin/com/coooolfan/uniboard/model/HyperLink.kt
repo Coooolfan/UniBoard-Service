@@ -20,4 +20,6 @@ interface HyperLink {
     val color: String
 
     val icon: BaseSimpleFile
+
+    val public: Boolean
 }

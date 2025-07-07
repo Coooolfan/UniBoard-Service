@@ -2,12 +2,14 @@ package com.coooolfan.uniboard.service
 
 import com.coooolfan.uniboard.model.BaseSimpleFile
 import com.coooolfan.uniboard.model.HyperLink
+import com.coooolfan.uniboard.model.HyperLinkProps
 import com.coooolfan.uniboard.model.dto.HyperLinkInsert
 import com.coooolfan.uniboard.model.dto.HyperLinkInsertBySnapShot
 import com.coooolfan.uniboard.repo.HyperLinkRepo
 import com.coooolfan.uniboard.utils.SaveFileResult
 import com.coooolfan.uniboard.utils.fetchIconFile
 import com.coooolfan.uniboard.utils.fetchWebPageMetadata
+import org.babyfish.jimmer.DraftObjects.hide
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.fetcher.Fetcher
 import org.springframework.stereotype.Service
@@ -18,7 +20,16 @@ import java.util.*
 
 @Service
 class HyperLinkService(private val repo: HyperLinkRepo) {
-    fun findAll(fetcher: Fetcher<HyperLink>) = repo.findAll(fetcher)
+    fun findAll(fetcher: Fetcher<HyperLink>, isLogin: Boolean): List<HyperLink> {
+        val hyperLinks = repo.findByIsPublic(fetcher, isLogin)
+
+        if (!isLogin) {
+            hyperLinks.forEach { hide(it, HyperLinkProps.PUBLIC) }
+        }
+
+        return hyperLinks
+    }
+
     fun deleteById(id: Long) = repo.deleteById(id)
 
     fun update(update: HyperLink, file: MultipartFile?, fetcher: Fetcher<HyperLink>): HyperLink {
@@ -65,6 +76,7 @@ class HyperLinkService(private val repo: HyperLinkRepo) {
             url = insert.url
             color = "f2f2f2"
             icon = hyperLinkIcon
+            public = true
         }
         return repo.saveCommand(
             newHyperLinkInsertMocked,

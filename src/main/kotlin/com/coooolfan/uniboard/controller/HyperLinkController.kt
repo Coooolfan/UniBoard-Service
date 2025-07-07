@@ -1,6 +1,7 @@
 package com.coooolfan.uniboard.controller
 
 import cn.dev33.satoken.annotation.SaCheckLogin
+import cn.dev33.satoken.stp.StpUtil
 import com.coooolfan.uniboard.error.HyperLinkException
 import com.coooolfan.uniboard.model.HyperLink
 import com.coooolfan.uniboard.model.by
@@ -29,7 +30,10 @@ class HyperLinkController(private val service: HyperLinkService) {
      * @return List<HyperLink> 超链接列表
      */
     @GetMapping
-    fun getAllHyperLinks(): List<@FetchBy("DEFAULT_HYPER_LINK") HyperLink> = service.findAll(DEFAULT_HYPER_LINK)
+    fun getAllHyperLinks(): List<@FetchBy("DEFAULT_HYPER_LINK") HyperLink> = service.findAll(
+        DEFAULT_HYPER_LINK,
+        StpUtil.isLogin(0)
+    )
 
     /**
      * 创建新的超链接

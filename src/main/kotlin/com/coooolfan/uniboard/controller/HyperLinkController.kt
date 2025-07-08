@@ -27,12 +27,14 @@ class HyperLinkController(private val service: HyperLinkService) {
      *
      * 获取系统中所有的超链接列表，用于展示在首页或超链接管理页面
      *
+     * 未登陆状态下只返回公开的超链接
+     *
      * @return List<HyperLink> 超链接列表
      */
     @GetMapping
     fun getAllHyperLinks(): List<@FetchBy("DEFAULT_HYPER_LINK") HyperLink> = service.findAll(
         DEFAULT_HYPER_LINK,
-        StpUtil.isLogin(0)
+        StpUtil.getLoginId(-1) == 0
     )
 
     /**

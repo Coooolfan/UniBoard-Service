@@ -14,6 +14,8 @@ input HyperLinkInsert {
 
 input HyperLinkInsertBySnapShot {
     url
+
+    public
 }
 
 input HyperLinkUpdate {

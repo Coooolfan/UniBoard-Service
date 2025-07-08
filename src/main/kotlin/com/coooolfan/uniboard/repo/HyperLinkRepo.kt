@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class HyperLinkRepo(sql: KSqlClient) : AbstractKotlinRepository<HyperLink, Long>(sql) {
-    fun findByIsPublic(fetcher: Fetcher<HyperLink>, isPublic: Boolean): List<HyperLink> {
+    fun findByIfLogin(fetcher: Fetcher<HyperLink>, isLogin: Boolean): List<HyperLink> {
         return sql.createQuery(HyperLink::class) {
-            where(table.public eq isPublic)
+            if (!isLogin) where(table.public eq true)
             select(table.fetch(fetcher))
         }.execute()
     }

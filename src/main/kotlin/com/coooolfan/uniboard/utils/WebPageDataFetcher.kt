@@ -52,8 +52,10 @@ fun fetchWebPageMetadata(url: String, timeout: Int = 30000): WebPageMetadata {
 fun fetchIconFile(url: String): File? {
     val normalizedUrl = normalizeUrl(url)
     return try {
+
+        val format = normalizedUrl.substringAfterLast('.', "").split('?').firstOrNull() ?: "jpg"
         // 创建临时文件用于保存图标
-        val iconFile = File.createTempFile("icon_", ".ico")
+        val iconFile = File.createTempFile("icon_", ".$format")
 
         // 使用Jsoup连接并下载图标
         val connection = Jsoup.connect(normalizedUrl)

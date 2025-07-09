@@ -7,6 +7,7 @@ import com.coooolfan.uniboard.model.HyperLink
 import com.coooolfan.uniboard.model.by
 import com.coooolfan.uniboard.model.dto.HyperLinkInsert
 import com.coooolfan.uniboard.model.dto.HyperLinkInsertBySnapShot
+import com.coooolfan.uniboard.model.dto.HyperLinkOrderUpdate
 import com.coooolfan.uniboard.model.dto.HyperLinkUpdate
 import com.coooolfan.uniboard.service.HyperLinkService
 import org.babyfish.jimmer.client.FetchBy
@@ -74,6 +75,13 @@ class HyperLinkController(private val service: HyperLinkService) {
         @RequestPart(required = false) file: MultipartFile?
     ): @FetchBy("DEFAULT_HYPER_LINK") HyperLink {
         return service.update(update.toEntity { this.id = id }, file, DEFAULT_HYPER_LINK)
+    }
+
+    @PostMapping("/sort")
+    @SaCheckLogin
+    @Throws(HyperLinkException.UpdateSortFailed::class)
+    fun updateHyperLinkSort(@RequestBody sortList: List<HyperLinkOrderUpdate>) {
+        service.updateSort(sortList)
     }
 
     /**

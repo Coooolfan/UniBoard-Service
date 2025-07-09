@@ -1,9 +1,11 @@
 package com.coooolfan.uniboard.service
 
+import com.coooolfan.uniboard.error.HyperLinkException
 import com.coooolfan.uniboard.model.BaseSimpleFile
 import com.coooolfan.uniboard.model.HyperLink
 import com.coooolfan.uniboard.model.dto.HyperLinkInsert
 import com.coooolfan.uniboard.model.dto.HyperLinkInsertBySnapShot
+import com.coooolfan.uniboard.model.dto.HyperLinkOrderUpdate
 import com.coooolfan.uniboard.repo.HyperLinkRepo
 import com.coooolfan.uniboard.utils.SaveFileResult
 import com.coooolfan.uniboard.utils.fetchIconFile
@@ -36,6 +38,14 @@ class HyperLinkService(private val repo: HyperLinkRepo) {
             },
             SaveMode.UPDATE_ONLY
         ).execute(fetcher).modifiedEntity
+    }
+
+    fun updateSort(updateList: List<HyperLinkOrderUpdate>) {
+        try {
+            repo.saveInputsCommand(updateList, SaveMode.UPDATE_ONLY).execute()
+        } catch (_: Exception) {
+            throw HyperLinkException.UpdateSortFailed()
+        }
     }
 
     fun insert(insert: HyperLinkInsert, file: MultipartFile, fetcher: Fetcher<HyperLink>): HyperLink {

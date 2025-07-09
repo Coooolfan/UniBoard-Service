@@ -29,3 +29,9 @@ input HyperLinkUpdate {
 
     public
 }
+
+input HyperLinkOrderUpdate {
+    id
+
+    sort
+}

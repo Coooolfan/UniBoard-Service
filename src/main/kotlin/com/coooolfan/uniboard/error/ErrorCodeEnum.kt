@@ -26,4 +26,5 @@ enum class ProfileErrorCode {
 @ErrorFamily
 enum class HyperLinkErrorCode {
     FETCH_SNAPSHOT_FAILED,
+    UPDATE_SORT_FAILED,
 }

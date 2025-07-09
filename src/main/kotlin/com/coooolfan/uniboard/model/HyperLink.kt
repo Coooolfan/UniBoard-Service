@@ -22,4 +22,6 @@ interface HyperLink {
     val icon: BaseSimpleFile
 
     val public: Boolean
+
+    val sort: Int
 }

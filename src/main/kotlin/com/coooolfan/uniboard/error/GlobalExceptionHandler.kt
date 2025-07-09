@@ -20,6 +20,7 @@ class GlobalExceptionHandler {
             ProfileErrorCode.EMPTY_LOGIN_NAME.toString() -> 400 // Bad Request
             ProfileErrorCode.EMPTY_NAME.toString() -> 400 // Bad Request
             HyperLinkErrorCode.FETCH_SNAPSHOT_FAILED.toString() -> 400 // Bad Request
+            HyperLinkErrorCode.UPDATE_SORT_FAILED.toString() -> 400 // Bad Request
             else -> 500 // Internal Server Error
         }
         return ResponseEntity

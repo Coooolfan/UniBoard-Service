@@ -13,6 +13,7 @@ interface ProbeTarget {
     val description: String
 
     // 用于上报服务鉴权
+    @Key
     val key: String
 
     val location: ProbeTargetLocation

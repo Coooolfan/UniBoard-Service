@@ -8,7 +8,8 @@ CREATE TABLE public.probe_target
     description TEXT             NOT NULL,
     key         TEXT             NOT NULL,
     latitude    DOUBLE PRECISION NOT NULL,
-    longitude   DOUBLE PRECISION NOT NULL
+    longitude DOUBLE PRECISION NOT NULL,
+    UNIQUE (key)
 );
 
 CREATE TABLE public.probe_metric

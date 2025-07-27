@@ -1,0 +1,17 @@
+export com.coooolfan.uniboard.model.probe.ProbeMetric
+
+input ProbeMetricInsert {
+    name
+
+    unit
+
+    range
+}
+
+input ProbeMetricUpdate {
+    name
+
+    unit
+
+    range
+}

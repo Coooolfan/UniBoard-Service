@@ -1,7 +1,7 @@
 package com.coooolfan.uniboard.model.probe
 
 import org.babyfish.jimmer.sql.*
-import java.time.Instant
+import java.time.LocalDateTime
 
 @Entity
 interface ProbeMetricData {
@@ -12,7 +12,7 @@ interface ProbeMetricData {
     val value: Double
 
     // 数据采集时间
-    val reportTime: Instant
+    val reportTime: LocalDateTime
 
     @ManyToOne
     val probeMetric: ProbeMetric

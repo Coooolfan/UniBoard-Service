@@ -1,18 +1,25 @@
-package com.coooolfan.uniboard.controller
+package com.coooolfan.uniboard.controller.probe
 
 import cn.dev33.satoken.annotation.SaCheckLogin
 import com.coooolfan.uniboard.model.probe.ProbeTarget
 import com.coooolfan.uniboard.model.probe.by
+import com.coooolfan.uniboard.model.probe.dto.ProbeMetricDataInsertItem
 import com.coooolfan.uniboard.model.probe.dto.ProbeTargetInsert
 import com.coooolfan.uniboard.model.probe.dto.ProbeTargetUpdate
-import com.coooolfan.uniboard.service.ProbeService
+import com.coooolfan.uniboard.service.probe.ProbeService
 import org.babyfish.jimmer.client.FetchBy
 import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
+/**
+ * 探针相关资源控制器
+ *
+ * 处理探针目标的增删改查操作，包括获取所有探针目标、插入新探针目标和更新探针目标信息
+ * 所有操作都需要登录验证
+ */
 @RestController
-@RequestMapping("/api/probe")
+@RequestMapping("/api/probe-target")
 @SaCheckLogin
 class ProbeController(private val service: ProbeService) {
     /**
@@ -63,6 +70,28 @@ class ProbeController(private val service: ProbeService) {
         service.update(update.toEntity { this.id = id })
     }
 
+    /**
+     * 删除探针目标
+     *
+     * 根据ID删除指定的探针目标
+     * 需要登录验证
+     *
+     * @param id 探针目标ID
+     */
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteProbeTargetById(@PathVariable id: Long) {
+        service.delete(id)
+    }
+
+    @PostMapping("/{id}/data")
+    fun insertProbeMetricData(
+        @PathVariable id: Long,
+        @RequestBody data: ProbeMetricDataInsert
+    ) {
+        return service.insertMetricData(id, data)
+    }
+
     companion object {
         private val DEFAULT_PROBE_TARGET = newFetcher(ProbeTarget::class).by {
             allScalarFields()
@@ -73,3 +102,8 @@ class ProbeController(private val service: ProbeService) {
     }
 
 }
+
+data class ProbeMetricDataInsert(
+    val key: String,
+    val datas: List<ProbeMetricDataInsertItem>
+)

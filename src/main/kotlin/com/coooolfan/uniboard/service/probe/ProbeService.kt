@@ -25,8 +25,8 @@ class ProbeService(private val repo: ProbeTargetRepo, private val datasource: Pr
 
     fun delete(id: Long) = repo.deleteById(id)
 
-    fun insertMetricData(targetId: Long, insert: ProbeMetricDataInsert) {
-        if (!repo.checkKeyValid(targetId, insert.key)) throw CommonException.forbidden()
+    fun insertMetricData(insert: ProbeMetricDataInsert) {
+        if (!repo.checkKeyValid(insert.targetId, insert.key)) throw CommonException.forbidden()
 
         datasource.saveInputsCommand(
             insert.datas,

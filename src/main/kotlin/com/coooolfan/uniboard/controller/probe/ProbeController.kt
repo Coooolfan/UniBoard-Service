@@ -3,7 +3,6 @@ package com.coooolfan.uniboard.controller.probe
 import cn.dev33.satoken.annotation.SaCheckLogin
 import com.coooolfan.uniboard.model.probe.ProbeTarget
 import com.coooolfan.uniboard.model.probe.by
-import com.coooolfan.uniboard.model.probe.dto.ProbeMetricDataInsertItem
 import com.coooolfan.uniboard.model.probe.dto.ProbeTargetInsert
 import com.coooolfan.uniboard.model.probe.dto.ProbeTargetUpdate
 import com.coooolfan.uniboard.service.probe.ProbeService
@@ -84,14 +83,6 @@ class ProbeController(private val service: ProbeService) {
         service.delete(id)
     }
 
-    @PostMapping("/{id}/data")
-    fun insertProbeMetricData(
-        @PathVariable id: Long,
-        @RequestBody data: ProbeMetricDataInsert
-    ) {
-        return service.insertMetricData(id, data)
-    }
-
     companion object {
         private val DEFAULT_PROBE_TARGET = newFetcher(ProbeTarget::class).by {
             allScalarFields()
@@ -102,8 +93,3 @@ class ProbeController(private val service: ProbeService) {
     }
 
 }
-
-data class ProbeMetricDataInsert(
-    val key: String,
-    val datas: List<ProbeMetricDataInsertItem>
-)

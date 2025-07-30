@@ -28,6 +28,6 @@ CREATE TABLE public.probe_metric_data
 (
     id              BIGSERIAL PRIMARY KEY,
     value           DOUBLE PRECISION NOT NULL,
-    report_time     TIMESTAMP        NOT NULL,
+    report_time TIMESTAMPTZ NOT NULL,
     probe_metric_id BIGINT           NOT NULL REFERENCES public.probe_metric (id) ON DELETE CASCADE ON UPDATE CASCADE
 );

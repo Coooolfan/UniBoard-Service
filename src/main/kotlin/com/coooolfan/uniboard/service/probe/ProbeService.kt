@@ -9,6 +9,7 @@ import com.coooolfan.uniboard.repo.probe.ProbeTargetRepo
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.fetcher.Fetcher
 import org.springframework.stereotype.Service
+import java.time.Instant
 import java.util.*
 
 @Service
@@ -33,4 +34,7 @@ class ProbeService(private val repo: ProbeTargetRepo, private val datasource: Pr
             SaveMode.INSERT_ONLY
         ).execute()
     }
+
+    fun getMetricData(targetIds: List<Long>, metricIds: List<Long>, start: Instant?, end: Instant?) =
+        repo.getMetricData(targetIds, metricIds, start, end)
 }

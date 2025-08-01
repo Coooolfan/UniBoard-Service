@@ -8,7 +8,7 @@ CREATE TABLE public.probe_target
     description TEXT             NOT NULL,
     key         TEXT             NOT NULL,
     latitude    DOUBLE PRECISION NOT NULL,
-    longitude DOUBLE PRECISION NOT NULL,
+    longitude   DOUBLE PRECISION NOT NULL,
     UNIQUE (key)
 );
 
@@ -28,6 +28,6 @@ CREATE TABLE public.probe_metric_data
 (
     id              BIGSERIAL PRIMARY KEY,
     value           DOUBLE PRECISION NOT NULL,
-    report_time TIMESTAMPTZ NOT NULL,
+    report_time     TIMESTAMPTZ      NOT NULL,
     probe_metric_id BIGINT           NOT NULL REFERENCES public.probe_metric (id) ON DELETE CASCADE ON UPDATE CASCADE
 );

@@ -4,8 +4,8 @@ import com.coooolfan.uniboard.model.probe.*
 import org.babyfish.jimmer.spring.repo.support.AbstractKotlinRepository
 import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.babyfish.jimmer.sql.kt.ast.expression.eq
-import org.babyfish.jimmer.sql.kt.ast.expression.`ge?`
-import org.babyfish.jimmer.sql.kt.ast.expression.`le?`
+import org.babyfish.jimmer.sql.kt.ast.expression.ge
+import org.babyfish.jimmer.sql.kt.ast.expression.le
 import org.babyfish.jimmer.sql.kt.ast.expression.valueIn
 import org.springframework.stereotype.Repository
 import java.time.Instant
@@ -20,7 +20,7 @@ class ProbeTargetRepo(sql: KSqlClient) : AbstractKotlinRepository<ProbeTarget, L
         }.execute()[0] == 1L
     }
 
-    fun getMetricData(targetIds: List<Long>, metricIds: List<Long>, start: Instant?, end: Instant?): List<ProbeTarget> {
+    fun getMetricData(targetIds: List<Long>, metricIds: List<Long>, start: Instant, end: Instant): List<ProbeTarget> {
         return sql.executeQuery(ProbeTarget::class) {
             where(table.id valueIn targetIds)
             select(table.fetchBy {
@@ -31,8 +31,8 @@ class ProbeTargetRepo(sql: KSqlClient) : AbstractKotlinRepository<ProbeTarget, L
                     allScalarFields()
                     datas({
                         filter {
-                            where(table.reportTime `ge?` start)
-                            where(table.reportTime `le?` end)
+                            where(table.reportTime ge start)
+                            where(table.reportTime le end)
                         }
                     }) {
                         allScalarFields()

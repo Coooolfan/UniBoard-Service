@@ -1,6 +1,8 @@
 package com.coooolfan.uniboard.model.probe
 
+import com.coooolfan.uniboard.model.SimpleTargetMetricData
 import org.babyfish.jimmer.sql.*
+import java.time.Instant
 
 @Entity
 interface ProbeTarget {
@@ -18,8 +20,12 @@ interface ProbeTarget {
 
     val location: ProbeTargetLocation
 
-    @OneToMany(mappedBy = "probeTarget")
-    val metrics: List<ProbeMetric> // 采集指标
+    val lastReportTime: Instant
+
+    @Column(sqlElementType = "TIMESTAMPTZ")
+    val reportTimes: Array<Instant>
+
+    val lastReportData: SimpleTargetMetricData?
 
 }
 

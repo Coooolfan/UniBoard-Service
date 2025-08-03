@@ -1,15 +1,23 @@
-package com.coooolfan.uniboard.controller.probe
+package com.coooolfan.uniboard.controller
 
 import cn.dev33.satoken.annotation.SaCheckLogin
 import com.coooolfan.uniboard.model.probe.ProbeTarget
 import com.coooolfan.uniboard.model.probe.by
 import com.coooolfan.uniboard.model.probe.dto.ProbeTargetInsert
 import com.coooolfan.uniboard.model.probe.dto.ProbeTargetUpdate
-import com.coooolfan.uniboard.service.probe.ProbeService
+import com.coooolfan.uniboard.service.ProbeService
 import org.babyfish.jimmer.client.FetchBy
 import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.bind.annotation.RestController
 
 /**
  * 探针相关资源控制器
@@ -86,9 +94,6 @@ class ProbeController(private val service: ProbeService) {
     companion object {
         private val DEFAULT_PROBE_TARGET = newFetcher(ProbeTarget::class).by {
             allScalarFields()
-            metrics {
-                allScalarFields()
-            }
         }
     }
 

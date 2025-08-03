@@ -3,31 +3,14 @@
 
 CREATE TABLE public.probe_target
 (
-    id          BIGSERIAL PRIMARY KEY,
-    name        TEXT             NOT NULL,
-    description TEXT             NOT NULL,
-    key         TEXT             NOT NULL,
-    latitude    DOUBLE PRECISION NOT NULL,
-    longitude   DOUBLE PRECISION NOT NULL,
-    UNIQUE (key)
-);
-
-CREATE TABLE public.probe_metric
-(
-    id              BIGSERIAL PRIMARY KEY,
-    name            TEXT             NOT NULL,
-    unit            TEXT             NOT NULL,
-    min             DOUBLE PRECISION NOT NULL,
-    max             DOUBLE PRECISION NOT NULL,
-    probe_target_id BIGINT           NOT NULL REFERENCES public.probe_target (id) ON DELETE CASCADE ON UPDATE CASCADE,
-
-    UNIQUE (name, probe_target_id)
-);
-
-CREATE TABLE public.probe_metric_data
-(
-    id              BIGSERIAL PRIMARY KEY,
-    value           DOUBLE PRECISION NOT NULL,
-    report_time     TIMESTAMPTZ      NOT NULL,
-    probe_metric_id BIGINT           NOT NULL REFERENCES public.probe_metric (id) ON DELETE CASCADE ON UPDATE CASCADE
+    id               BIGSERIAL PRIMARY KEY,
+    name             TEXT             NOT NULL,
+    description      TEXT             NOT NULL,
+    key              TEXT             NOT NULL,
+    latitude         DOUBLE PRECISION NOT NULL,
+    longitude        DOUBLE PRECISION NOT NULL,
+    report_times     TIMESTAMPTZ[]    NOT NULL,
+    last_report_data JSONB,
+    last_report_time TIMESTAMPTZ      NOT NULL DEFAULT to_timestamp(0),
+    UNIQUE (key, name)
 );

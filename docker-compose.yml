@@ -1,5 +1,8 @@
 # Only for Development
 # 仅用于开发环境
+
+name: uniboard-dev
+
 services:
   server:
     build:

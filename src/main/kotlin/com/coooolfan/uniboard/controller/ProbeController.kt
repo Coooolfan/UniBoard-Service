@@ -9,15 +9,7 @@ import com.coooolfan.uniboard.service.ProbeService
 import org.babyfish.jimmer.client.FetchBy
 import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 /**
  * 探针相关资源控制器
@@ -91,9 +83,28 @@ class ProbeController(private val service: ProbeService) {
         service.delete(id)
     }
 
+    /**
+     * 刷新探针目标的key
+     *
+     * 根据ID刷新指定探针目标的key并返回新的key
+     * 需要登录验证
+     *
+     * @param id 探针目标ID
+     */
+    @PutMapping("/{id}/key")
+    fun refreshProbeTargetKey(@PathVariable id: Long): @FetchBy("PROBE_TARGET_WITH_KEY") ProbeTarget {
+        return service.refreshProbeTargetKey(id, PROBE_TARGET_WITH_KEY)
+    }
+
     companion object {
         private val DEFAULT_PROBE_TARGET = newFetcher(ProbeTarget::class).by {
             allScalarFields()
+            key(false)
+            reportTimes(false)
+        }
+
+        private val PROBE_TARGET_WITH_KEY = newFetcher(ProbeTarget::class).by {
+            key(true)
         }
     }
 

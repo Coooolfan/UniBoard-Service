@@ -28,3 +28,8 @@ enum class HyperLinkErrorCode {
     FETCH_SNAPSHOT_FAILED,
     UPDATE_SORT_FAILED,
 }
+
+@ErrorFamily
+enum class ProbeErrorCode {
+    KEY_NOT_MATCH, // 上报数据的key不匹配
+}

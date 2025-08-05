@@ -102,7 +102,7 @@ class ProfileController(private val service: ProfileService) {
      * @param update 密码更新数据，包含当前密码和新密码
      * @throws ProfileException.SystemUninitialized 当系统未初始化时抛出
      * @throws ProfileException.EmptyLoginName 当登录名为空时抛出
-     * @throws CommonException.Forbidden 当当前密码验证失败时抛出
+     * @throws CommonException.Forbidden 当前密码验证失败时抛出
      */
     @PutMapping("/password")
     @SaCheckLogin

@@ -1,12 +1,13 @@
 package com.coooolfan.uniboard.repo
 
-import com.coooolfan.uniboard.model.probe.ProbeTarget
-import com.coooolfan.uniboard.model.probe.id
-import com.coooolfan.uniboard.model.probe.key
+import com.coooolfan.uniboard.model.SimpleTargetMetricData
+import com.coooolfan.uniboard.model.probe.*
 import org.babyfish.jimmer.spring.repo.support.AbstractKotlinRepository
 import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.babyfish.jimmer.sql.kt.ast.expression.eq
+import org.babyfish.jimmer.sql.kt.ast.expression.sql
 import org.springframework.stereotype.Repository
+import java.time.Instant
 
 @Repository
 class ProbeTargetRepo(sql: KSqlClient) : AbstractKotlinRepository<ProbeTarget, Long>(sql) {
@@ -16,6 +17,29 @@ class ProbeTargetRepo(sql: KSqlClient) : AbstractKotlinRepository<ProbeTarget, L
             where(table.key eq key)
             selectCount()
         }.execute()[0] == 1L
+    }
+
+    fun updateAndInsertData(
+        id: Long, timestamp: Instant, data: SimpleTargetMetricData
+    ) {
+        sql.executeUpdate(ProbeTarget::class) {
+            set(
+                table.lastReportTime,
+                timestamp
+            )
+            set(
+                table.lastReportData,
+                data
+            )
+            set(
+                table.reportTimes,
+                sql("array_prepend(%v, report_times)") {
+                    value(timestamp)
+                }
+            )
+            where(table.id eq id)
+
+        }
     }
 
 }

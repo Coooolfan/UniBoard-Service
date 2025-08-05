@@ -18,7 +18,7 @@ class ProbeService(private val repo: ProbeTargetRepo) {
     fun insert(insert: ProbeTargetInsert, fetcher: Fetcher<ProbeTarget>): ProbeTarget {
         val entity = insert.toEntity {
             this.key = UUID.randomUUID().toString()
-            this.lastReportTime = Instant.ofEpochSecond(0)
+            this.lastReportTime = Instant.EPOCH
             this.reportTimes = emptyArray<Instant>()
         }
         return repo.saveCommand(entity, SaveMode.INSERT_ONLY)

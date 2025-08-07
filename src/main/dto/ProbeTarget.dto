@@ -23,3 +23,9 @@ input ProbeTargetUpdate {
         longitude
     }
 }
+
+input ProbeTargetOrderUpdate {
+    id
+
+    sort
+}

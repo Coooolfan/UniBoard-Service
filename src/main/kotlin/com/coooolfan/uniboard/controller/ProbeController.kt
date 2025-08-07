@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckLogin
 import com.coooolfan.uniboard.model.probe.ProbeTarget
 import com.coooolfan.uniboard.model.probe.by
 import com.coooolfan.uniboard.model.probe.dto.ProbeTargetInsert
+import com.coooolfan.uniboard.model.probe.dto.ProbeTargetOrderUpdate
 import com.coooolfan.uniboard.model.probe.dto.ProbeTargetUpdate
 import com.coooolfan.uniboard.service.ProbeService
 import org.babyfish.jimmer.client.FetchBy
@@ -31,7 +32,7 @@ class ProbeController(private val service: ProbeService) {
      * 探针目标列表，包含所有标量字段和指标信息
      */
     @GetMapping
-    fun getAllProbeTagets(): List<@FetchBy("DEFAULT_PROBE_TARGET") ProbeTarget> {
+    fun getAllProbeTargets(): List<@FetchBy("DEFAULT_PROBE_TARGET") ProbeTarget> {
         return service.findAll(DEFAULT_PROBE_TARGET)
     }
 
@@ -96,11 +97,16 @@ class ProbeController(private val service: ProbeService) {
         return service.refreshProbeTargetKey(id, PROBE_TARGET_WITH_KEY)
     }
 
+    @PostMapping("sort")
+    fun updateProbeTargetSort(@RequestBody sortList: List<ProbeTargetOrderUpdate>) {
+        service.updateSort(sortList)
+    }
+
+
     companion object {
         private val DEFAULT_PROBE_TARGET = newFetcher(ProbeTarget::class).by {
             allScalarFields()
             key(false)
-            reportTimes(false)
         }
 
         private val PROBE_TARGET_WITH_KEY = newFetcher(ProbeTarget::class).by {

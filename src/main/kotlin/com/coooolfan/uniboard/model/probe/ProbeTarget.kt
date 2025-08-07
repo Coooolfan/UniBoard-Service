@@ -18,12 +18,11 @@ interface ProbeTarget {
     @Key
     val key: String
 
+    val sort: Int
+
     val location: ProbeTargetLocation
 
     val lastReportTime: Instant
-
-    @Column(sqlElementType = "TIMESTAMPTZ")
-    val reportTimes: Array<Instant>
 
     val lastReportData: SimpleTargetMetricData?
 

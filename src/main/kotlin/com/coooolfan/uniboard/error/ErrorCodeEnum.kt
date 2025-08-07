@@ -32,4 +32,5 @@ enum class HyperLinkErrorCode {
 @ErrorFamily
 enum class ProbeErrorCode {
     KEY_NOT_MATCH, // 上报数据的key不匹配
+    UPDATE_SORT_FAILED, // 更新探针目标排序失败
 }

@@ -97,6 +97,15 @@ class ProbeController(private val service: ProbeService) {
         return service.refreshProbeTargetKey(id, PROBE_TARGET_WITH_KEY)
     }
 
+    /**
+     * 更新探针目标的排序
+     *
+     * 根据提供的排序列表更新探针目标的显示顺序
+     * 需要登录验证
+     *
+     * @param sortList List<ProbeTargetOrderUpdate>
+     * 包含要更新的探针目标ID和新的排序值
+     */
     @PostMapping("sort")
     fun updateProbeTargetSort(@RequestBody sortList: List<ProbeTargetOrderUpdate>) {
         service.updateSort(sortList)

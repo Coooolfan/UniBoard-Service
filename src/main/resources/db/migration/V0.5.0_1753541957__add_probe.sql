@@ -1,5 +1,5 @@
 -- 创建与探针相关的表服务
--- 预计发布于0.5.0版本
+-- 版本：0.5.0
 
 CREATE TABLE public.probe_target
 (

@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service
 @Service
 class ProbeScriptService(private val sql: KSqlClient) {
     fun genCustomInstallScript(probeId: Long, key: String, interval: Int): String {
-        val host = sql.createQuery(SystemConfig::class) {
+        val baseUrl = sql.createQuery(SystemConfig::class) {
             where(table.id eq 0L)
             select(table.host)
         }.fetchOne()
-        val hostWithoutSlash = host.removeSuffix("/")
-        return generateInstallScript(hostWithoutSlash, probeId, key, interval)
+        val normalizedBaseUrl = baseUrl.removeSuffix("/")
+        return generateInstallScript(normalizedBaseUrl, probeId, key, interval)
     }
 
     private fun generateInstallScript(host: String, probeId: Long, key: String, interval: Int): String {

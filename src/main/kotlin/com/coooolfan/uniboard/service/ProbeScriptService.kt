@@ -14,7 +14,8 @@ class ProbeScriptService(private val sql: KSqlClient) {
             where(table.id eq 0L)
             select(table.host)
         }.fetchOne()
-        return generateInstallScript(host, probeId, key, interval)
+        val hostWithoutSlash = host.removeSuffix("/")
+        return generateInstallScript(hostWithoutSlash, probeId, key, interval)
     }
 
     private fun generateInstallScript(host: String, probeId: Long, key: String, interval: Int): String {
@@ -59,7 +60,7 @@ fi
 mkdir -p ${'$'}INSTALL_DIR
 cd ${'$'}INSTALL_DIR
 
-curl -fsSL "${'$'}PROBE_HOST/api/script/probe-monitor.sh" -o probe-monitor.sh
+curl -fsSL "${'$'}PROBE_HOST/api/probe-script/probe-monitor.sh" -o probe-monitor.sh
 chmod +x probe-monitor.sh
 
 cat > probe-config.env << EOF
@@ -69,7 +70,7 @@ PROBE_KEY=${'$'}PROBE_KEY
 INTERVAL=${'$'}INTERVAL
 EOF
 
-cat > /etc/systemd/system/${'$'}SERVICE_NAME.service << 'EOF'
+cat > /etc/systemd/system/${'$'}SERVICE_NAME.service << EOF
 [Unit]
 Description=System Monitoring Probe
 After=network.target

@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.coooolfan"
-version = "0.4.1-BETA"
+version = "0.5.0-BETA"
 
 java {
     toolchain {
@@ -19,8 +19,8 @@ repositories {
     mavenCentral()
 }
 
-val jimmerVersion = "0.9.94"
-val saTokenVersion = "1.43.0"
+val jimmerVersion = "0.9.104"
+val saTokenVersion = "1.44.0"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")

@@ -77,6 +77,14 @@ class HyperLinkController(private val service: HyperLinkService) {
         return service.update(update.toEntity { this.id = id }, file, DEFAULT_HYPER_LINK)
     }
 
+    /**
+     * 批量更新超链接排序
+     *
+     * 根据提供的排序列表更新多个超链接的显示顺序
+     * 需要登录验证
+     *
+     * @param sortList 包含超链接ID和新排序值的列表
+     */
     @PostMapping("/sort")
     @SaCheckLogin
     @Throws(HyperLinkException.UpdateSortFailed::class)
